@@ -7,20 +7,20 @@
 <title>Dynamic Classroom Admin</title>
 
 <style>
+*{box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#f1f5f9;margin:0;color:#1e293b}
 header{background:#123c69;color:white;text-align:center;padding:20px}
 main{max-width:750px;margin:20px auto;padding:15px}
 .card{background:white;padding:20px;margin-bottom:18px;border-radius:10px;box-shadow:0 2px 8px #0001}
 input,textarea,select{box-sizing:border-box;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #ccc;border-radius:6px;font:inherit}
 textarea{min-height:100px}
-button{background:#123c69;color:white;border:0;padding:11px 15px;border-radius:6px;margin:4px;cursor:pointer}
+button{background:#123c69;color:white;border:0;padding:11px 15px;border-radius:6px;margin:4px;cursor:pointer;font:inherit}
 button:disabled{opacity:.6}
 .del{background:#b91c1c}
 .notice,.student,.payment{border:1px solid #ddd;padding:12px;margin:12px 0;border-radius:8px;overflow-wrap:anywhere}
 .stat{background:#eff6ff;padding:12px;border-radius:8px;margin:8px 0}
 small{color:#475569}
 [hidden]{display:none!important}
-
 .receipt{border:1px solid #cbd5e1;padding:20px;border-radius:8px;background:white}
 .receipt-head{text-align:center;border-bottom:2px solid #123c69;padding-bottom:12px;margin-bottom:16px}
 .receipt-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e2e8f0}
@@ -28,6 +28,12 @@ small{color:#475569}
 .receipt-row span:last-child{text-align:right;flex:1;overflow-wrap:anywhere}
 .receipt-total{font-size:18px;font-weight:bold;color:#123c69}
 .receipt-footer{text-align:center;margin-top:25px}
+@media(max-width:480px){
+ main{padding:10px}
+ .card{padding:14px}
+ .receipt{padding:12px}
+ .receipt-row{font-size:14px;gap:8px}
+}
 @media print{
  @page{size:A4;margin:12mm}
  body *{visibility:hidden!important}
@@ -76,7 +82,6 @@ small{color:#475569}
 <div class="card">
 <h2>শিক্ষার্থী যোগ করুন</h2>
 <form id="studentForm">
-
 <label>শিক্ষার্থীর নাম</label>
 <input id="studentName" required maxlength="120">
 
@@ -107,7 +112,6 @@ small{color:#475569}
 <button id="saveStudent" type="submit">শিক্ষার্থী সংরক্ষণ</button>
 <button id="cancelStudent" type="button" hidden>বাতিল</button>
 </form>
-
 <div id="studentList">লোড হচ্ছে...</div>
 </div>
 
@@ -116,7 +120,6 @@ small{color:#475569}
 <p><small>একই মাসে একাধিক কিস্তিতে বেতন জমা নেওয়া যাবে।</small></p>
 
 <form id="paymentForm">
-
 <label>শিক্ষার্থী নির্বাচন</label>
 <select id="paymentStudent" required>
 <option value="">শিক্ষার্থী নির্বাচন করুন</option>
@@ -155,7 +158,6 @@ small{color:#475569}
 
 <div class="card" id="receiptPrint" hidden>
 <div class="receipt">
-
 <div class="receipt-head">
 <h2>Dynamic Classroom</h2>
 <p>বেতন জমার রসিদ</p>
@@ -169,9 +171,8 @@ small{color:#475569}
 <p><small>এই রসিদটি Dynamic Classroom-এর পেমেন্ট রেকর্ড অনুযায়ী তৈরি।</small></p>
 </div>
 
-<button type="button" onclick="window.print()">রসিদ প্রিন্ট / PDF সংরক্ষণ</button>
+<button type="button" id="printReceipt">রসিদ প্রিন্ট / PDF সংরক্ষণ</button>
 <button type="button" id="closeReceipt">রসিদ বন্ধ করুন</button>
-
 </div>
 </div>
 
@@ -187,20 +188,11 @@ small{color:#475569}
 import {initializeApp} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
 
 import {
- getAuth,
- signInWithEmailAndPassword,
- onAuthStateChanged,
- signOut
+ getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
 import {
- getFirestore,
- collection,
- onSnapshot,
- addDoc,
- updateDoc,
- deleteDoc,
- doc
+ getFirestore,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc
 } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -224,13 +216,16 @@ let editingStudentDocId=null;
 let stopNotices=null,stopStudents=null,stopPayments=null;
 let students=[],payments=[];
 
-function status(s){$("status").textContent=s}
+function status(message){
+ $("status").textContent=message;
+}
 
-function stopListeners(){
- [stopNotices,stopStudents,stopPayments].forEach(fn=>{
-  if(fn)fn();
- });
- stopNotices=stopStudents=stopPayments=null;
+function money(value){
+ return "৳"+Number(value||0).toLocaleString("en-BD");
+}
+
+function currentAdmin(){
+ return auth.currentUser && auth.currentUser.uid===ADMIN_UID;
 }
 
 function btn(label,cls,action){
@@ -242,26 +237,25 @@ function btn(label,cls,action){
  return b;
 }
 
-function currentAdmin(){
- return auth.currentUser&&auth.currentUser.uid===ADMIN_UID;
+function stopListeners(){
+ [stopNotices,stopStudents,stopPayments].forEach(fn=>{
+  if(fn)fn();
+ });
+ stopNotices=stopStudents=stopPayments=null;
 }
 
-function money(n){
- return "৳"+Number(n||0).toLocaleString("en-BD");
-}
-
-/* Login */
+/* LOGIN */
 
 $("loginForm").addEventListener("submit",async e=>{
  e.preventDefault();
  status("লগইন হচ্ছে...");
+
  try{
   await signInWithEmailAndPassword(
-   auth,
-   $("email").value.trim(),
-   $("password").value
+   auth,$("email").value.trim(),$("password").value
   );
  }catch(error){
+  console.error(error);
   status("লগইন হয়নি। ইমেইল ও পাসওয়ার্ড পরীক্ষা করুন।");
  }
 });
@@ -291,7 +285,7 @@ onAuthStateChanged(auth,user=>{
  loadPayments();
 });
 
-/* Notices */
+/* NOTICES */
 
 function loadNotices(){
  stopNotices=onSnapshot(collection(db,"Notices"),snap=>{
@@ -329,7 +323,8 @@ function loadNotices(){
      try{
       await deleteDoc(doc(db,"Notices",item.id));
       status("নোটিশ মুছে ফেলা হয়েছে।");
-     }catch(e){
+     }catch(error){
+      console.error(error);
       status("নোটিশ মুছতে পারেনি।");
      }
     })
@@ -337,7 +332,10 @@ function loadNotices(){
 
    list.appendChild(box);
   });
- },e=>status("নোটিশ লোড হয়নি।"));
+ },error=>{
+  console.error(error);
+  status("নোটিশ লোড হয়নি।");
+ });
 }
 
 function resetNotice(){
@@ -359,7 +357,6 @@ $("noticeForm").onsubmit=async e=>{
 
  const title=$("title").value.trim();
  const message=$("message").value.trim();
-
  $("saveNotice").disabled=true;
 
  try{
@@ -370,18 +367,17 @@ $("noticeForm").onsubmit=async e=>{
     title,message,createdAt:new Date().toISOString()
    });
   }
-
   resetNotice();
   status("নোটিশ সংরক্ষণ হয়েছে।");
-
- }catch(e){
+ }catch(error){
+  console.error(error);
   status("নোটিশ সংরক্ষণ হয়নি।");
  }finally{
   $("saveNotice").disabled=false;
  }
 };
 
-/* Students */
+/* STUDENTS */
 
 function loadStudents(){
  stopStudents=onSnapshot(collection(db,"Students"),snap=>{
@@ -390,7 +386,10 @@ function loadStudents(){
   renderStudentOptions();
   renderPaymentSummary();
   renderPaymentHistory();
- },e=>status("শিক্ষার্থীর তালিকা লোড হয়নি। Firebase Rules পরীক্ষা করুন।"));
+ },error=>{
+  console.error(error);
+  status("শিক্ষার্থীর তালিকা লোড হয়নি। Firebase Rules পরীক্ষা করুন।");
+ });
 }
 
 function renderStudents(){
@@ -433,11 +432,12 @@ function renderStudents(){
     window.scrollTo({top:0,behavior:"smooth"});
    }),
    btn("মুছুন","del",async()=>{
-    if(!confirm("এই শিক্ষার্থীর প্রোফাইল মুছবেন? তার পেমেন্টের ইতিহাস থেকে যেতে পারে।"))return;
+    if(!confirm("শিক্ষার্থীর প্রোফাইল মুছবেন? পেমেন্টের ইতিহাস থেকে যেতে পারে।"))return;
     try{
      await deleteDoc(doc(db,"Students",s.docId));
      status("শিক্ষার্থীর প্রোফাইল মুছে ফেলা হয়েছে।");
-    }catch(e){
+    }catch(error){
+     console.error(error);
      status("শিক্ষার্থীর তথ্য মুছতে পারেনি।");
     }
    })
@@ -450,7 +450,6 @@ function renderStudents(){
 function renderStudentOptions(){
  const select=$("paymentStudent");
  const old=select.value;
-
  select.replaceChildren();
 
  const placeholder=document.createElement("option");
@@ -459,15 +458,13 @@ function renderStudentOptions(){
  select.appendChild(placeholder);
 
  students.forEach(s=>{
-  const o=document.createElement("option");
-  o.value=s.docId;
-  o.textContent=`${s.name} — ${s.studentId||"ID নেই"}`;
-  select.appendChild(o);
+  const option=document.createElement("option");
+  option.value=s.docId;
+  option.textContent=`${s.name||"নাম নেই"} — ${s.studentId||"ID নেই"}`;
+  select.appendChild(option);
  });
 
- if(students.some(s=>s.docId===old)){
-  select.value=old;
- }
+ if(students.some(s=>s.docId===old))select.value=old;
 }
 
 function resetStudent(){
@@ -488,9 +485,8 @@ $("studentForm").onsubmit=async e=>{
  }
 
  const fee=Number($("monthlyFee").value);
-
- if(!Number.isFinite(fee)||fee<0){
-  status("বেতন সঠিকভাবে লিখুন।");
+ if(!Number.isSafeInteger(fee)||fee<0){
+  status("মাসিক বেতন পূর্ণ টাকা হিসেবে লিখুন।");
   return;
  }
 
@@ -517,22 +513,25 @@ $("studentForm").onsubmit=async e=>{
 
   resetStudent();
   status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়েছে।");
-
- }catch(e){
+ }catch(error){
+  console.error(error);
   status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।");
  }finally{
   $("saveStudent").disabled=false;
  }
 };
 
-/* Payment records */
+/* PAYMENTS */
 
 function loadPayments(){
  stopPayments=onSnapshot(collection(db,"Payments"),snap=>{
   payments=snap.docs.map(x=>({docId:x.id,...x.data()}));
   renderPaymentSummary();
   renderPaymentHistory();
- },e=>status("পেমেন্ট লোড হয়নি। Firebase Rules পরীক্ষা করুন।"));
+ },error=>{
+  console.error(error);
+  status("পেমেন্ট লোড হয়নি। Firebase Rules পরীক্ষা করুন।");
+ });
 }
 
 function chosenStudent(){
@@ -542,12 +541,19 @@ function chosenStudent(){
 function matchingPayments(){
  const student=chosenStudent();
  const month=$("paymentMonth").value;
-
  if(!student||!month)return [];
 
  return payments.filter(p=>
-  p.studentDocId===student.docId&&p.month===month
+  p.studentDocId===student.docId && p.month===month
  );
+}
+
+function orderedPayments(records){
+ return [...records].sort((a,b)=>{
+  const at=a.createdAt||((a.paymentDate||"")+"T00:00:00");
+  const bt=b.createdAt||((b.paymentDate||"")+"T00:00:00");
+  return at.localeCompare(bt)||(a.docId||"").localeCompare(b.docId||"");
+ });
 }
 
 function renderPaymentSummary(){
@@ -560,8 +566,9 @@ function renderPaymentSummary(){
   return;
  }
 
- const records=matchingPayments();
- const paid=records.reduce((sum,p)=>sum+Number(p.amountPaid||0),0);
+ const paid=matchingPayments().reduce(
+  (sum,p)=>sum+Number(p.amountPaid||0),0
+ );
  const fee=Number(student.monthlyFee||0);
  const due=Math.max(0,fee-paid);
 
@@ -581,36 +588,40 @@ function renderPaymentSummary(){
 
  if(paid>fee){
   const warn=document.createElement("p");
-  warn.textContent="সতর্কতা: জমার অঙ্ক মাসিক বেতনের চেয়ে বেশি। হিসাব যাচাই করুন।";
+  warn.textContent="সতর্কতা: মোট জমা মাসিক বেতনের চেয়ে বেশি। হিসাব যাচাই করুন।";
   box.appendChild(warn);
  }
 }
 
-/* Receipt */
+/* DIGITAL RECEIPT */
 
 function renderReceipt(p){
  const student=students.find(s=>s.docId===p.studentDocId);
  const fee=Number(student?.monthlyFee||0);
 
- const records=payments
-  .filter(x=>x.studentDocId===p.studentDocId&&x.month===p.month)
-  .sort((a,b)=>(a.createdAt||"").localeCompare(b.createdAt||""));
+ /*
+  * Realtime snapshot আপডেট হওয়ার আগেই নতুন রসিদ খুললেও
+  * নির্বাচিত পেমেন্টটি হিসাবের তালিকায় অন্তর্ভুক্ত করা হয়।
+  */
+ const records=payments.filter(x=>
+  x.studentDocId===p.studentDocId && x.month===p.month
+ );
 
- const index=records.findIndex(x=>x.docId===p.docId);
+ if(!records.some(x=>x.docId===p.docId)){
+  records.push(p);
+ }
 
- const calculatedTotal=records
-  .slice(0,index>=0?index+1:records.length)
-  .reduce((sum,x)=>sum+Number(x.amountPaid||0),0);
+ const ordered=orderedPayments(records);
+ const index=ordered.findIndex(x=>x.docId===p.docId);
+ const relevant=index>=0?ordered.slice(0,index+1):[p];
 
- const total=p.totalPaidAfter!=null
-  ?Number(p.totalPaidAfter)
-  :calculatedTotal;
+ const total=relevant.reduce(
+  (sum,x)=>sum+Number(x.amountPaid||0),0
+ );
+ const due=Math.max(0,fee-total);
 
- const due=p.dueAfter!=null
-  ?Number(p.dueAfter)
-  :Math.max(0,fee-total);
-
- const receiptNo="DC-"+String(p.month||"").replace("-","")+"-"+
+ const receiptNo="DC-"+
+  String(p.month||"").replace("-","")+"-"+
   String(p.docId||"").slice(-8).toUpperCase();
 
  $("receiptNumber").textContent="রসিদ নম্বর: "+receiptNo;
@@ -629,7 +640,7 @@ function renderReceipt(p){
   ["এই কিস্তিতে জমা",money(p.amountPaid)],
   ["মাসিক বেতন",money(fee)],
   ["এই জমাসহ মোট জমা",money(total)],
-  ["বর্তমান বকেয়া",money(due)],
+  ["এই কিস্তির পর বকেয়া",money(due)],
   ["Transaction ID",p.transactionRef||"প্রযোজ্য নয়"]
  ];
 
@@ -651,9 +662,13 @@ function renderReceipt(p){
  $("receiptPrint").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
+$("printReceipt").onclick=()=>window.print();
+
 $("closeReceipt").onclick=()=>{
  $("receiptPrint").hidden=true;
 };
+
+/* PAYMENT HISTORY */
 
 function renderPaymentHistory(){
  const box=$("paymentHistory");
@@ -713,7 +728,7 @@ $("paymentMonth").onchange=()=>{
  renderPaymentHistory();
 };
 
-/* Default date */
+/* DEFAULT DATE */
 
 const now=new Date();
 
@@ -724,7 +739,7 @@ $("paymentDate").value=
  now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+
  String(now.getDate()).padStart(2,"0");
 
-/* Save payment and show receipt */
+/* SAVE PAYMENT */
 
 $("paymentForm").onsubmit=async e=>{
  e.preventDefault();
@@ -757,7 +772,9 @@ $("paymentForm").onsubmit=async e=>{
  }
 
  const existing=matchingPayments();
- const paid=existing.reduce((sum,p)=>sum+Number(p.amountPaid||0),0);
+ const paid=existing.reduce(
+  (sum,p)=>sum+Number(p.amountPaid||0),0
+ );
  const fee=Number(student.monthlyFee||0);
  const due=fee-paid;
 
@@ -779,18 +796,18 @@ $("paymentForm").onsubmit=async e=>{
    studentUid:"",
    studentId:student.studentId||"",
    studentName:student.name||"",
-   month:month,
+   month,
    year:Number(month.slice(0,4)),
    amountPaid:amount,
-   paymentDate:paymentDate,
-   method:method,
-   transactionRef:transactionRef,
-   totalPaidAfter:paid+amount,
-   dueAfter:Math.max(0,fee-paid-amount),
+   paymentDate,
+   method,
+   transactionRef,
    createdAt:new Date().toISOString()
   };
 
-  const paymentRef=await addDoc(collection(db,"Payments"),paymentData);
+  const paymentRef=await addDoc(
+   collection(db,"Payments"),paymentData
+  );
 
   $("amountPaid").value="";
   $("transactionRef").value="";
@@ -802,14 +819,22 @@ $("paymentForm").onsubmit=async e=>{
    docId:paymentRef.id
   });
 
- }catch(e){
+ }catch(error){
+  console.error(error);
   status("পেমেন্ট সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।");
  }finally{
   $("savePayment").disabled=false;
  }
 };
 
-$("logout").onclick=()=>signOut(auth);
+$("logout").onclick=async()=>{
+ try{
+  await signOut(auth);
+ }catch(error){
+  console.error(error);
+  status("লগআউট করা যায়নি।");
+ }
+};
 </script>
 </body>
 </html>
