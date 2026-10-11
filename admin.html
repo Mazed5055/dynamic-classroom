@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dynamic Classroom Admin</title>
+
 <style>
 body{font-family:Arial,sans-serif;background:#f1f5f9;margin:0;color:#1e293b}
 header{background:#123c69;color:white;text-align:center;padding:20px}
@@ -18,8 +20,25 @@ button:disabled{opacity:.6}
 .stat{background:#eff6ff;padding:12px;border-radius:8px;margin:8px 0}
 small{color:#475569}
 [hidden]{display:none!important}
+
+.receipt{border:1px solid #cbd5e1;padding:20px;border-radius:8px;background:white}
+.receipt-head{text-align:center;border-bottom:2px solid #123c69;padding-bottom:12px;margin-bottom:16px}
+.receipt-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e2e8f0}
+.receipt-row span:first-child{flex:1}
+.receipt-row span:last-child{text-align:right;flex:1;overflow-wrap:anywhere}
+.receipt-total{font-size:18px;font-weight:bold;color:#123c69}
+.receipt-footer{text-align:center;margin-top:25px}
+@media print{
+ @page{size:A4;margin:12mm}
+ body *{visibility:hidden!important}
+ #receiptPrint,#receiptPrint *{visibility:visible!important}
+ #receiptPrint{display:block!important;position:absolute!important;left:0;top:0;width:100%;margin:0;padding:0;box-sizing:border-box;background:white;box-shadow:none}
+ #receiptPrint .receipt{border:1px solid #999;box-shadow:none}
+ #receiptPrint button{display:none!important}
+}
 </style>
 </head>
+
 <body>
 <header>
 <h1>Dynamic Classroom</h1>
@@ -27,6 +46,7 @@ small{color:#475569}
 </header>
 
 <main>
+
 <section class="card" id="login">
 <h2>অ্যাডমিন লগইন</h2>
 <form id="loginForm">
@@ -39,6 +59,7 @@ small{color:#475569}
 </section>
 
 <section id="panel" hidden>
+
 <div class="card">
 <h2>নোটিশ প্রকাশ করুন</h2>
 <form id="noticeForm">
@@ -55,6 +76,7 @@ small{color:#475569}
 <div class="card">
 <h2>শিক্ষার্থী যোগ করুন</h2>
 <form id="studentForm">
+
 <label>শিক্ষার্থীর নাম</label>
 <input id="studentName" required maxlength="120">
 
@@ -85,14 +107,16 @@ small{color:#475569}
 <button id="saveStudent" type="submit">শিক্ষার্থী সংরক্ষণ</button>
 <button id="cancelStudent" type="button" hidden>বাতিল</button>
 </form>
+
 <div id="studentList">লোড হচ্ছে...</div>
 </div>
 
 <div class="card">
 <h2>মাসিক বেতন গ্রহণ</h2>
-<p><small>একই মাসে একাধিক কিস্তি জমা দিতে পারবেন। প্রতিটি জমা আলাদা রেকর্ড হবে।</small></p>
+<p><small>একই মাসে একাধিক কিস্তিতে বেতন জমা নেওয়া যাবে।</small></p>
 
 <form id="paymentForm">
+
 <label>শিক্ষার্থী নির্বাচন</label>
 <select id="paymentStudent" required>
 <option value="">শিক্ষার্থী নির্বাচন করুন</option>
@@ -129,24 +153,55 @@ small{color:#475569}
 <div id="paymentHistory">শিক্ষার্থী ও মাস নির্বাচন করুন।</div>
 </div>
 
+<div class="card" id="receiptPrint" hidden>
+<div class="receipt">
+
+<div class="receipt-head">
+<h2>Dynamic Classroom</h2>
+<p>বেতন জমার রসিদ</p>
+<p id="receiptNumber"></p>
+</div>
+
+<div id="receiptDetails"></div>
+
+<div class="receipt-footer">
+<p>বেতন জমা দেওয়ার জন্য ধন্যবাদ।</p>
+<p><small>এই রসিদটি Dynamic Classroom-এর পেমেন্ট রেকর্ড অনুযায়ী তৈরি।</small></p>
+</div>
+
+<button type="button" onclick="window.print()">রসিদ প্রিন্ট / PDF সংরক্ষণ</button>
+<button type="button" id="closeReceipt">রসিদ বন্ধ করুন</button>
+
+</div>
+</div>
+
 <button id="logout">লগআউট</button>
 </section>
 
 <p id="status" role="status" aria-live="polite"></p>
 <a href="./index.html">মূল ওয়েবসাইটে ফিরে যান</a>
+
 </main>
 
 <script type="module">
-import {initializeApp} from
-"https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
 import {
- getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
-} from
-"https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+ getAuth,
+ signInWithEmailAndPassword,
+ onAuthStateChanged,
+ signOut
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
 import {
- getFirestore,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc
-} from
-"https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+ getFirestore,
+ collection,
+ onSnapshot,
+ addDoc,
+ updateDoc,
+ deleteDoc,
+ doc
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBNwcshjGf5joK2bpzrTdxzNd5juOPwoaQ",
@@ -170,161 +225,288 @@ let stopNotices=null,stopStudents=null,stopPayments=null;
 let students=[],payments=[];
 
 function status(s){$("status").textContent=s}
+
 function stopListeners(){
- [stopNotices,stopStudents,stopPayments].forEach(fn=>{if(fn)fn()});
+ [stopNotices,stopStudents,stopPayments].forEach(fn=>{
+  if(fn)fn();
+ });
  stopNotices=stopStudents=stopPayments=null;
 }
+
 function btn(label,cls,action){
  const b=document.createElement("button");
- b.type="button";b.textContent=label;
+ b.type="button";
+ b.textContent=label;
  if(cls)b.className=cls;
  b.addEventListener("click",action);
  return b;
 }
+
 function currentAdmin(){
  return auth.currentUser&&auth.currentUser.uid===ADMIN_UID;
 }
+
 function money(n){
  return "৳"+Number(n||0).toLocaleString("en-BD");
 }
 
 /* Login */
+
 $("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();status("লগইন হচ্ছে...");
+ e.preventDefault();
+ status("লগইন হচ্ছে...");
  try{
-  await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
- }catch(error){status("লগইন হয়নি। ইমেইল ও পাসওয়ার্ড পরীক্ষা করুন।")}
+  await signInWithEmailAndPassword(
+   auth,
+   $("email").value.trim(),
+   $("password").value
+  );
+ }catch(error){
+  status("লগইন হয়নি। ইমেইল ও পাসওয়ার্ড পরীক্ষা করুন।");
+ }
 });
 
 onAuthStateChanged(auth,user=>{
  stopListeners();
- $("login").hidden=false;$("panel").hidden=true;
- if(!user){status("");return}
+ $("login").hidden=false;
+ $("panel").hidden=true;
+
+ if(!user){
+  status("");
+  return;
+ }
+
  if(user.uid!==ADMIN_UID){
   status("এই অ্যাকাউন্টের অ্যাডমিন অনুমতি নেই।");
-  signOut(auth);return;
+  signOut(auth);
+  return;
  }
- $("login").hidden=true;$("panel").hidden=false;
+
+ $("login").hidden=true;
+ $("panel").hidden=false;
  status("অ্যাডমিন হিসেবে লগইন হয়েছে।");
- loadNotices();loadStudents();loadPayments();
+
+ loadNotices();
+ loadStudents();
+ loadPayments();
 });
 
 /* Notices */
+
 function loadNotices(){
  stopNotices=onSnapshot(collection(db,"Notices"),snap=>{
-  const list=$("noticeList");list.replaceChildren();
-  if(snap.empty){list.textContent="কোনো নোটিশ নেই।";return}
+  const list=$("noticeList");
+  list.replaceChildren();
+
+  if(snap.empty){
+   list.textContent="কোনো নোটিশ নেই।";
+   return;
+  }
+
   snap.forEach(item=>{
-   const d=item.data(),box=document.createElement("div");
+   const d=item.data();
+   const box=document.createElement("div");
    box.className="notice";
-   const h=document.createElement("h3");h.textContent=d.title||"শিরোনাম নেই";
-   const p=document.createElement("p");p.textContent=d.message||"";
-   box.append(h,p,btn("সম্পাদনা","",()=>{
-    editingNoticeId=item.id;
-    $("title").value=d.title||"";$("message").value=d.message||"";
-    $("saveNotice").textContent="পরিবর্তন সংরক্ষণ";
-    $("cancelNotice").hidden=false;
-    window.scrollTo({top:0,behavior:"smooth"});
-   }),btn("মুছুন","del",async()=>{
-    if(!confirm("নোটিশটি মুছবেন?"))return;
-    try{await deleteDoc(doc(db,"Notices",item.id));status("নোটিশ মুছে ফেলা হয়েছে।")}
-    catch(e){status("নোটিশ মুছতে পারেনি।")}
-   }));
+
+   const h=document.createElement("h3");
+   h.textContent=d.title||"শিরোনাম নেই";
+
+   const p=document.createElement("p");
+   p.textContent=d.message||"";
+
+   box.append(
+    h,p,
+    btn("সম্পাদনা","",()=>{
+     editingNoticeId=item.id;
+     $("title").value=d.title||"";
+     $("message").value=d.message||"";
+     $("saveNotice").textContent="পরিবর্তন সংরক্ষণ";
+     $("cancelNotice").hidden=false;
+     window.scrollTo({top:0,behavior:"smooth"});
+    }),
+    btn("মুছুন","del",async()=>{
+     if(!confirm("নোটিশটি মুছবেন?"))return;
+     try{
+      await deleteDoc(doc(db,"Notices",item.id));
+      status("নোটিশ মুছে ফেলা হয়েছে।");
+     }catch(e){
+      status("নোটিশ মুছতে পারেনি।");
+     }
+    })
+   );
+
    list.appendChild(box);
   });
  },e=>status("নোটিশ লোড হয়নি।"));
 }
+
 function resetNotice(){
- editingNoticeId=null;$("noticeForm").reset();
- $("saveNotice").textContent="নোটিশ প্রকাশ";$("cancelNotice").hidden=true;
+ editingNoticeId=null;
+ $("noticeForm").reset();
+ $("saveNotice").textContent="নোটিশ প্রকাশ";
+ $("cancelNotice").hidden=true;
 }
+
 $("cancelNotice").onclick=resetNotice;
+
 $("noticeForm").onsubmit=async e=>{
  e.preventDefault();
- if(!currentAdmin()){status("অ্যাডমিন অনুমতি নেই।");return}
- const title=$("title").value.trim(),message=$("message").value.trim();
+
+ if(!currentAdmin()){
+  status("অ্যাডমিন অনুমতি নেই।");
+  return;
+ }
+
+ const title=$("title").value.trim();
+ const message=$("message").value.trim();
+
  $("saveNotice").disabled=true;
+
  try{
   if(editingNoticeId){
    await updateDoc(doc(db,"Notices",editingNoticeId),{title,message});
   }else{
-   await addDoc(collection(db,"Notices"),{title,message,createdAt:new Date().toISOString()});
+   await addDoc(collection(db,"Notices"),{
+    title,message,createdAt:new Date().toISOString()
+   });
   }
-  resetNotice();status("নোটিশ সংরক্ষণ হয়েছে।");
- }catch(e){status("নোটিশ সংরক্ষণ হয়নি।")}
- finally{$("saveNotice").disabled=false}
+
+  resetNotice();
+  status("নোটিশ সংরক্ষণ হয়েছে।");
+
+ }catch(e){
+  status("নোটিশ সংরক্ষণ হয়নি।");
+ }finally{
+  $("saveNotice").disabled=false;
+ }
 };
 
 /* Students */
+
 function loadStudents(){
  stopStudents=onSnapshot(collection(db,"Students"),snap=>{
   students=snap.docs.map(x=>({docId:x.id,...x.data()}));
-  renderStudents();renderStudentOptions();renderPaymentSummary();
+  renderStudents();
+  renderStudentOptions();
+  renderPaymentSummary();
+  renderPaymentHistory();
  },e=>status("শিক্ষার্থীর তালিকা লোড হয়নি। Firebase Rules পরীক্ষা করুন।"));
 }
+
 function renderStudents(){
- const list=$("studentList");list.replaceChildren();
- if(!students.length){list.textContent="এখনও শিক্ষার্থী যোগ করা হয়নি।";return}
+ const list=$("studentList");
+ list.replaceChildren();
+
+ if(!students.length){
+  list.textContent="এখনও শিক্ষার্থী যোগ করা হয়নি।";
+  return;
+ }
+
  students.forEach(s=>{
-  const box=document.createElement("div");box.className="student";
-  const h=document.createElement("h3");h.textContent=s.name||"নাম নেই";
+  const box=document.createElement("div");
+  box.className="student";
+
+  const h=document.createElement("h3");
+  h.textContent=s.name||"নাম নেই";
+
   const p=document.createElement("p");
   p.textContent=`ID: ${s.studentId||"-"} | শ্রেণি: ${s.className||"-"} | রোল: ${s.roll||"-"}`;
-  const g=document.createElement("p");g.textContent="অভিভাবক: "+(s.guardianPhone||"-");
-  const f=document.createElement("p");f.textContent="মাসিক বেতন: "+money(s.monthlyFee);
-  box.append(h,p,g,f,btn("সম্পাদনা","",()=>{
-   editingStudentDocId=s.docId;
-   $("studentName").value=s.name||"";
-   $("studentId").value=s.studentId||"";
-   $("className").value=String(s.className||"");
-   $("roll").value=s.roll||"";
-   $("guardianPhone").value=s.guardianPhone||"";
-   $("monthlyFee").value=s.monthlyFee??0;
-   $("saveStudent").textContent="পরিবর্তন সংরক্ষণ";
-   $("cancelStudent").hidden=false;
-   window.scrollTo({top:0,behavior:"smooth"});
-  }),btn("মুছুন","del",async()=>{
-   if(!confirm("এই শিক্ষার্থীর প্রোফাইল মুছবেন? তার পেমেন্টের ইতিহাস আলাদাভাবে থেকে যেতে পারে।"))return;
-   try{
-    await deleteDoc(doc(db,"Students",s.docId));
-    status("শিক্ষার্থীর প্রোফাইল মুছে ফেলা হয়েছে।");
-   }catch(e){status("শিক্ষার্থীর তথ্য মুছতে পারেনি।")}
-  }));
+
+  const g=document.createElement("p");
+  g.textContent="অভিভাবক: "+(s.guardianPhone||"-");
+
+  const f=document.createElement("p");
+  f.textContent="মাসিক বেতন: "+money(s.monthlyFee);
+
+  box.append(
+   h,p,g,f,
+   btn("সম্পাদনা","",()=>{
+    editingStudentDocId=s.docId;
+    $("studentName").value=s.name||"";
+    $("studentId").value=s.studentId||"";
+    $("className").value=String(s.className||"");
+    $("roll").value=s.roll||"";
+    $("guardianPhone").value=s.guardianPhone||"";
+    $("monthlyFee").value=s.monthlyFee??0;
+    $("saveStudent").textContent="পরিবর্তন সংরক্ষণ";
+    $("cancelStudent").hidden=false;
+    window.scrollTo({top:0,behavior:"smooth"});
+   }),
+   btn("মুছুন","del",async()=>{
+    if(!confirm("এই শিক্ষার্থীর প্রোফাইল মুছবেন? তার পেমেন্টের ইতিহাস থেকে যেতে পারে।"))return;
+    try{
+     await deleteDoc(doc(db,"Students",s.docId));
+     status("শিক্ষার্থীর প্রোফাইল মুছে ফেলা হয়েছে।");
+    }catch(e){
+     status("শিক্ষার্থীর তথ্য মুছতে পারেনি।");
+    }
+   })
+  );
+
   list.appendChild(box);
  });
 }
+
 function renderStudentOptions(){
- const select=$("paymentStudent"),old=select.value;
+ const select=$("paymentStudent");
+ const old=select.value;
+
  select.replaceChildren();
+
  const placeholder=document.createElement("option");
- placeholder.value="";placeholder.textContent="শিক্ষার্থী নির্বাচন করুন";
+ placeholder.value="";
+ placeholder.textContent="শিক্ষার্থী নির্বাচন করুন";
  select.appendChild(placeholder);
+
  students.forEach(s=>{
   const o=document.createElement("option");
-  o.value=s.docId;o.textContent=`${s.name} — ${s.studentId||"ID নেই"}`;
+  o.value=s.docId;
+  o.textContent=`${s.name} — ${s.studentId||"ID নেই"}`;
   select.appendChild(o);
  });
- if(students.some(s=>s.docId===old))select.value=old;
+
+ if(students.some(s=>s.docId===old)){
+  select.value=old;
+ }
 }
+
 function resetStudent(){
- editingStudentDocId=null;$("studentForm").reset();
- $("saveStudent").textContent="শিক্ষার্থী সংরক্ষণ";$("cancelStudent").hidden=true;
+ editingStudentDocId=null;
+ $("studentForm").reset();
+ $("saveStudent").textContent="শিক্ষার্থী সংরক্ষণ";
+ $("cancelStudent").hidden=true;
 }
+
 $("cancelStudent").onclick=resetStudent;
+
 $("studentForm").onsubmit=async e=>{
  e.preventDefault();
- if(!currentAdmin()){status("অ্যাডমিন অনুমতি নেই।");return}
+
+ if(!currentAdmin()){
+  status("অ্যাডমিন অনুমতি নেই।");
+  return;
+ }
+
  const fee=Number($("monthlyFee").value);
- if(!Number.isFinite(fee)||fee<0){status("বেতন সঠিকভাবে লিখুন।");return}
+
+ if(!Number.isFinite(fee)||fee<0){
+  status("বেতন সঠিকভাবে লিখুন।");
+  return;
+ }
+
  const data={
   name:$("studentName").value.trim(),
   studentId:$("studentId").value.trim(),
   className:$("className").value,
   roll:$("roll").value.trim(),
   guardianPhone:$("guardianPhone").value.trim(),
-  monthlyFee:fee,active:true,updatedAt:new Date().toISOString()
+  monthlyFee:fee,
+  active:true,
+  updatedAt:new Date().toISOString()
  };
+
  $("saveStudent").disabled=true;
+
  try{
   if(editingStudentDocId){
    await updateDoc(doc(db,"Students",editingStudentDocId),data);
@@ -332,39 +514,59 @@ $("studentForm").onsubmit=async e=>{
    data.createdAt=new Date().toISOString();
    await addDoc(collection(db,"Students"),data);
   }
-  resetStudent();status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়েছে।");
- }catch(e){status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।")}
- finally{$("saveStudent").disabled=false}
+
+  resetStudent();
+  status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়েছে।");
+
+ }catch(e){
+  status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।");
+ }finally{
+  $("saveStudent").disabled=false;
+ }
 };
 
 /* Payment records */
+
 function loadPayments(){
  stopPayments=onSnapshot(collection(db,"Payments"),snap=>{
   payments=snap.docs.map(x=>({docId:x.id,...x.data()}));
-  renderPaymentSummary();renderPaymentHistory();
+  renderPaymentSummary();
+  renderPaymentHistory();
  },e=>status("পেমেন্ট লোড হয়নি। Firebase Rules পরীক্ষা করুন।"));
 }
 
 function chosenStudent(){
  return students.find(s=>s.docId===$("paymentStudent").value);
 }
+
 function matchingPayments(){
- const student=chosenStudent(),month=$("paymentMonth").value;
+ const student=chosenStudent();
+ const month=$("paymentMonth").value;
+
  if(!student||!month)return [];
- return payments.filter(p=>p.studentDocId===student.docId&&p.month===month);
+
+ return payments.filter(p=>
+  p.studentDocId===student.docId&&p.month===month
+ );
 }
+
 function renderPaymentSummary(){
- const student=chosenStudent(),month=$("paymentMonth").value;
+ const student=chosenStudent();
+ const month=$("paymentMonth").value;
  const box=$("paymentSummary");
+
  if(!student||!month){
   box.textContent="হিসাব দেখতে শিক্ষার্থী ও মাস নির্বাচন করুন।";
   return;
  }
+
  const records=matchingPayments();
  const paid=records.reduce((sum,p)=>sum+Number(p.amountPaid||0),0);
  const fee=Number(student.monthlyFee||0);
  const due=Math.max(0,fee-paid);
+
  box.replaceChildren();
+
  [
   ["শিক্ষার্থী",student.name],
   ["মাস",month],
@@ -376,82 +578,230 @@ function renderPaymentSummary(){
   p.textContent=label+": "+value;
   box.appendChild(p);
  });
+
  if(paid>fee){
   const warn=document.createElement("p");
   warn.textContent="সতর্কতা: জমার অঙ্ক মাসিক বেতনের চেয়ে বেশি। হিসাব যাচাই করুন।";
   box.appendChild(warn);
  }
 }
+
+/* Receipt */
+
+function renderReceipt(p){
+ const student=students.find(s=>s.docId===p.studentDocId);
+ const fee=Number(student?.monthlyFee||0);
+
+ const records=payments
+  .filter(x=>x.studentDocId===p.studentDocId&&x.month===p.month)
+  .sort((a,b)=>(a.createdAt||"").localeCompare(b.createdAt||""));
+
+ const index=records.findIndex(x=>x.docId===p.docId);
+
+ const calculatedTotal=records
+  .slice(0,index>=0?index+1:records.length)
+  .reduce((sum,x)=>sum+Number(x.amountPaid||0),0);
+
+ const total=p.totalPaidAfter!=null
+  ?Number(p.totalPaidAfter)
+  :calculatedTotal;
+
+ const due=p.dueAfter!=null
+  ?Number(p.dueAfter)
+  :Math.max(0,fee-total);
+
+ const receiptNo="DC-"+String(p.month||"").replace("-","")+"-"+
+  String(p.docId||"").slice(-8).toUpperCase();
+
+ $("receiptNumber").textContent="রসিদ নম্বর: "+receiptNo;
+
+ const details=$("receiptDetails");
+ details.replaceChildren();
+
+ const rows=[
+  ["শিক্ষার্থীর নাম",p.studentName||student?.name||"-"],
+  ["Student ID",p.studentId||student?.studentId||"-"],
+  ["শ্রেণি",student?.className||"-"],
+  ["রোল",student?.roll||"-"],
+  ["বেতনের মাস",p.month||"-"],
+  ["জমার তারিখ",p.paymentDate||"-"],
+  ["পেমেন্টের মাধ্যম",p.method||"-"],
+  ["এই কিস্তিতে জমা",money(p.amountPaid)],
+  ["মাসিক বেতন",money(fee)],
+  ["এই জমাসহ মোট জমা",money(total)],
+  ["বর্তমান বকেয়া",money(due)],
+  ["Transaction ID",p.transactionRef||"প্রযোজ্য নয়"]
+ ];
+
+ rows.forEach(([label,value],i)=>{
+  const row=document.createElement("div");
+  row.className="receipt-row"+(i===7?" receipt-total":"");
+
+  const left=document.createElement("span");
+  left.textContent=label;
+
+  const right=document.createElement("span");
+  right.textContent=String(value);
+
+  row.append(left,right);
+  details.appendChild(row);
+ });
+
+ $("receiptPrint").hidden=false;
+ $("receiptPrint").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+$("closeReceipt").onclick=()=>{
+ $("receiptPrint").hidden=true;
+};
+
 function renderPaymentHistory(){
- const box=$("paymentHistory");box.replaceChildren();
- const records=matchingPayments().sort((a,b)=>(b.paymentDate||"").localeCompare(a.paymentDate||""));
- if(!chosenStudent()||!$("paymentMonth").value){
-  box.textContent="শিক্ষার্থী ও মাস নির্বাচন করুন।";return;
+ const box=$("paymentHistory");
+ box.replaceChildren();
+
+ const student=chosenStudent();
+ const month=$("paymentMonth").value;
+
+ if(!student||!month){
+  box.textContent="শিক্ষার্থী ও মাস নির্বাচন করুন।";
+  return;
  }
- if(!records.length){box.textContent="এই মাসে কোনো জমার রেকর্ড নেই।";return}
+
+ const records=matchingPayments().sort((a,b)=>
+  (b.paymentDate||"").localeCompare(a.paymentDate||"")||
+  (b.createdAt||"").localeCompare(a.createdAt||"")
+ );
+
+ if(!records.length){
+  box.textContent="এই মাসে কোনো জমার রেকর্ড নেই।";
+  return;
+ }
+
  records.forEach(p=>{
-  const item=document.createElement("div");item.className="payment";
+  const item=document.createElement("div");
+  item.className="payment";
+
   const h=document.createElement("strong");
   h.textContent=money(p.amountPaid)+" — "+(p.method||"মাধ্যম উল্লেখ নেই");
+
   const detail=document.createElement("p");
   detail.textContent="তারিখ: "+(p.paymentDate||"-")+" | মাস: "+(p.month||"-");
+
   item.append(h,detail);
+
   if(p.transactionRef){
    const ref=document.createElement("p");
    ref.textContent="Transaction ID: "+p.transactionRef;
    item.appendChild(ref);
   }
+
+  item.appendChild(btn("রসিদ দেখুন / প্রিন্ট","",()=>{
+   renderReceipt(p);
+  }));
+
   box.appendChild(item);
  });
 }
-$("paymentStudent").onchange=()=>{renderPaymentSummary();renderPaymentHistory()};
-$("paymentMonth").onchange=()=>{renderPaymentSummary();renderPaymentHistory()};
+
+$("paymentStudent").onchange=()=>{
+ renderPaymentSummary();
+ renderPaymentHistory();
+};
+
+$("paymentMonth").onchange=()=>{
+ renderPaymentSummary();
+ renderPaymentHistory();
+};
+
+/* Default date */
 
 const now=new Date();
+
 $("paymentMonth").value=
  now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
+
 $("paymentDate").value=
- now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+ now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+
+ String(now.getDate()).padStart(2,"0");
+
+/* Save payment and show receipt */
 
 $("paymentForm").onsubmit=async e=>{
  e.preventDefault();
- if(!currentAdmin()){status("অ্যাডমিন অনুমতি নেই।");return}
- const student=chosenStudent(),month=$("paymentMonth").value;
- const amount=Number($("amountPaid").value);
- if(!student||!month){status("শিক্ষার্থী ও মাস নির্বাচন করুন।");return}
- if(!Number.isSafeInteger(amount)||amount<=0){
-  status("জমার পরিমাণ পূর্ণ টাকা হিসেবে লিখুন।");return
+
+ if(!currentAdmin()){
+  status("অ্যাডমিন অনুমতি নেই।");
+  return;
  }
- if(!$("paymentDate").value){status("জমার তারিখ দিন।");return}
+
+ const student=chosenStudent();
+ const month=$("paymentMonth").value;
+ const amount=Number($("amountPaid").value);
+ const paymentDate=$("paymentDate").value;
+ const method=$("paymentMethod").value;
+ const transactionRef=$("transactionRef").value.trim();
+
+ if(!student||!month){
+  status("শিক্ষার্থী ও মাস নির্বাচন করুন।");
+  return;
+ }
+
+ if(!Number.isSafeInteger(amount)||amount<=0){
+  status("জমার পরিমাণ পূর্ণ টাকা হিসেবে লিখুন।");
+  return;
+ }
+
+ if(!paymentDate){
+  status("জমার তারিখ দিন।");
+  return;
+ }
 
  const existing=matchingPayments();
  const paid=existing.reduce((sum,p)=>sum+Number(p.amountPaid||0),0);
  const fee=Number(student.monthlyFee||0);
  const due=fee-paid;
 
- if(due<=0){status("এই মাসের বেতন ইতিমধ্যে পরিশোধ হয়েছে।");return}
+ if(due<=0){
+  status("এই মাসের বেতন ইতিমধ্যে পরিশোধ হয়েছে।");
+  return;
+ }
+
  if(amount>due){
-  status("জমার পরিমাণ বকেয়ার চেয়ে বেশি। বকেয়া "+money(due));return
+  status("জমার পরিমাণ বকেয়ার চেয়ে বেশি। বকেয়া "+money(due));
+  return;
  }
 
  $("savePayment").disabled=true;
+
  try{
-  await addDoc(collection(db,"Payments"),{
+  const paymentData={
    studentDocId:student.docId,
    studentUid:"",
    studentId:student.studentId||"",
    studentName:student.name||"",
-   month,
+   month:month,
    year:Number(month.slice(0,4)),
    amountPaid:amount,
-   paymentDate:$("paymentDate").value,
-   method:$("paymentMethod").value,
-   transactionRef:$("transactionRef").value.trim(),
+   paymentDate:paymentDate,
+   method:method,
+   transactionRef:transactionRef,
+   totalPaidAfter:paid+amount,
+   dueAfter:Math.max(0,fee-paid-amount),
    createdAt:new Date().toISOString()
-  });
+  };
+
+  const paymentRef=await addDoc(collection(db,"Payments"),paymentData);
+
   $("amountPaid").value="";
   $("transactionRef").value="";
-  status("পেমেন্ট রেকর্ড সংরক্ষণ হয়েছে।");
+
+  status("পেমেন্ট সংরক্ষণ হয়েছে। রসিদ তৈরি করা হয়েছে।");
+
+  renderReceipt({
+   ...paymentData,
+   docId:paymentRef.id
+  });
+
  }catch(e){
   status("পেমেন্ট সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।");
  }finally{
