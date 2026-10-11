@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dynamic Classroom Admin</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f1f5f9;margin:0;color:#1e293b}
+header{background:#123c69;color:white;text-align:center;padding:20px}
+main{max-width:650px;margin:20px auto;padding:15px}
+.card{background:white;padding:20px;margin-bottom:18px;border-radius:10px;box-shadow:0 2px 8px #0001}
+input,textarea{box-sizing:border-box;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #ccc;border-radius:6px;font:inherit}
+textarea{min-height:100px}
+button{background:#123c69;color:white;border:0;padding:11px 15px;border-radius:6px;margin:4px;cursor:pointer}
+.del{background:#b91c1c}
+.notice{border:1px solid #ddd;padding:12px;margin:12px 0;border-radius:8px;overflow-wrap:anywhere}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+<h1>Dynamic Classroom</h1>
+<p>অ্যাডমিন প্যানেল</p>
+</header>
+<main>
+<section class="card" id="login">
+<h2>অ্যাডমিন লগইন</h2>
+<form id="loginForm">
+<label>ইমেইল</label>
+<input id="email" type="email" required autocomplete="username">
+<label>পাসওয়ার্ড</label>
+<input id="password" type="password" required autocomplete="current-password">
+<button type="submit">লগইন</button>
+</form>
+</section>
+
+<section id="panel" hidden>
+<div class="card">
+<h2>নোটিশ প্রকাশ করুন</h2>
+<form id="noticeForm">
+<label>শিরোনাম</label>
+<input id="title" required maxlength="150">
+<label>বিবরণ</label>
+<textarea id="message" required maxlength="10000"></textarea>
+<button id="save" type="submit">নোটিশ প্রকাশ</button>
+<button id="cancel" type="button" hidden>সম্পাদনা বাতিল</button>
+</form>
+</div>
+<div class="card">
+<h2>প্রকাশিত নোটিশ</h2>
+<div id="list">লোড হচ্ছে...</div>
+</div>
+<button id="logout">লগআউট</button>
+</section>
+<p id="status" role="status"></p>
+<a href="./index.html">মূল ওয়েবসাইটে ফিরে যান</a>
+</main>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+import{getFirestore,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc}from"https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyBNwcshjGf5joK2bpzrTdxzNd5juOPwoaQ",
+authDomain:"dynamic-classroom.firebaseapp.com",
+projectId:"dynamic-classroom",
+storageBucket:"dynamic-classroom.firebasestorage.app",
+messagingSenderId:"911104617826",
+appId:"1:911104617826:web:dab7751b928fc6f946103b",
+measurementId:"G-39ZTSYEPNB"
+};
+
+const ADMIN_UID="pypHsESFjka54eeQiM7VYQ029hI3";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const $=id=>document.getElementById(id);
+let editingId=null,unsubscribe=null;
+
+function status(text){$("status").textContent=text}
+function stop(){if(unsubscribe)unsubscribe();unsubscribe=null}
+
+$("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();status("লগইন হচ্ছে...");
+try{
+await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
+}catch(error){status("লগইন ব্যর্থ। ইমেইল, পাসওয়ার্ড ও Firebase Authentication পরীক্ষা করুন।")}
+});
+
+onAuthStateChanged(auth,user=>{
+stop();$("login").hidden=false;$("panel").hidden=true;
+if(!user){status("");return}
+if(user.uid!==ADMIN_UID){
+status("এই অ্যাকাউন্টের অ্যাডমিন অনুমতি নেই।");
+signOut(auth);return
+}
+$("login").hidden=true;$("panel").hidden=false;
+status("অ্যাডমিন হিসেবে লগইন হয়েছে।");
+unsubscribe=onSnapshot(collection(db,"Notices"),snapshot=>{
+$("list").replaceChildren();
+if(snapshot.empty){$("list").textContent="কোনো নোটিশ নেই।";return}
+snapshot.forEach(item=>{
+const data=item.data(),box=document.createElement("div");
+box.className="notice";
+const h=document.createElement("h3");h.textContent=data.title||"শিরোনাম নেই";
+const p=document.createElement("p");p.textContent=data.message||"";
+const edit=document.createElement("button");edit.textContent="সম্পাদনা";
+edit.onclick=()=>{
+editingId=item.id;$("title").value=data.title||"";
+$("message").value=data.message||"";$("save").textContent="পরিবর্তন সংরক্ষণ";
+$("cancel").hidden=false;window.scrollTo({top:0,behavior:"smooth"});
+};
+const del=document.createElement("button");del.textContent="মুছুন";del.className="del";
+del.onclick=async()=>{
+if(!confirm("এই নোটিশ মুছবেন?"))return;
+try{await deleteDoc(doc(db,"Notices",item.id));status("নোটিশ মুছে ফেলা হয়েছে।")}
+catch(error){status("মুছতে পারেনি। Firebase Rules পরীক্ষা করুন।")}
+};
+box.append(h,p,edit,del);$("list").appendChild(box);
+});
+},error=>status("নোটিশ লোড হয়নি। Firebase Rules পরীক্ষা করুন।"));
+});
+
+$("noticeForm").addEventListener("submit",async e=>{
+e.preventDefault();
+if(!auth.currentUser||auth.currentUser.uid!==ADMIN_UID){
+status("অ্যাডমিন অনুমতি নেই।");return
+}
+const title=$("title").value.trim(),message=$("message").value.trim();
+if(!title||!message){status("শিরোনাম ও বিবরণ লিখুন।");return}
+$("save").disabled=true;
+try{
+if(editingId){
+await updateDoc(doc(db,"Notices",editingId),{title,message});
+status("নোটিশ পরিবর্তন করা হয়েছে।");
+}else{
+await addDoc(collection(db,"Notices"),{title,message,createdAt:new Date().toISOString()});
+status("নোটিশ প্রকাশ হয়েছে।");
+}
+$("noticeForm").reset();editingId=null;
+$("save").textContent="নোটিশ প্রকাশ";$("cancel").hidden=true;
+}catch(error){status("সংরক্ষণ হয়নি। অ্যাডমিন UID ও Firebase Rules পরীক্ষা করুন।")}
+finally{$("save").disabled=false}
+});
+
+$("cancel").onclick=()=>{
+editingId=null;$("noticeForm").reset();
+$("save").textContent="নোটিশ প্রকাশ";$("cancel").hidden=true;status("");
+};
+$("logout").onclick=()=>signOut(auth);
+</script>
+</body>
+</html>
