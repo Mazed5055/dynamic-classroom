@@ -27,7 +27,7 @@
     }
     nav a {
       color: white;
-      margin: 0 10px;
+      margin: 0 8px;
       text-decoration: none;
     }
     .hero {
@@ -63,6 +63,16 @@
     }
     h2, h3 { color: #123c69; }
     section { margin-bottom: 30px; }
+    .notice {
+      background: white;
+      padding: 16px;
+      margin: 12px 0;
+      border-left: 4px solid #123c69;
+      border-radius: 6px;
+      overflow-wrap: anywhere;
+    }
+    .notice h3 { margin-top: 0; }
+    #noticeStatus { color: #475569; }
     footer {
       background: #0b2545;
       color: white;
@@ -79,6 +89,7 @@
 
   <nav>
     <a href="#home">হোম</a>
+    <a href="#notices">নোটিশ</a>
     <a href="#courses">কোর্স</a>
     <a href="#about">আমাদের সম্পর্কে</a>
     <a href="#contact">যোগাযোগ</a>
@@ -91,6 +102,12 @@
   </div>
 
   <main>
+    <section id="notices">
+      <h2>📢 নোটিশ বোর্ড</h2>
+      <p id="noticeStatus">নোটিশ লোড হচ্ছে...</p>
+      <div id="noticeList"></div>
+    </section>
+
     <section id="courses">
       <h2>আমাদের শিক্ষা কার্যক্রম</h2>
       <div class="cards">
@@ -125,5 +142,67 @@
     <p>© 2026 Dynamic Classroom</p>
     <p>শিক্ষাই শক্তি, শিক্ষাই সম্ভাবনা।</p>
   </footer>
+
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+      getFirestore,
+      collection,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNwcshjGf5joK2bpzrTdxzNd5juOPwoaQ",
+      authDomain: "dynamic-classroom.firebaseapp.com",
+      projectId: "dynamic-classroom",
+      storageBucket: "dynamic-classroom.firebasestorage.app",
+      messagingSenderId: "911104617826",
+      appId: "1:911104617826:web:dab7751b928fc6f946103b",
+      measurementId: "G-39ZTSYEPNB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const noticeList = document.getElementById("noticeList");
+    const noticeStatus = document.getElementById("noticeStatus");
+
+    onSnapshot(
+      collection(db, "Notices"),
+      (snapshot) => {
+        noticeList.replaceChildren();
+
+        if (snapshot.empty) {
+          noticeStatus.textContent = "এখনো কোনো নোটিশ প্রকাশ করা হয়নি।";
+          return;
+        }
+
+        snapshot.forEach((documentSnapshot) => {
+          const data = documentSnapshot.data();
+          const article = document.createElement("article");
+          article.className = "notice";
+
+          const title = document.createElement("h3");
+          title.textContent = data.title || "নোটিশ";
+
+          const message = document.createElement("p");
+          message.textContent =
+            data.message || "এই নোটিশে কোনো বিবরণ নেই।";
+
+          article.append(title, message);
+          noticeList.appendChild(article);
+        });
+
+        noticeStatus.textContent = "সর্বশেষ নোটিশসমূহ";
+      },
+      (error) => {
+        console.error("Notice loading error:", error);
+        noticeStatus.textContent =
+          "নোটিশ লোড করা যায়নি। Firebase-এর নিরাপত্তা নিয়ম পরীক্ষা করতে হবে।";
+      }
+    );
+  </script>
 </body>
 </html>
