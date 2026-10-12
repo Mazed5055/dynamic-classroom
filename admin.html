@@ -113,6 +113,25 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
 .loading i{font-size:1.5rem;color:var(--primary);margin-bottom:8px;display:block;animation:spin 1s linear infinite}
 @keyframes spin{100%{transform:rotate(360deg)}}
 
+/* WhatsApp Button */
+.btn-wa{
+  background:#25D366;
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  font-size:.8rem;
+  border-radius:7px;
+  cursor:pointer;
+  font-family:inherit;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  transition:.2s;
+}
+.btn-wa:hover{background:#1da851;transform:translateY(-1px);}
+.btn-wa i{font-size:.9rem;}
+
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
@@ -210,7 +229,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
     <div class="page active" id="page-dashboard">
       <div class="stat-grid">
         <div class="stat-box"><div class="ic blue"><i class="fa-solid fa-user-graduate"></i></div><div><h3 id="sStudents">0</h3><p>মোট শিক্ষার্থী</p></div></div>
-        <div class="stat-box"><div class="ic green"><i class="fa-solid fa-money-bill"></i></div><div><h3 id="sIncome">0</h3><p>মাসিক আয় (৳)</p></div></div>
+        <div class="stat-box"><div class="ic green"><i class="fa-solid fa-money-bill"></i></div><div><h3 id="sIncome">0</h3><p>মোট আয় (৳)</p></div></div>
         <div class="stat-box"><div class="ic orange"><i class="fa-solid fa-bullhorn"></i></div><div><h3 id="sNotice">0</h3><p>নোটিশ</p></div></div>
         <div class="stat-box"><div class="ic purple"><i class="fa-solid fa-book"></i></div><div><h3 id="sCourse">0</h3><p>কোর্স</p></div></div>
       </div>
@@ -283,7 +302,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
             <option value="১২শ">দ্বাদশ শ্রেণি</option>
           </select>
 
-          <input type="tel" id="stPhone" placeholder="মোবাইল নম্বর" required>
+          <input type="tel" id="stPhone" placeholder="মোবাইল নম্বর (WhatsApp-এ স্লিপ পাঠাতে এটাই ব্যবহার হবে)" required>
 
           <select id="stBatch" required>
             <option value="">বাচ নির্বাচন করুন</option>
@@ -311,24 +330,68 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
     <!-- PAYMENT -->
     <div class="page" id="page-payment">
       <div class="card">
-        <div class="card-head"><h3>💳 ফি পরিশোধ</h3></div>
+        <div class="card-head"><h3>💳 নতুন পেমেন্ট এন্ট্রি</h3></div>
         <form class="form-grid" onsubmit="addPayment(event)">
-          <input type="text" id="pStudent" placeholder="শিক্ষার্থীর নাম" required>
-          <input type="text" id="pAmount" placeholder="পরিমাণ (৳)" required>
-          <select id="pMethod"><option>বিকাশ</option><option>নগদ</option><option>রকেট</option><option>ক্যাশ</option></select>
-          <input type="text" id="pMonth" placeholder="মাস" required>
-          <button type="submit"><i class="fa-solid fa-plus"></i> রেকর্ড করুন</button>
+
+          <select id="pStudent" required>
+            <option value="">শিক্ষার্থী নির্বাচন করুন</option>
+          </select>
+
+          <select id="pMonth" required>
+            <option value="">মাস নির্বাচন করুন</option>
+            <option value="জানুয়ারি">জানুয়ারি</option>
+            <option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option>
+            <option value="মার্চ">মার্চ</option>
+            <option value="এপ্রিল">এপ্রিল</option>
+            <option value="মে">মে</option>
+            <option value="জুন">জুন</option>
+            <option value="জুলাই">জুলাই</option>
+            <option value="আগস্ট">আগস্ট</option>
+            <option value="সেপ্টেম্বর">সেপ্টেম্বর</option>
+            <option value="অক্টোবর">অক্টোবর</option>
+            <option value="নভেম্বর">নভেম্বর</option>
+            <option value="ডিসেম্বর">ডিসেম্বর</option>
+          </select>
+
+          <input type="number" id="pAmount" placeholder="পরিমাণ (৳)" required min="1">
+
+          <select id="pMethod" required>
+            <option value="">মাধ্যম নির্বাচন করুন</option>
+            <option value="বিকাশ">বিকাশ</option>
+            <option value="নগদ">নগদ</option>
+            <option value="রকেট">রকেট</option>
+            <option value="ক্যাশ">ক্যাশ</option>
+          </select>
+
+          <input type="text" id="pNote" placeholder="নোট (ঐচ্ছিক)" class="full">
+
+          <button type="submit"><i class="fa-solid fa-plus"></i> পেমেন্ট সেভ করুন</button>
         </form>
       </div>
+
       <div class="card">
-        <div class="card-head"><h3>📊 পেমেন্ট হিস্ট্রি</h3></div>
-        <div class="table-wrap"><table id="paymentTable">
-          <tr><th>শিক্ষার্থী</th><th>পরিমাণ</th><th>মাধ্যম</th><th>মাস</th><th>স্ট্যাটাস</th></tr>
-        </table></div>
+        <div class="card-head">
+          <h3>📊 পেমেন্ট হিস্ট্রি</h3>
+          <button onclick="renderPayments()" style="background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-family:inherit">
+            <i class="fa-solid fa-rotate"></i> রিফ্রেশ
+          </button>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="pSearch" placeholder="🔍 শিক্ষার্থী, মাস বা মাধ্যম..." onkeyup="renderPayments()">
+        </div>
+        <div class="table-wrap">
+          <table id="paymentTable">
+            <tr>
+              <th>আইডি</th><th>শিক্ষার্থী</th><th>মাস</th>
+              <th>পরিমাণ</th><th>মাধ্যম</th><th>তারিখ</th>
+              <th>WhatsApp</th><th>অ্যাকশন</th>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- ============ RESULT (নতুন সিস্টেম) ============ -->
+    <!-- RESULT -->
     <div class="page" id="page-result">
       <div class="card">
         <div class="card-head"><h3>📝 নতুন রেজাল্ট এন্ট্রি</h3></div>
@@ -583,12 +646,12 @@ function showPage(id,el){
   document.getElementById('pageTitle').textContent=t[id];
   document.getElementById('sidebar').classList.remove('open');
 
-  // পেজ অনুযায়ী ডেটা লোড
   if(id==='student'){ renderStudents(); }
   if(id==='result'){ loadStudentDropdown(); renderResults(); }
+  if(id==='payment'){ loadPaymentStudentDropdown(); renderPayments(); }
 }
 
-/* ============ STUDENT (Firebase) ============ */
+/* ============ STUDENT ============ */
 async function addStudent(e){
   e.preventDefault();
   var name=document.getElementById('stName').value.trim();
@@ -682,7 +745,179 @@ async function deleteStudent(fireId){
   }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
 }
 
-/* ============ RESULT (নতুন সিস্টেম) ============ */
+/* ============ PAYMENT (Firebase + WhatsApp) ============ */
+async function loadPaymentStudentDropdown(){
+  var sel=document.getElementById('pStudent');
+  if(!sel) return;
+  var cur=sel.value;
+  sel.innerHTML='<option value="">শিক্ষার্থী নির্বাচন করুন</option>';
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Students'));
+    var list=[];
+    snap.forEach(function(d){list.push(d.data());});
+    list.sort(function(a,b){return (a.studentId||'').localeCompare(b.studentId||'');});
+    list.forEach(function(s){
+      var op=document.createElement('option');
+      op.value=s.studentId;
+      op.textContent=s.studentId+' — '+s.name+' ('+s.className+')';
+      op.dataset.name=s.name;
+      op.dataset.cls=s.className;
+      op.dataset.phone=s.phone||'';
+      op.dataset.batch=s.batch||'';
+      sel.appendChild(op);
+    });
+    if(cur) sel.value=cur;
+  }catch(err){console.error(err);}
+}
+
+async function addPayment(e){
+  e.preventDefault();
+  var sel=document.getElementById('pStudent');
+  var studentId=sel.value;
+  if(!studentId){alert('⚠️ শিক্ষার্থী নির্বাচন করুন');return;}
+
+  var studentName=sel.options[sel.selectedIndex].dataset.name||'';
+  var studentCls=sel.options[sel.selectedIndex].dataset.cls||'';
+  var studentPhone=sel.options[sel.selectedIndex].dataset.phone||'';
+  var month=document.getElementById('pMonth').value;
+  var amount=parseInt(document.getElementById('pAmount').value);
+  var method=document.getElementById('pMethod').value;
+  var note=document.getElementById('pNote').value.trim();
+
+  if(!month){alert('⚠️ মাস নির্বাচন করুন');return;}
+  if(isNaN(amount)||amount<=0){alert('⚠️ সঠিক পরিমাণ দিন');return;}
+  if(!method){alert('⚠️ মাধ্যম নির্বাচন করুন');return;}
+
+  try{
+    await window.fbAddDoc(window.fbCollection(window.db,'Payments'),{
+      studentId:studentId,
+      studentName:studentName,
+      className:studentCls,
+      phone:studentPhone,
+      month:month,
+      amount:amount,
+      method:method,
+      note:note,
+      status:'পরিশোধিত',
+      date:new Date().toLocaleDateString('bn-BD'),
+      createdAt:new Date().toISOString()
+    });
+
+    e.target.reset();
+    await renderPayments();
+    loadStats();
+
+    alert('✅ পেমেন্ট সেভ হয়েছে!\n\n'+studentName+'\n'+month+' — ৳'+amount+'\n\nএখন WhatsApp স্লিপ পাঠাতে পারবেন।');
+  }catch(err){
+    alert('❌ সমস্যা: '+err.message);
+    console.error(err);
+  }
+}
+
+async function renderPayments(){
+  var t=document.getElementById('paymentTable');
+  t.innerHTML='<tr><td colspan="8" class="loading"><i class="fa-solid fa-spinner"></i>লোড হচ্ছে...</td></tr>';
+
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Payments'));
+    var list=[];
+    snap.forEach(function(d){list.push({fireId:d.id,...d.data()});});
+
+    var q=(document.getElementById('pSearch')?.value||'').toLowerCase();
+    if(q){
+      list=list.filter(function(p){
+        return (p.studentName||'').toLowerCase().indexOf(q)>-1 ||
+               (p.studentId||'').toLowerCase().indexOf(q)>-1 ||
+               (p.month||'').toLowerCase().indexOf(q)>-1 ||
+               (p.method||'').toLowerCase().indexOf(q)>-1;
+      });
+    }
+
+    list.sort(function(a,b){
+      return (b.createdAt||'').localeCompare(a.createdAt||'');
+    });
+
+    t.innerHTML='<tr>'+
+      '<th>আইডি</th><th>শিক্ষার্থী</th><th>মাস</th>'+
+      '<th>পরিমাণ</th><th>মাধ্যম</th><th>তারিখ</th>'+
+      '<th>WhatsApp</th><th>অ্যাকশন</th>'+
+    '</tr>';
+
+    if(list.length===0){
+      t.innerHTML+='<tr><td colspan="8" class="empty-msg">এখনো কোনো পেমেন্ট নেই</td></tr>';
+      return;
+    }
+
+    list.forEach(function(p){
+      t.innerHTML+='<tr>'+
+        '<td><strong>'+p.studentId+'</strong></td>'+
+        '<td>'+p.studentName+'</td>'+
+        '<td>'+p.month+'</td>'+
+        '<td><b>৳'+p.amount+'</b></td>'+
+        '<td><span class="badge blue">'+p.method+'</span></td>'+
+        '<td>'+p.date+'</td>'+
+        '<td><button class="btn-wa" onclick="sendWhatsAppSlip(\''+p.fireId+'\')"><i class="fa-brands fa-whatsapp"></i> স্লিপ</button></td>'+
+        '<td><button class="btn-red" onclick="deletePayment(\''+p.fireId+'\')"><i class="fa-solid fa-trash"></i></button></td>'+
+      '</tr>';
+    });
+  }catch(err){
+    t.innerHTML='<tr><td colspan="8" class="empty-msg">❌ লোড ব্যর্থ: '+err.message+'</td></tr>';
+    console.error(err);
+  }
+}
+
+async function sendWhatsAppSlip(fireId){
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Payments'));
+    var payment=null;
+    snap.forEach(function(d){ if(d.id===fireId) payment=d.data(); });
+
+    if(!payment){alert('❌ পেমেন্ট পাওয়া যায়নি');return;}
+
+    var rawPhone=(payment.phone||'').replace(/\D/g,'');
+    if(!rawPhone){alert('⚠️ শিক্ষার্থীর মোবাইল নম্বর নেই');return;}
+
+    if(rawPhone.startsWith('880')) { }
+    else if(rawPhone.startsWith('0')) { rawPhone='88'+rawPhone; }
+    else { rawPhone='880'+rawPhone; }
+
+    var msg='';
+    msg+='🔔 *Dynamic Classroom*\n';
+    msg+='━━━━━━━━━━━━━━━\n';
+    msg+='🎓 *পেমেন্ট স্লিপ*\n';
+    msg+='━━━━━━━━━━━━━━━\n';
+    msg+='👤 শিক্ষার্থী: '+payment.studentName+'\n';
+    msg+='🆔 আইডি: '+payment.studentId+'\n';
+    msg+='📚 শ্রেণি: '+(payment.className||'—')+'\n';
+    msg+='📅 মাস: '+payment.month+'\n';
+    msg+='💰 পরিমাণ: ৳'+payment.amount+'\n';
+    msg+='💳 মাধ্যম: '+payment.method+'\n';
+    msg+='📆 তারিখ: '+payment.date+'\n';
+    msg+='✅ স্ট্যাটাস: '+payment.status+'\n';
+    if(payment.note){ msg+='📝 নোট: '+payment.note+'\n'; }
+    msg+='━━━━━━━━━━━━━━━\n';
+    msg+='ধন্যবাদ 🙏\n';
+    msg+='_Dynamic Classroom_';
+
+    var url='https://wa.me/'+rawPhone+'?text='+encodeURIComponent(msg);
+    window.open(url,'_blank');
+
+  }catch(err){
+    alert('❌ সমস্যা: '+err.message);
+    console.error(err);
+  }
+}
+
+async function deletePayment(fireId){
+  if(!confirm('এই পেমেন্ট মুছে ফেলবেন?'))return;
+  try{
+    await window.fbDeleteDoc(window.fbDoc(window.db,'Payments',fireId));
+    await renderPayments();
+    loadStats();
+  }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
+}
+
+/* ============ RESULT ============ */
 async function loadStudentDropdown(){
   var sel=document.getElementById('rStudent');
   if(!sel) return;
@@ -827,7 +1062,7 @@ async function deleteResult(fireId){
   }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
 }
 
-/* ============ OTHER SECTIONS (LocalStorage) ============ */
+/* ============ OTHER SECTIONS ============ */
 function get(k){try{return JSON.parse(localStorage.getItem('dc_'+k)||'[]')}catch(e){return[]}}
 function set(k,v){localStorage.setItem('dc_'+k,JSON.stringify(v))}
 
@@ -857,19 +1092,6 @@ function renderCourses(){
     t.innerHTML+='<tr><td><strong>'+c.name+'</strong></td><td>৳'+c.price+'</td><td>'+c.duration+'</td><td>'+c.seats+'</td><td><button class="btn-red" onclick="delItem(\'courses\','+i+',renderCourses)"><i class="fa-solid fa-trash"></i></button></td></tr>';
   });
 }
-function addPayment(e){
-  e.preventDefault();
-  var list=get('payments');
-  list.push({student:document.getElementById('pStudent').value,amount:document.getElementById('pAmount').value,method:document.getElementById('pMethod').value,month:document.getElementById('pMonth').value,status:'পরিশোধিত'});
-  set('payments',list);e.target.reset();renderPayments();loadStats();
-}
-function renderPayments(){
-  var t=document.getElementById('paymentTable');
-  t.innerHTML='<tr><th>শিক্ষার্থী</th><th>পরিমাণ</th><th>মাধ্যম</th><th>মাস</th><th>স্ট্যাটাস</th></tr>';
-  get('payments').forEach(function(p){
-    t.innerHTML+='<tr><td>'+p.student+'</td><td>৳'+p.amount+'</td><td>'+p.method+'</td><td>'+p.month+'</td><td><span class="badge green">'+p.status+'</span></td></tr>';
-  });
-}
 function addTeacher(e){
   e.preventDefault();
   var list=get('teachers');
@@ -887,12 +1109,19 @@ function delItem(k,i,cb){
   if(!confirm('মুছে ফেলবেন?'))return;
   var l=get(k);l.splice(i,1);set(k,l);cb();loadStats();
 }
-function loadStats(){
-  window.fbGetDocs(window.fbCollection(window.db,'Students')).then(function(s){
-    document.getElementById('sStudents').textContent=s.size;
-  }).catch(function(){});
-  var inc=0;get('payments').forEach(function(p){inc+=parseInt(p.amount||0);});
-  document.getElementById('sIncome').textContent=inc;
+
+/* ============ STATS ============ */
+async function loadStats(){
+  try{
+    var sSnap=await window.fbGetDocs(window.fbCollection(window.db,'Students'));
+    document.getElementById('sStudents').textContent=sSnap.size;
+  }catch(e){}
+  try{
+    var pSnap=await window.fbGetDocs(window.fbCollection(window.db,'Payments'));
+    var inc=0;
+    pSnap.forEach(function(d){inc+=parseInt(d.data().amount||0);});
+    document.getElementById('sIncome').textContent=inc;
+  }catch(e){}
   document.getElementById('sNotice').textContent=get('notices').length;
   document.getElementById('sCourse').textContent=get('courses').length;
 }
@@ -901,12 +1130,13 @@ function loadStats(){
 function loadAll(){
   renderNotices();
   renderCourses();
-  renderPayments();
   renderTeachers();
   renderStudents();
   loadStats();
   loadStudentDropdown();
   renderResults();
+  loadPaymentStudentDropdown();
+  renderPayments();
 }
 </script>
 </body>
