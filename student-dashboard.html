@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>শিক্ষার্থী ড্যাশবোর্ড - Dynamic Classroom</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-layout">
+        <aside class="sidebar student-sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Dynamic Classroom</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><i class="fas fa-home"></i> হোম</li>
+                <li><i class="fas fa-book"></i> আমার ক্লাস</li>
+                <li><i class="fas fa-file-alt"></i> পরীক্ষা</li>
+                <li><i class="fas fa-bullhorn"></i> নোটিশ</li>
+                <li><i class="fas fa-user"></i> প্রোফাইল</li>
+            </ul>
+            <button class="btn btn-logout" id="studentLogout"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <h1>স্বাগতম, <span id="studentNameDisplay">শিক্ষার্থী</span></h1>
+                <div class="admin-info">
+                    <i class="fas fa-user-graduate"></i>
+                    <span id="studentClassDisplay">শ্রেণী</span>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-book-open"></i>
+                    <h3>৭</h3>
+                    <p>বিষয়</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h3>৩</h3>
+                    <p>পরীক্ষা</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-bullhorn"></i>
+                    <h3 id="studentNoticeCount">0</h3>
+                    <p>নোটিশ</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>সর্বশেষ নোটিশ</h2>
+                <div id="studentNotices" class="notices-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/student.js"></script>
+</body>
+</html>
