@@ -353,6 +353,85 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
             <option value="ডিসেম্বর">ডিসেম্বর</option>
           </select>
 
+          <select id="pYear" required>
+            <option value="">বছর নির্বাচন করুন</option>
+            <option value="২০২৬">২০২৬</option>
+            <option value="২০২৭">২০২৭</option>
+            <option value="২০২৮">২০২৮</option>
+            <option value="২০২৯">২০২৯</option>
+            <option value="২০৩০">২০৩০</option>
+            <option value="২০৩১">২০৩১</option>
+            <option value="২০৩২">২০৩২</option>
+            <option value="২০৩৩">২০৩৩</option>
+            <option value="২০৩৪">২০৩৪</option>
+            <option value="২০৩৫">২০৩৫</option>
+            <option value="২০৩৬">২০৩৬</option>
+            <option value="২০৩৭">২০৩৭</option>
+            <option value="২০৩৮">২০৩৮</option>
+            <option value="২০৩৯">২০৩৯</option>
+            <option value="২০৪০">২০৪০</option>
+            <option value="২০৪১">২০৪১</option>
+            <option value="২০৪২">২০৪২</option>
+            <option value="২০৪৩">২০৪৩</option>
+            <option value="২০৪৪">২০৪৪</option>
+            <option value="২০৪৫">২০৪৫</option>
+            <option value="২০৪৬">২০৪৬</option>
+            <option value="২০৪৭">২০৪৭</option>
+            <option value="২০৪৮">২০৪৮</option>
+            <option value="২০৪৯">২০৪৯</option>
+            <option value="২০৫০">২০৫০</option>
+            <option value="২০৫১">২০৫১</option>
+            <option value="২০৫২">২০৫২</option>
+            <option value="২০৫৩">২০৫৩</option>
+            <option value="২০৫৪">২০৫৪</option>
+            <option value="২০৫৫">২০৫৫</option>
+            <option value="২০৫৬">২০৫৬</option>
+            <option value="২০৫৭">২০৫৭</option>
+            <option value="২০৫৮">২০৫৮</option>
+            <option value="২০৫৯">২০৫৯</option>
+            <option value="২০৬০">২০৬০</option>
+            <option value="২০৬১">২০৬১</option>
+            <option value="২০৬২">২০৬২</option>
+            <option value="২০৬৩">২০৬৩</option>
+            <option value="২০৬৪">২০৬৪</option>
+            <option value="২০৬৫">২০৬৫</option>
+            <option value="২০৬৬">২০৬৬</option>
+            <option value="২০৬৭">২০৬৭</option>
+            <option value="২০৬৮">২০৬৮</option>
+            <option value="২০৬৯">২০৬৯</option>
+            <option value="২০৭০">২০৭০</option>
+            <option value="২০৭১">২০৭১</option>
+            <option value="২০৭২">২০৭২</option>
+            <option value="২০৭৩">২০৭৩</option>
+            <option value="২০৭৪">২০৭৪</option>
+            <option value="২০৭৫">২০৭৫</option>
+            <option value="২০৭৬">২০৭৬</option>
+            <option value="২০৭৭">২০৭৭</option>
+            <option value="২০৭৮">২০৭৮</option>
+            <option value="২০৭৯">২০৭৯</option>
+            <option value="২০৮০">২০৮০</option>
+            <option value="২০৮১">২০৮১</option>
+            <option value="২০৮২">২০৮২</option>
+            <option value="২০৮৩">২০৮৩</option>
+            <option value="২০৮৪">২০৮৪</option>
+            <option value="২০৮৫">২০৮৫</option>
+            <option value="২০৮৬">২০৮৬</option>
+            <option value="২০৮৭">২০৮৭</option>
+            <option value="২০৮৮">২০৮৮</option>
+            <option value="২০৮৯">২০৮৯</option>
+            <option value="২০৯০">২০৯০</option>
+            <option value="২০৯১">২০৯১</option>
+            <option value="২০৯২">২০৯২</option>
+            <option value="২০৯৩">২০৯৩</option>
+            <option value="২০৯৪">২০৯৪</option>
+            <option value="২০৯৫">২০৯৫</option>
+            <option value="২০৯৬">২০৯৬</option>
+            <option value="২০৯৭">২০৯৭</option>
+            <option value="২০৯৮">২০৯৮</option>
+            <option value="২০৯৯">২০৯৯</option>
+            <option value="২১০০">২১০০</option>
+          </select>
+
           <input type="number" id="pAmount" placeholder="পরিমাণ (৳)" required min="1">
 
           <select id="pMethod" required>
@@ -377,12 +456,12 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
           </button>
         </div>
         <div class="search-bar">
-          <input type="text" id="pSearch" placeholder="🔍 শিক্ষার্থী, মাস বা মাধ্যম..." onkeyup="renderPayments()">
+          <input type="text" id="pSearch" placeholder="🔍 শিক্ষার্থী, মাস, বছর বা মাধ্যম..." onkeyup="renderPayments()">
         </div>
         <div class="table-wrap">
           <table id="paymentTable">
             <tr>
-              <th>আইডি</th><th>শিক্ষার্থী</th><th>মাস</th>
+              <th>আইডি</th><th>শিক্ষার্থী</th><th>মাস</th><th>বছর</th>
               <th>পরিমাণ</th><th>মাধ্যম</th><th>তারিখ</th>
               <th>WhatsApp</th><th>অ্যাকশন</th>
             </tr>
@@ -745,7 +824,7 @@ async function deleteStudent(fireId){
   }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
 }
 
-/* ============ PAYMENT (Firebase + WhatsApp) ============ */
+/* ============ PAYMENT (Firebase + WhatsApp + বছর) ============ */
 async function loadPaymentStudentDropdown(){
   var sel=document.getElementById('pStudent');
   if(!sel) return;
@@ -780,11 +859,13 @@ async function addPayment(e){
   var studentCls=sel.options[sel.selectedIndex].dataset.cls||'';
   var studentPhone=sel.options[sel.selectedIndex].dataset.phone||'';
   var month=document.getElementById('pMonth').value;
+  var year=document.getElementById('pYear').value;
   var amount=parseInt(document.getElementById('pAmount').value);
   var method=document.getElementById('pMethod').value;
   var note=document.getElementById('pNote').value.trim();
 
   if(!month){alert('⚠️ মাস নির্বাচন করুন');return;}
+  if(!year){alert('⚠️ বছর নির্বাচন করুন');return;}
   if(isNaN(amount)||amount<=0){alert('⚠️ সঠিক পরিমাণ দিন');return;}
   if(!method){alert('⚠️ মাধ্যম নির্বাচন করুন');return;}
 
@@ -795,6 +876,7 @@ async function addPayment(e){
       className:studentCls,
       phone:studentPhone,
       month:month,
+      year:year,
       amount:amount,
       method:method,
       note:note,
@@ -807,7 +889,7 @@ async function addPayment(e){
     await renderPayments();
     loadStats();
 
-    alert('✅ পেমেন্ট সেভ হয়েছে!\n\n'+studentName+'\n'+month+' — ৳'+amount+'\n\nএখন WhatsApp স্লিপ পাঠাতে পারবেন।');
+    alert('✅ পেমেন্ট সেভ হয়েছে!\n\n'+studentName+'\n'+month+' '+year+' — ৳'+amount+'\n\nএখন WhatsApp স্লিপ পাঠাতে পারবেন।');
   }catch(err){
     alert('❌ সমস্যা: '+err.message);
     console.error(err);
@@ -816,7 +898,7 @@ async function addPayment(e){
 
 async function renderPayments(){
   var t=document.getElementById('paymentTable');
-  t.innerHTML='<tr><td colspan="8" class="loading"><i class="fa-solid fa-spinner"></i>লোড হচ্ছে...</td></tr>';
+  t.innerHTML='<tr><td colspan="9" class="loading"><i class="fa-solid fa-spinner"></i>লোড হচ্ছে...</td></tr>';
 
   try{
     var snap=await window.fbGetDocs(window.fbCollection(window.db,'Payments'));
@@ -829,6 +911,7 @@ async function renderPayments(){
         return (p.studentName||'').toLowerCase().indexOf(q)>-1 ||
                (p.studentId||'').toLowerCase().indexOf(q)>-1 ||
                (p.month||'').toLowerCase().indexOf(q)>-1 ||
+               (p.year||'').toLowerCase().indexOf(q)>-1 ||
                (p.method||'').toLowerCase().indexOf(q)>-1;
       });
     }
@@ -838,13 +921,13 @@ async function renderPayments(){
     });
 
     t.innerHTML='<tr>'+
-      '<th>আইডি</th><th>শিক্ষার্থী</th><th>মাস</th>'+
+      '<th>আইডি</th><th>শিক্ষার্থী</th><th>মাস</th><th>বছর</th>'+
       '<th>পরিমাণ</th><th>মাধ্যম</th><th>তারিখ</th>'+
       '<th>WhatsApp</th><th>অ্যাকশন</th>'+
     '</tr>';
 
     if(list.length===0){
-      t.innerHTML+='<tr><td colspan="8" class="empty-msg">এখনো কোনো পেমেন্ট নেই</td></tr>';
+      t.innerHTML+='<tr><td colspan="9" class="empty-msg">এখনো কোনো পেমেন্ট নেই</td></tr>';
       return;
     }
 
@@ -853,6 +936,7 @@ async function renderPayments(){
         '<td><strong>'+p.studentId+'</strong></td>'+
         '<td>'+p.studentName+'</td>'+
         '<td>'+p.month+'</td>'+
+        '<td><span class="badge orange">'+(p.year||'—')+'</span></td>'+
         '<td><b>৳'+p.amount+'</b></td>'+
         '<td><span class="badge blue">'+p.method+'</span></td>'+
         '<td>'+p.date+'</td>'+
@@ -861,7 +945,7 @@ async function renderPayments(){
       '</tr>';
     });
   }catch(err){
-    t.innerHTML='<tr><td colspan="8" class="empty-msg">❌ লোড ব্যর্থ: '+err.message+'</td></tr>';
+    t.innerHTML='<tr><td colspan="9" class="empty-msg">❌ লোড ব্যর্থ: '+err.message+'</td></tr>';
     console.error(err);
   }
 }
@@ -889,7 +973,7 @@ async function sendWhatsAppSlip(fireId){
     msg+='👤 শিক্ষার্থী: '+payment.studentName+'\n';
     msg+='🆔 আইডি: '+payment.studentId+'\n';
     msg+='📚 শ্রেণি: '+(payment.className||'—')+'\n';
-    msg+='📅 মাস: '+payment.month+'\n';
+    msg+='📅 মাস: '+payment.month+' '+(payment.year||'')+'\n';
     msg+='💰 পরিমাণ: ৳'+payment.amount+'\n';
     msg+='💳 মাধ্যম: '+payment.method+'\n';
     msg+='📆 তারিখ: '+payment.date+'\n';
