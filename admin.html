@@ -8,9 +8,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root{
-  --primary:#1a365d;--primary-light:#2c5282;--accent:#f59e0b;
-  --bg:#f1f5f9;--text:#1e293b;--muted:#64748b;--white:#fff;
-  --green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;
+  --primary:#1a365d;--accent:#f59e0b;--bg:#f1f5f9;--text:#1e293b;
+  --muted:#64748b;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;
   --radius:12px;--shadow:0 4px 20px rgba(0,0,0,.08);
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -31,7 +30,6 @@ body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--tex
 .login-box button.back{background:#64748b}
 .login-box button.back:hover{background:#475569}
 .forgot-link{display:block;text-align:right;color:var(--accent);font-size:.88rem;text-decoration:none;margin:-6px 0 14px;cursor:pointer;font-weight:600}
-.forgot-link:hover{text-decoration:underline}
 .login-hint{font-size:.82rem;color:var(--muted);margin-top:12px;background:#f8fafc;padding:12px;border-radius:8px;border:1px dashed #cbd5e1;text-align:left}
 .login-hint strong{color:var(--primary)}
 .otp-display{background:#fef3c7;border:2px dashed var(--accent);color:#92400e;padding:14px;border-radius:10px;margin-bottom:16px;font-size:.9rem}
@@ -44,11 +42,7 @@ body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--tex
 .msg.success{background:#dcfce7;color:#166534;display:block}
 .msg.info{background:#dbeafe;color:#1e40af;display:block}
 .timer{font-size:.85rem;color:var(--red);font-weight:600;margin-bottom:12px}
-.timer span{color:var(--primary)}
 .otp-input{letter-spacing:8px;font-size:1.4rem;font-weight:700;text-align:center}
-.strength{height:6px;background:#e2e8f0;border-radius:50px;overflow:hidden;margin:-8px 0 8px}
-.strength-bar{height:100%;width:0;transition:.3s;border-radius:50px}
-.strength-text{font-size:.8rem;text-align:left;margin-bottom:14px;color:var(--muted)}
 
 /* ADMIN */
 .admin{display:none}
@@ -61,15 +55,12 @@ body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--tex
 .sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 22px;color:#cbd5e1;text-decoration:none;font-size:.93rem;transition:.25s;border-left:3px solid transparent;cursor:pointer}
 .sidebar nav a:hover{background:rgba(255,255,255,.06);color:#fff}
 .sidebar nav a.active{background:rgba(245,158,11,.15);color:var(--accent);border-left-color:var(--accent)}
-.sidebar nav a i{width:20px;text-align:center}
 
 .main{flex:1;margin-left:260px;padding:24px}
 .topbar{background:#fff;padding:16px 24px;border-radius:var(--radius);box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
 .topbar h2{color:var(--primary);font-size:1.3rem}
-.topbar .actions{display:flex;align-items:center;gap:14px}
 .topbar .user{display:flex;align-items:center;gap:10px}
 .topbar .user .avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
-.topbar .user span{font-size:.9rem;font-weight:600}
 .menu-toggle{display:none;background:none;border:none;font-size:1.4rem;color:var(--primary);cursor:pointer}
 
 .page{display:none}
@@ -118,6 +109,10 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
 .search-bar input{flex:1;padding:11px 16px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit}
 .search-bar input:focus{outline:none;border-color:var(--primary)}
 
+.loading{text-align:center;padding:30px;color:var(--muted)}
+.loading i{font-size:1.5rem;color:var(--primary);margin-bottom:8px;display:block;animation:spin 1s linear infinite}
+@keyframes spin{100%{transform:rotate(360deg)}}
+
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
@@ -151,35 +146,31 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
 
     <div class="step" id="stepForgot">
       <h3 style="color:var(--primary);margin-bottom:8px">🔐 পাসওয়ার্ড রিসেট</h3>
-      <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">আপনার ইমেইল দিন, OTP কোড পাঠানো হবে</p>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">আপনার ইমেইল দিন</p>
       <div class="msg" id="msgF1"></div>
       <input type="email" id="forgotEmail" placeholder="📧 আপনার ইমেইল">
       <button onclick="sendResetOTP()"><i class="fa-solid fa-paper-plane"></i> OTP পাঠান</button>
-      <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> লগইনে ফিরে যান</button>
+      <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
     </div>
 
     <div class="step" id="stepResetOTP">
       <h3 style="color:var(--primary);margin-bottom:8px">📨 OTP যাচাই</h3>
-      <div class="otp-display">📨 ডেমো OTP কোড:<b id="otpShow2">------</b></div>
+      <div class="otp-display">ডেমো OTP:<b id="otpShow2">------</b></div>
       <div class="msg" id="msgF2"></div>
       <input type="text" id="resetOtpInput" class="otp-input" placeholder="------" maxlength="6">
-      <div class="timer">⏱️ সময় বাকি: <span id="timer2">০২:০০</span></div>
+      <div class="timer">⏱️ সময়: <span id="timer2">০২:০০</span></div>
       <button onclick="verifyResetOTP()"><i class="fa-solid fa-shield-halved"></i> যাচাই করুন</button>
       <button class="back" onclick="goToForgot()"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
     </div>
 
     <div class="step" id="stepNewPass">
       <h3 style="color:var(--primary);margin-bottom:8px">🔑 নতুন পাসওয়ার্ড</h3>
-      <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">শক্তিশালী পাসওয়ার্ড ব্যবহার করুন</p>
       <div class="msg" id="msgF3"></div>
-      <input type="password" id="newPass" placeholder="🔒 নতুন পাসওয়ার্ড" oninput="checkStrength()">
-      <div class="strength"><div class="strength-bar" id="strengthBar"></div></div>
-      <div class="strength-text" id="strengthText"></div>
-      <input type="password" id="newPass2" placeholder="🔒 নতুন পাসওয়ার্ড (আবার)">
-      <button onclick="saveNewPassword()"><i class="fa-solid fa-floppy-disk"></i> পাসওয়ার্ড সেভ করুন</button>
-      <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> বাতিল করুন</button>
+      <input type="password" id="newPass" placeholder="🔒 নতুন পাসওয়ার্ড">
+      <input type="password" id="newPass2" placeholder="🔒 আবার লিখুন">
+      <button onclick="saveNewPassword()"><i class="fa-solid fa-floppy-disk"></i> সেভ করুন</button>
+      <button class="back" onclick="backToStep1()">বাতিল</button>
     </div>
-
   </div>
 </div>
 
@@ -209,13 +200,12 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
         <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
         <h2 id="pageTitle">📊 ড্যাশবোর্ড</h2>
       </div>
-      <div class="actions">
-        <a href="index.html" target="_blank" style="color:var(--primary);text-decoration:none;font-size:.9rem"><i class="fa-solid fa-eye"></i> সাইট দেখুন</a>
+      <div style="display:flex;align-items:center;gap:14px">
+        <a href="index.html" target="_blank" style="color:var(--primary);text-decoration:none;font-size:.9rem"><i class="fa-solid fa-eye"></i> সাইট</a>
         <div class="user"><div class="avatar">A</div><span>Admin</span></div>
       </div>
     </div>
 
-    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="stat-grid">
         <div class="stat-box"><div class="ic blue"><i class="fa-solid fa-user-graduate"></i></div><div><h3 id="sStudents">0</h3><p>মোট শিক্ষার্থী</p></div></div>
@@ -230,13 +220,11 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
             <tr><th>ধরন</th><th>বিবরণ</th><th>সময়</th></tr>
             <tr><td><span class="badge green">ভর্তি</span></td><td>নতুন শিক্ষার্থী ভর্তি হয়েছে</td><td>১০ মিনিট আগে</td></tr>
             <tr><td><span class="badge blue">পেমেন্ট</span></td><td>৳১২০০ ফি পরিশোধিত</td><td>১ ঘণ্টা আগে</td></tr>
-            <tr><td><span class="badge orange">নোটিশ</span></td><td>নতুন নোটিশ প্রকাশিত</td><td>২ ঘণ্টা আগে</td></tr>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- NOTICE -->
     <div class="page" id="page-notice">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন নোটিশ</h3></div>
@@ -255,14 +243,13 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
-    <!-- COURSE -->
     <div class="page" id="page-course">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন কোর্স</h3></div>
         <form class="form-grid" onsubmit="addCourse(event)">
           <input type="text" id="cName" placeholder="কোর্সের নাম" required>
           <input type="text" id="cPrice" placeholder="ফি (৳)" required>
-          <input type="text" id="cDuration" placeholder="মেয়াদ (যেমন: ৩ মাস)" required>
+          <input type="text" id="cDuration" placeholder="মেয়াদ" required>
           <input type="text" id="cSeats" placeholder="আসন সংখ্যা" required>
           <button type="submit"><i class="fa-solid fa-plus"></i> কোর্স যোগ করুন</button>
         </form>
@@ -275,7 +262,6 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
-    <!-- STUDENT (নতুন) -->
     <div class="page" id="page-student">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন শিক্ষার্থী</h3></div>
@@ -307,24 +293,26 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
         </form>
       </div>
       <div class="card">
-        <div class="card-head"><h3>👨‍🎓 শিক্ষার্থী তালিকা</h3></div>
-        <div class="search-bar"><input type="text" id="stSearch" placeholder="🔍 নাম বা আইডি বা মোবাইল দিয়ে খুঁজুন..." onkeyup="searchStudent()"></div>
+        <div class="card-head">
+          <h3>👨‍🎓 শিক্ষার্থী তালিকা (<span id="stCount">0</span>)</h3>
+          <button onclick="renderStudents()" style="background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-family:inherit"><i class="fa-solid fa-rotate"></i> রিফ্রেশ</button>
+        </div>
+        <div class="search-bar"><input type="text" id="stSearch" placeholder="🔍 নাম বা আইডি বা মোবাইল..." onkeyup="renderStudents()"></div>
         <div class="table-wrap"><table id="studentTable">
           <tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th><th>বাচ</th><th>পাসওয়ার্ড</th><th>অ্যাকশন</th></tr>
         </table></div>
       </div>
     </div>
 
-    <!-- PAYMENT -->
     <div class="page" id="page-payment">
       <div class="card">
-        <div class="card-head"><h3>💳 ফি পরিশোধ এন্ট্রি</h3></div>
+        <div class="card-head"><h3>💳 ফি পরিশোধ</h3></div>
         <form class="form-grid" onsubmit="addPayment(event)">
           <input type="text" id="pStudent" placeholder="শিক্ষার্থীর নাম" required>
           <input type="text" id="pAmount" placeholder="পরিমাণ (৳)" required>
           <select id="pMethod"><option>বিকাশ</option><option>নগদ</option><option>রকেট</option><option>ক্যাশ</option></select>
-          <input type="text" id="pMonth" placeholder="মাস (যেমন: অক্টোবর)" required>
-          <button type="submit"><i class="fa-solid fa-plus"></i> পেমেন্ট রেকর্ড করুন</button>
+          <input type="text" id="pMonth" placeholder="মাস" required>
+          <button type="submit"><i class="fa-solid fa-plus"></i> রেকর্ড করুন</button>
         </form>
       </div>
       <div class="card">
@@ -335,7 +323,6 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
-    <!-- RESULT -->
     <div class="page" id="page-result">
       <div class="card">
         <div class="card-head"><h3>📝 রেজাল্ট এন্ট্রি</h3></div>
@@ -343,7 +330,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
           <input type="text" id="rName" placeholder="শিক্ষার্থীর নাম" required>
           <input type="text" id="rClass" placeholder="শ্রেণি" required>
           <input type="text" id="rSubject" placeholder="বিষয়" required>
-          <input type="text" id="rMarks" placeholder="প্রাপ্ত নম্বর" required>
+          <input type="text" id="rMarks" placeholder="নম্বর" required>
           <button type="submit"><i class="fa-solid fa-plus"></i> রেজাল্ট যোগ করুন</button>
         </form>
       </div>
@@ -355,7 +342,6 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
-    <!-- TEACHER -->
     <div class="page" id="page-teacher">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন শিক্ষক</h3></div>
@@ -363,7 +349,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
           <input type="text" id="tName" placeholder="শিক্ষকের নাম" required>
           <input type="text" id="tSubject" placeholder="বিষয়" required>
           <input type="tel" id="tPhone" placeholder="মোবাইল" required>
-          <input type="text" id="tQualification" placeholder="শিক্ষাগত যোগ্যতা" required>
+          <input type="text" id="tQualification" placeholder="যোগ্যতা" required>
           <button type="submit"><i class="fa-solid fa-plus"></i> শিক্ষক যোগ করুন</button>
         </form>
       </div>
@@ -375,15 +361,14 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
-    <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="card">
-        <div class="card-head"><h3>⚙️ সাইট সেটিংস</h3></div>
-        <form class="form-grid" onsubmit="event.preventDefault();alert('✅ সেটিংস সেভ হয়েছে!')">
+        <div class="card-head"><h3>⚙️ সেটিংস</h3></div>
+        <form class="form-grid" onsubmit="event.preventDefault();alert('✅ সেভ হয়েছে!')">
           <input type="text" value="Dynamic Classroom" placeholder="সাইটের নাম">
-          <input type="tel" value="+880 1633354664" placeholder="ফোন">
+          <input type="tel" value="01633354664" placeholder="ফোন">
           <input type="email" value="mazedhossain50555@gmail.com" placeholder="ইমেইল">
-          <input type="text" value=" শান্তিনগর, এনায়েত নগর, ফতুল্লা, নারায়ণগঞ্জ " placeholder="ঠিকানা">
+          <input type="text" value="শান্তিনগর, ফতুল্লা, নারায়ণগঞ্জ" placeholder="ঠিকানা">
           <button type="submit"><i class="fa-solid fa-save"></i> সেভ করুন</button>
         </form>
       </div>
@@ -392,7 +377,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
         <form class="form-grid" onsubmit="changePassword(event)">
           <input type="password" id="oldPass" placeholder="পুরোনো পাসওয়ার্ড" required>
           <input type="password" id="newPassAdmin" placeholder="নতুন পাসওয়ার্ড" required>
-          <input type="password" id="newPassAdmin2" placeholder="নতুন পাসওয়ার্ড (আবার)" class="full" required>
+          <input type="password" id="newPassAdmin2" placeholder="আবার লিখুন" class="full" required>
           <button type="submit">পাসওয়ার্ড পরিবর্তন</button>
         </form>
       </div>
@@ -401,47 +386,64 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
   </main>
 </div>
 
+<!-- ============ FIREBASE ============ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBNwcshjGF5joK2bpzrTdxzNd5juOPwoaQ",
+  authDomain: "dynamic-classroom.firebaseapp.com",
+  projectId: "dynamic-classroom",
+  storageBucket: "dynamic-classroom.firebasestorage.app",
+  messagingSenderId: "911104617826",
+  appId: "1:911104617826:web:935b512d66c8c89746103b",
+  measurementId: "G-V0GSCD6EH4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// window-এ এক্সপোর্ট করি যাতে onclick থেকে কল করা যায়
+window.db = db;
+window.fbCollection = collection;
+window.fbAddDoc = addDoc;
+window.fbGetDocs = getDocs;
+window.fbDeleteDoc = deleteDoc;
+window.fbDoc = doc;
+window.fbQuery = query;
+window.fbOrderBy = orderBy;
+
+console.log("✅ Firebase connected!");
+</script>
+
 <script>
 /* ============ CONFIG ============ */
 var DEFAULT_EMAIL='mazedhossain50555@gmail.com';
 var DEFAULT_PASS='admin1234';
-
 function getAdminEmail(){return localStorage.getItem('dc_email')||DEFAULT_EMAIL;}
 function getAdminPass(){return localStorage.getItem('dc_pass')||DEFAULT_PASS;}
 
-var resetOTP='';
-var resetTimer=null, resetSeconds=120;
+var resetOTP='',resetTimer=null,resetSeconds=120;
 
-/* ============ STEP NAV ============ */
 function showStep(id){
-  var steps=document.querySelectorAll('.step');
-  for(var i=0;i<steps.length;i++){steps[i].classList.remove('active');}
+  var s=document.querySelectorAll('.step');
+  for(var i=0;i<s.length;i++)s[i].classList.remove('active');
   document.getElementById(id).classList.add('active');
 }
-function backToStep1(){
-  clearInterval(resetTimer);
-  showStep('step1');
-  document.getElementById('msg1').className='msg';
-}
+function backToStep1(){clearInterval(resetTimer);showStep('step1');document.getElementById('msg1').className='msg';}
 
 /* ============ LOGIN ============ */
 function login(){
-  var email=document.getElementById('adminEmail').value.trim();
-  var pass=document.getElementById('adminPass').value.trim();
-  var msg=document.getElementById('msg1');
-  msg.className='msg';
-
-  if(!email || !pass){
-    msg.className='msg error';msg.textContent='⚠️ ইমেইল ও পাসওয়ার্ড দুটোই দিন!';return;
-  }
-  if(email.toLowerCase()!==getAdminEmail().toLowerCase()){
-    msg.className='msg error';msg.textContent='❌ ভুল ইমেইল!';return;
-  }
-  if(pass!==getAdminPass()){
-    msg.className='msg error';msg.textContent='❌ ভুল পাসওয়ার্ড! "পাসওয়ার্ড ভুলে গেছেন?" লিংকে ক্লিক করুন।';return;
-  }
-
-  msg.className='msg success';msg.textContent='✅ লগইন সফল!';
+  var e=document.getElementById('adminEmail').value.trim();
+  var p=document.getElementById('adminPass').value.trim();
+  var m=document.getElementById('msg1');
+  m.className='msg';
+  if(!e||!p){m.className='msg error';m.textContent='⚠️ ইমেইল ও পাসওয়ার্ড দিন!';return;}
+  if(e.toLowerCase()!==getAdminEmail().toLowerCase()){m.className='msg error';m.textContent='❌ ভুল ইমেইল!';return;}
+  if(p!==getAdminPass()){m.className='msg error';m.textContent='❌ ভুল পাসওয়ার্ড!';return;}
+  m.className='msg success';m.textContent='✅ লগইন সফল!';
   localStorage.setItem('dc_admin','yes');
   setTimeout(function(){
     document.getElementById('loginScreen').style.display='none';
@@ -450,120 +452,57 @@ function login(){
   },500);
 }
 
-/* ============ FORGOT ============ */
-function goToForgot(){
-  clearInterval(resetTimer);
-  document.getElementById('forgotEmail').value='';
-  document.getElementById('msgF1').className='msg';
-  showStep('stepForgot');
-}
+function goToForgot(){clearInterval(resetTimer);document.getElementById('forgotEmail').value='';document.getElementById('msgF1').className='msg';showStep('stepForgot');}
 function sendResetOTP(){
-  var email=document.getElementById('forgotEmail').value.trim();
-  var msg=document.getElementById('msgF1');
-  msg.className='msg';
-  if(!email){msg.className='msg error';msg.textContent='⚠️ ইমেইল দিন!';return;}
-  if(email.toLowerCase()!==getAdminEmail().toLowerCase()){
-    msg.className='msg error';msg.textContent='❌ এই ইমেইল নিবন্ধিত নয়!';return;
-  }
+  var e=document.getElementById('forgotEmail').value.trim();
+  var m=document.getElementById('msgF1');m.className='msg';
+  if(!e){m.className='msg error';m.textContent='⚠️ ইমেইল দিন!';return;}
+  if(e.toLowerCase()!==getAdminEmail().toLowerCase()){m.className='msg error';m.textContent='❌ এই ইমেইল নিবন্ধিত নয়!';return;}
   resetOTP=String(Math.floor(100000+Math.random()*900000));
   document.getElementById('otpShow2').textContent=resetOTP;
   document.getElementById('resetOtpInput').value='';
   document.getElementById('msgF2').className='msg';
   showStep('stepResetOTP');
-  startResetTimer();
+  resetSeconds=120;clearInterval(resetTimer);updateTimer();
+  resetTimer=setInterval(function(){resetSeconds--;updateTimer();if(resetSeconds<=0){clearInterval(resetTimer);document.getElementById('timer2').textContent='শেষ';}},1000);
 }
-function startResetTimer(){
-  resetSeconds=120;clearInterval(resetTimer);updateResetTimer();
-  resetTimer=setInterval(function(){
-    resetSeconds--;updateResetTimer();
-    if(resetSeconds<=0){clearInterval(resetTimer);document.getElementById('timer2').textContent='সময় শেষ';}
-  },1000);
-}
-function updateResetTimer(){
-  var m=Math.floor(resetSeconds/60),s=resetSeconds%60;
-  document.getElementById('timer2').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-}
+function updateTimer(){var m=Math.floor(resetSeconds/60),s=resetSeconds%60;document.getElementById('timer2').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
 function verifyResetOTP(){
-  var input=document.getElementById('resetOtpInput').value.trim();
-  var msg=document.getElementById('msgF2');
-  msg.className='msg';
-  if(resetSeconds<=0){msg.className='msg error';msg.textContent='⏰ OTP এর সময় শেষ!';return;}
-  if(input.length!==6){msg.className='msg error';msg.textContent='⚠️ ৬ ডিজিটের কোড দিন!';return;}
-  if(input===resetOTP){
-    msg.className='msg success';msg.textContent='✅ যাচাই সফল!';
+  var i=document.getElementById('resetOtpInput').value.trim();
+  var m=document.getElementById('msgF2');m.className='msg';
+  if(resetSeconds<=0){m.className='msg error';m.textContent='⏰ সময় শেষ!';return;}
+  if(i.length!==6){m.className='msg error';m.textContent='⚠️ ৬ ডিজিট দিন!';return;}
+  if(i===resetOTP){
+    m.className='msg success';m.textContent='✅ যাচাই সফল!';
     clearInterval(resetTimer);
     document.getElementById('newPass').value='';
     document.getElementById('newPass2').value='';
     document.getElementById('msgF3').className='msg';
-    document.getElementById('strengthBar').style.width='0';
-    document.getElementById('strengthText').textContent='';
     setTimeout(function(){showStep('stepNewPass');},600);
-  } else {
-    msg.className='msg error';msg.textContent='❌ ভুল OTP কোড!';
-  }
-}
-function checkStrength(){
-  var p=document.getElementById('newPass').value;
-  var bar=document.getElementById('strengthBar');
-  var txt=document.getElementById('strengthText');
-  var score=0;
-  if(p.length>=6)score++;
-  if(p.length>=10)score++;
-  if(/[A-Z]/.test(p))score++;
-  if(/[0-9]/.test(p))score++;
-  if(/[^A-Za-z0-9]/.test(p))score++;
-  var levels=[
-    {w:'0%',c:'',t:''},
-    {w:'20%',c:'#ef4444',t:'🔴 দুর্বল'},
-    {w:'40%',c:'#f97316',t:'🟠 মাঝারি'},
-    {w:'60%',c:'#f59e0b',t:'🟡 ভালো'},
-    {w:'80%',c:'#3b82f6',t:'🔵 শক্তিশালী'},
-    {w:'100%',c:'#10b981',t:'🟢 খুব শক্তিশালী'}
-  ];
-  var lv=levels[Math.min(score,5)];
-  bar.style.width=lv.w;bar.style.background=lv.c;txt.textContent=lv.t;
+  } else {m.className='msg error';m.textContent='❌ ভুল OTP!';}
 }
 function saveNewPassword(){
-  var p1=document.getElementById('newPass').value;
-  var p2=document.getElementById('newPass2').value;
-  var msg=document.getElementById('msgF3');
-  msg.className='msg';
-  if(p1.length<6){msg.className='msg error';msg.textContent='⚠️ পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!';return;}
-  if(p1!==p2){msg.className='msg error';msg.textContent='❌ দুটো পাসওয়ার্ড মিলছে না!';return;}
+  var p1=document.getElementById('newPass').value,p2=document.getElementById('newPass2').value;
+  var m=document.getElementById('msgF3');m.className='msg';
+  if(p1.length<6){m.className='msg error';m.textContent='⚠️ কমপক্ষে ৬ অক্ষর!';return;}
+  if(p1!==p2){m.className='msg error';m.textContent='❌ মিলছে না!';return;}
   localStorage.setItem('dc_pass',p1);
-  msg.className='msg success';msg.textContent='✅ পাসওয়ার্ড সফলভাবে পরিবর্তিত!';
-  setTimeout(function(){
-    document.getElementById('adminPass').value='';
-    document.getElementById('adminEmail').value=getAdminEmail();
-    document.getElementById('msg1').className='msg info';
-    document.getElementById('msg1').textContent='✅ নতুন পাসওয়ার্ড দিয়ে লগইন করুন।';
-    showStep('step1');
-  },1200);
+  m.className='msg success';m.textContent='✅ সফল!';
+  setTimeout(function(){document.getElementById('adminPass').value='';document.getElementById('adminEmail').value=getAdminEmail();document.getElementById('msg1').className='msg info';document.getElementById('msg1').textContent='✅ নতুন পাসওয়ার্ড দিয়ে লগইন করুন।';showStep('step1');},1200);
 }
 function changePassword(e){
   e.preventDefault();
-  var oldP=document.getElementById('oldPass').value;
-  var n1=document.getElementById('newPassAdmin').value;
-  var n2=document.getElementById('newPassAdmin2').value;
-  if(oldP!==getAdminPass()){alert('❌ পুরোনো পাসওয়ার্ড ভুল!');return;}
-  if(n1.length<6){alert('⚠️ নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!');return;}
-  if(n1!==n2){alert('❌ দুটো নতুন পাসওয়ার্ড মিলছে না!');return;}
-  localStorage.setItem('dc_pass',n1);
-  alert('✅ পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!');
-  e.target.reset();
+  var o=document.getElementById('oldPass').value,n1=document.getElementById('newPassAdmin').value,n2=document.getElementById('newPassAdmin2').value;
+  if(o!==getAdminPass()){alert('❌ পুরোনো পাসওয়ার্ড ভুল!');return;}
+  if(n1.length<6){alert('⚠️ কমপক্ষে ৬ অক্ষর!');return;}
+  if(n1!==n2){alert('❌ মিলছে না!');return;}
+  localStorage.setItem('dc_pass',n1);alert('✅ সফল!');e.target.reset();
 }
 function resetAll(){
-  if(confirm('সব ডেটা মুছে যাবে (ইমেইল/পাসওয়ার্ড সহ)। নিশ্চিত?')){
-    localStorage.clear();
-    alert('✅ সব ডেটা রিসেট হয়েছে!');
-    location.reload();
-  }
+  if(confirm('সব ডেটা মুছে যাবে। নিশ্চিত?')){localStorage.clear();alert('✅ রিসেট হয়েছে!');location.reload();}
 }
 function logout(){
-  if(confirm('লগআউট করবেন?')){
-    localStorage.removeItem('dc_admin');
-    location.reload();
-  }
+  if(confirm('লগআউট করবেন?')){localStorage.removeItem('dc_admin');location.reload();}
 }
 window.addEventListener('DOMContentLoaded',function(){
   if(localStorage.getItem('dc_admin')==='yes'){
@@ -575,22 +514,115 @@ window.addEventListener('DOMContentLoaded',function(){
 
 /* ============ PAGE NAV ============ */
 function showPage(id,el){
-  var pages=document.querySelectorAll('.page');
-  for(var i=0;i<pages.length;i++){pages[i].classList.remove('active');}
+  var p=document.querySelectorAll('.page');for(var i=0;i<p.length;i++)p[i].classList.remove('active');
   document.getElementById('page-'+id).classList.add('active');
-  var links=document.querySelectorAll('.sidebar nav a');
-  for(var j=0;j<links.length;j++){links[j].classList.remove('active');}
+  var l=document.querySelectorAll('.sidebar nav a');for(var j=0;j<l.length;j++)l[j].classList.remove('active');
   el.classList.add('active');
-  var titles={dashboard:'📊 ড্যাশবোর্ড',notice:'📢 নোটিশ',course:'📚 কোর্স',student:'👨‍🎓 শিক্ষার্থী',payment:'💳 পেমেন্ট',result:'📝 রেজাল্ট',teacher:'👨‍🏫 শিক্ষক',settings:'⚙️ সেটিংস'};
-  document.getElementById('pageTitle').textContent=titles[id];
+  var t={dashboard:'📊 ড্যাশবোর্ড',notice:'📢 নোটিশ',course:'📚 কোর্স',student:'👨‍🎓 শিক্ষার্থী',payment:'💳 পেমেন্ট',result:'📝 রেজাল্ট',teacher:'👨‍🏫 শিক্ষক',settings:'⚙️ সেটিংস'};
+  document.getElementById('pageTitle').textContent=t[id];
   document.getElementById('sidebar').classList.remove('open');
 }
 
-/* ============ STORAGE ============ */
+/* ============ STUDENT (Firebase) ============ */
+async function addStudent(e){
+  e.preventDefault();
+  var name=document.getElementById('stName').value.trim();
+  var cls=document.getElementById('stClass').value;
+  var phone=document.getElementById('stPhone').value.trim();
+  var batch=document.getElementById('stBatch').value;
+  var pass=document.getElementById('stPass').value.trim();
+
+  if(!name||!cls||!phone||!batch||!pass){alert('⚠️ সব ফিল্ড পূরণ করুন!');return;}
+
+  // সব শিক্ষার্থী পড়ে max ID বের করা
+  var snap=await window.fbGetDocs(window.fbCollection(window.db,'Students'));
+  var maxNum=0;
+  snap.forEach(function(d){
+    var sid=d.data().studentId||'';
+    var n=parseInt(String(sid).replace('STU',''))||0;
+    if(n>maxNum)maxNum=n;
+  });
+  var newId='STU'+String(maxNum+1).padStart(3,'0');
+
+  try{
+    await window.fbAddDoc(window.fbCollection(window.db,'Students'),{
+      studentId:newId,
+      name:name,
+      className:cls,
+      phone:phone,
+      batch:batch,
+      password:pass,
+      createdAt:new Date().toISOString()
+    });
+    e.target.reset();
+    await renderStudents();
+    loadStats();
+    alert('✅ শিক্ষার্থী যোগ হয়েছে!\n\nআইডি: '+newId+'\nপাসওয়ার্ড: '+pass+'\n\nএই তথ্য শিক্ষার্থীকে দিন।');
+  }catch(err){
+    alert('❌ সমস্যা: '+err.message);
+    console.error(err);
+  }
+}
+
+async function renderStudents(){
+  var t=document.getElementById('studentTable');
+  t.innerHTML='<tr><td colspan="7" class="loading"><i class="fa-solid fa-spinner"></i>লোড হচ্ছে...</td></tr>';
+
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Students'));
+    var list=[];
+    snap.forEach(function(d){list.push({fireId:d.id,...d.data()});});
+
+    // সার্চ ফিল্টার
+    var q=(document.getElementById('stSearch')?.value||'').toLowerCase();
+    if(q){
+      list=list.filter(function(s){
+        return (s.name||'').toLowerCase().indexOf(q)>-1 ||
+               (s.studentId||'').toLowerCase().indexOf(q)>-1 ||
+               (s.phone||'').indexOf(q)>-1;
+      });
+    }
+
+    document.getElementById('stCount').textContent=list.length;
+
+    t.innerHTML='<tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th><th>বাচ</th><th>পাসওয়ার্ড</th><th>অ্যাকশন</th></tr>';
+
+    if(list.length===0){
+      t.innerHTML+='<tr><td colspan="7" class="empty-msg">কোনো শিক্ষার্থী নেই। উপরের ফর্ম দিয়ে যোগ করুন।</td></tr>';
+      return;
+    }
+
+    list.forEach(function(s){
+      var bc=(s.batch==='সকাল')?'orange':'blue';
+      t.innerHTML+='<tr>'+
+        '<td><strong>'+s.studentId+'</strong></td>'+
+        '<td>'+s.name+'</td>'+
+        '<td>'+s.className+'</td>'+
+        '<td>'+s.phone+'</td>'+
+        '<td><span class="badge '+bc+'">'+s.batch+'</span></td>'+
+        '<td><code class="pass">'+s.password+'</code></td>'+
+        '<td><button class="btn-red" onclick="deleteStudent(\''+s.fireId+'\')"><i class="fa-solid fa-trash"></i></button></td>'+
+      '</tr>';
+    });
+  }catch(err){
+    t.innerHTML='<tr><td colspan="7" class="empty-msg">❌ লোড ব্যর্থ: '+err.message+'</td></tr>';
+    console.error(err);
+  }
+}
+
+async function deleteStudent(fireId){
+  if(!confirm('এই শিক্ষার্থীকে মুছে ফেলবেন?'))return;
+  try{
+    await window.fbDeleteDoc(window.fbDoc(window.db,'Students',fireId));
+    await renderStudents();
+    loadStats();
+  }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
+}
+
+/* ============ OTHER SECTIONS (LocalStorage ডেমো) ============ */
 function get(k){try{return JSON.parse(localStorage.getItem('dc_'+k)||'[]')}catch(e){return[]}}
 function set(k,v){localStorage.setItem('dc_'+k,JSON.stringify(v))}
 
-/* ============ NOTICE ============ */
 function addNotice(e){
   e.preventDefault();
   var list=get('notices');
@@ -604,8 +636,6 @@ function renderNotices(){
     t.innerHTML+='<tr><td><strong>'+n.title+'</strong></td><td><span class="badge orange">'+n.type+'</span></td><td>'+n.body+'</td><td>'+n.date+'</td><td><button class="btn-red" onclick="delItem(\'notices\','+i+',renderNotices)"><i class="fa-solid fa-trash"></i></button></td></tr>';
   });
 }
-
-/* ============ COURSE ============ */
 function addCourse(e){
   e.preventDefault();
   var list=get('courses');
@@ -619,67 +649,6 @@ function renderCourses(){
     t.innerHTML+='<tr><td><strong>'+c.name+'</strong></td><td>৳'+c.price+'</td><td>'+c.duration+'</td><td>'+c.seats+'</td><td><button class="btn-red" onclick="delItem(\'courses\','+i+',renderCourses)"><i class="fa-solid fa-trash"></i></button></td></tr>';
   });
 }
-
-/* ============ STUDENT (নতুন) ============ */
-function generateStudentId(list){
-  if(list.length===0) return 'STU001';
-  var max=0;
-  list.forEach(function(s){
-    var n=parseInt(String(s.id).replace('STU',''))||0;
-    if(n>max)max=n;
-  });
-  return 'STU'+String(max+1).padStart(3,'0');
-}
-
-function addStudent(e){
-  e.preventDefault();
-  var name=document.getElementById('stName').value.trim();
-  var cls=document.getElementById('stClass').value;
-  var phone=document.getElementById('stPhone').value.trim();
-  var batch=document.getElementById('stBatch').value;
-  var pass=document.getElementById('stPass').value.trim();
-
-  if(!name){alert('⚠️ শিক্ষার্থীর নাম লিখুন');return;}
-  if(!cls){alert('⚠️ শ্রেণি নির্বাচন করুন');return;}
-  if(!phone){alert('⚠️ মোবাইল নম্বর লিখুন');return;}
-  if(!batch){alert('⚠️ বাচ নির্বাচন করুন');return;}
-  if(!pass){alert('⚠️ পাসওয়ার্ড দিন');return;}
-
-  var list=get('students');
-  if(list.some(function(s){return s.phone===phone;})){
-    alert('❌ এই মোবাইল নম্বর আগেই যোগ করা হয়েছে!');return;
-  }
-
-  var newId=generateStudentId(list);
-  list.push({id:newId,name:name,cls:cls,phone:phone,batch:batch,pass:pass,date:new Date().toLocaleDateString('bn-BD')});
-  set('students',list);
-  e.target.reset();
-  renderStudents();
-  loadStats();
-  alert('✅ শিক্ষার্থী যোগ হয়েছে!\n\nআইডি: '+newId+'\nপাসওয়ার্ড: '+pass+'\n\nএই তথ্য শিক্ষার্থীকে দিন।');
-}
-
-function renderStudents(filter){
-  filter=filter||'';
-  var t=document.getElementById('studentTable');
-  t.innerHTML='<tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th><th>বাচ</th><th>পাসওয়ার্ড</th><th>অ্যাকশন</th></tr>';
-  var list=get('students').filter(function(s){
-    var q=filter.toLowerCase();
-    return s.name.toLowerCase().indexOf(q)>-1 || s.id.toLowerCase().indexOf(q)>-1 || s.phone.indexOf(filter)>-1;
-  });
-  if(list.length===0){
-    t.innerHTML+='<tr><td colspan="7" class="empty-msg">কোনো শিক্ষার্থী পাওয়া যায়নি</td></tr>';
-    return;
-  }
-  list.forEach(function(s){
-    var idx=get('students').findIndex(function(x){return x.id===s.id;});
-    var batchCls=s.batch==='সকাল'?'orange':'blue';
-    t.innerHTML+='<tr><td><strong>'+s.id+'</strong></td><td>'+s.name+'</td><td>'+s.cls+'</td><td>'+s.phone+'</td><td><span class="badge '+batchCls+'">'+s.batch+'</span></td><td><code class="pass">'+s.pass+'</code></td><td><button class="btn-red" onclick="delItem(\'students\','+idx+',renderStudents)"><i class="fa-solid fa-trash"></i></button></td></tr>';
-  });
-}
-function searchStudent(){renderStudents(document.getElementById('stSearch').value)}
-
-/* ============ PAYMENT ============ */
 function addPayment(e){
   e.preventDefault();
   var list=get('payments');
@@ -693,15 +662,13 @@ function renderPayments(){
     t.innerHTML+='<tr><td>'+p.student+'</td><td>৳'+p.amount+'</td><td>'+p.method+'</td><td>'+p.month+'</td><td><span class="badge green">'+p.status+'</span></td></tr>';
   });
 }
-
-/* ============ RESULT ============ */
 function addResult(e){
   e.preventDefault();
   var marks=parseInt(document.getElementById('rMarks').value);
-  var grade='F';
-  if(marks>=80)grade='A+';else if(marks>=70)grade='A';else if(marks>=60)grade='A-';else if(marks>=50)grade='B';else if(marks>=40)grade='C';else if(marks>=33)grade='D';
+  var g='F';
+  if(marks>=80)g='A+';else if(marks>=70)g='A';else if(marks>=60)g='A-';else if(marks>=50)g='B';else if(marks>=40)g='C';else if(marks>=33)g='D';
   var list=get('results');
-  list.push({name:document.getElementById('rName').value,cls:document.getElementById('rClass').value,subject:document.getElementById('rSubject').value,marks:marks,grade:grade});
+  list.push({name:document.getElementById('rName').value,cls:document.getElementById('rClass').value,subject:document.getElementById('rSubject').value,marks:marks,grade:g});
   set('results',list);e.target.reset();renderResults();
 }
 function renderResults(){
@@ -711,8 +678,6 @@ function renderResults(){
     t.innerHTML+='<tr><td>'+r.name+'</td><td>'+r.cls+'</td><td>'+r.subject+'</td><td>'+r.marks+'</td><td><span class="badge '+(r.grade==='F'?'red':'green')+'">'+r.grade+'</span></td></tr>';
   });
 }
-
-/* ============ TEACHER ============ */
 function addTeacher(e){
   e.preventDefault();
   var list=get('teachers');
@@ -726,45 +691,25 @@ function renderTeachers(){
     t.innerHTML+='<tr><td><strong>'+tc.name+'</strong></td><td>'+tc.subject+'</td><td>'+tc.phone+'</td><td>'+tc.qual+'</td><td><button class="btn-red" onclick="delItem(\'teachers\','+i+',renderTeachers)"><i class="fa-solid fa-trash"></i></button></td></tr>';
   });
 }
-
-/* ============ DELETE ============ */
-function delItem(key,index,callback){
+function delItem(k,i,cb){
   if(!confirm('মুছে ফেলবেন?'))return;
-  var list=get(key);
-  list.splice(index,1);
-  set(key,list);
-  callback();
-  loadStats();
+  var l=get(k);l.splice(i,1);set(k,l);cb();loadStats();
 }
-
-/* ============ STATS ============ */
 function loadStats(){
-  document.getElementById('sStudents').textContent=get('students').length;
-  var income=0;
-  get('payments').forEach(function(p){income+=parseInt(p.amount||0);});
-  document.getElementById('sIncome').textContent=income;
+  // শিক্ষার্থীর সংখ্যা Firebase থেকে
+  window.fbGetDocs(window.fbCollection(window.db,'Students')).then(function(s){
+    document.getElementById('sStudents').textContent=s.size;
+  }).catch(function(){});
+  var inc=0;get('payments').forEach(function(p){inc+=parseInt(p.amount||0);});
+  document.getElementById('sIncome').textContent=inc;
   document.getElementById('sNotice').textContent=get('notices').length;
   document.getElementById('sCourse').textContent=get('courses').length;
 }
 
-/* ============ LOAD ============ */
+/* ============ LOAD ALL ============ */
 function loadAll(){
-  renderNotices();renderCourses();renderStudents();renderPayments();renderResults();renderTeachers();loadStats();
-  if(get('notices').length===0){
-    set('notices',[
-      {title:'আগামীকাল কোচিং বন্ধ',type:'জরুরি',body:'আগামীকাল (শুক্রবার) সকল ক্লাস বন্ধ থাকবে।',date:'১০/১০/২০২৬'},
-      {title:'নতুন ব্যাচ শুরু',type:'তথ্য',body:'অষ্টম শ্রেণির নতুন ব্যাচ আগামী সপ্তাহে শুরু হবে।',date:'০৮/১০/২০২৬'}
-    ]);
-    renderNotices();loadStats();
-  }
-  if(get('courses').length===0){
-    set('courses',[
-      {name:'ষষ্ঠ-অষ্টম শ্রেণি',price:'800',duration:'৩ মাস',seats:'50'},
-      {name:'SSC প্রস্তুতি',price:'1200',duration:'৬ মাস',seats:'40'},
-      {name:'HSC প্রস্তুতি',price:'1500',duration:'৬ মাস',seats:'30'}
-    ]);
-    renderCourses();loadStats();
-  }
+  renderNotices();renderCourses();renderPayments();renderResults();renderTeachers();
+  renderStudents();loadStats();
 }
 </script>
 </body>
