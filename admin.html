@@ -18,13 +18,12 @@ body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--tex
 
 /* LOGIN */
 .login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1a365d,#2c5282);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow-y:auto}
-.login-box{background:#fff;padding:36px 30px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:430px;text-align:center;margin:auto}
+.login-box{background:#fff;padding:36px 30px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:420px;text-align:center;margin:auto}
 .login-box .logo{width:70px;height:70px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:#fff;font-size:1.8rem}
 .login-box h2{color:var(--primary);margin-bottom:6px}
 .login-box p.sub{color:var(--muted);font-size:.9rem;margin-bottom:22px}
 .login-box input{width:100%;padding:13px 16px;border:1px solid #cbd5e1;border-radius:10px;margin-bottom:14px;font-family:inherit;font-size:.95rem}
 .login-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,54,93,.1)}
-.login-box input.otp-input{letter-spacing:8px;font-size:1.4rem;font-weight:700;text-align:center}
 .login-box button{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;font-family:inherit;transition:.3s;margin-bottom:8px}
 .login-box button:hover{background:var(--accent)}
 .login-box button.reset{background:#ef4444}
@@ -46,7 +45,8 @@ body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--tex
 .msg.info{background:#dbeafe;color:#1e40af;display:block}
 .timer{font-size:.85rem;color:var(--red);font-weight:600;margin-bottom:12px}
 .timer span{color:var(--primary)}
-.strength{height:6px;background:#e2e8f0;border-radius:50px;overflow:hidden;margin:-8px 0 14px}
+.otp-input{letter-spacing:8px;font-size:1.4rem;font-weight:700;text-align:center}
+.strength{height:6px;background:#e2e8f0;border-radius:50px;overflow:hidden;margin:-8px 0 8px}
 .strength-bar{height:100%;width:0;transition:.3s;border-radius:50px}
 .strength-text{font-size:.8rem;text-align:left;margin-bottom:14px;color:var(--muted)}
 
@@ -127,20 +127,20 @@ table tr:hover{background:#f8fafc}
 </head>
 <body>
 
-<!-- ============ LOGIN WITH OTP + RESET ============ -->
+<!-- ============ LOGIN ============ -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="logo"><i class="fa-solid fa-graduation-cap"></i></div>
     <h2>Admin Panel</h2>
     <p class="sub">Dynamic Classroom ম্যানেজমেন্ট সিস্টেম</p>
 
-    <!-- STEP 1: Email + Password -->
+    <!-- STEP 1: Login with Email -->
     <div class="step active" id="step1">
       <div class="msg" id="msg1"></div>
       <input type="email" id="adminEmail" placeholder="📧 ইমেইল অ্যাড্রেস">
       <input type="password" id="adminPass" placeholder="🔒 পাসওয়ার্ড">
       <a class="forgot-link" onclick="goToForgot()">পাসওয়ার্ড ভুলে গেছেন?</a>
-      <button onclick="sendOTP()"><i class="fa-solid fa-paper-plane"></i> OTP পাঠান</button>
+      <button onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> লগইন করুন</button>
       <button class="reset" onclick="resetAll()"><i class="fa-solid fa-rotate"></i> Reset All Data</button>
       <div class="login-hint">
         <strong>📧 ইমেইল:</strong> mazedhossain50555@gmail.com<br>
@@ -148,20 +148,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
-    <!-- STEP 2: OTP Verify -->
-    <div class="step" id="step2">
-      <div class="otp-display">
-        📨 ডেমো OTP কোড (আসল সাইটে ইমেইলে যাবে):
-        <b id="otpShow">------</b>
-      </div>
-      <div class="msg" id="msg2"></div>
-      <input type="text" id="otpInput" class="otp-input" placeholder="------" maxlength="6">
-      <div class="timer">⏱️ সময় বাকি: <span id="timer">০২:০০</span></div>
-      <button onclick="verifyOTP()"><i class="fa-solid fa-shield-halved"></i> যাচাই করুন</button>
-      <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
-    </div>
-
-    <!-- STEP 3: Forgot Password - Email -->
+    <!-- STEP 2: Forgot Password - Email -->
     <div class="step" id="stepForgot">
       <h3 style="color:var(--primary);margin-bottom:8px">🔐 পাসওয়ার্ড রিসেট</h3>
       <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">আপনার ইমেইল দিন, OTP কোড পাঠানো হবে</p>
@@ -171,7 +158,7 @@ table tr:hover{background:#f8fafc}
       <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> লগইনে ফিরে যান</button>
     </div>
 
-    <!-- STEP 4: Forgot Password - OTP Verify -->
+    <!-- STEP 3: Forgot Password - OTP -->
     <div class="step" id="stepResetOTP">
       <h3 style="color:var(--primary);margin-bottom:8px">📨 OTP যাচাই</h3>
       <div class="otp-display">
@@ -185,7 +172,7 @@ table tr:hover{background:#f8fafc}
       <button class="back" onclick="goToForgot()"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
     </div>
 
-    <!-- STEP 5: New Password -->
+    <!-- STEP 4: New Password -->
     <div class="step" id="stepNewPass">
       <h3 style="color:var(--primary);margin-bottom:8px">🔑 নতুন পাসওয়ার্ড</h3>
       <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">শক্তিশালী পাসওয়ার্ড ব্যবহার করুন</p>
@@ -195,6 +182,7 @@ table tr:hover{background:#f8fafc}
       <div class="strength-text" id="strengthText"></div>
       <input type="password" id="newPass2" placeholder="🔒 নতুন পাসওয়ার্ড (আবার)">
       <button onclick="saveNewPassword()"><i class="fa-solid fa-floppy-disk"></i> পাসওয়ার্ড সেভ করুন</button>
+      <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> বাতিল করুন</button>
     </div>
 
   </div>
@@ -379,10 +367,10 @@ table tr:hover{background:#f8fafc}
       </div>
       <div class="card">
         <div class="card-head"><h3>🔐 পাসওয়ার্ড পরিবর্তন</h3></div>
-        <form class="form-grid" onsubmit="event.preventDefault();alert('✅ পাসওয়ার্ড পরিবর্তিত!')">
-          <input type="password" placeholder="পুরোনো পাসওয়ার্ড">
-          <input type="password" placeholder="নতুন পাসওয়ার্ড">
-          <input type="password" placeholder="নতুন পাসওয়ার্ড (আবার)" class="full">
+        <form class="form-grid" onsubmit="changePassword(event)">
+          <input type="password" id="oldPass" placeholder="পুরোনো পাসওয়ার্ড" required>
+          <input type="password" id="newPassAdmin" placeholder="নতুন পাসওয়ার্ড" required>
+          <input type="password" id="newPassAdmin2" placeholder="নতুন পাসওয়ার্ড (আবার)" class="full" required>
           <button type="submit">পাসওয়ার্ড পরিবর্তন</button>
         </form>
       </div>
@@ -399,8 +387,6 @@ var DEFAULT_PASS='admin1234';
 function getAdminEmail(){return localStorage.getItem('dc_email')||DEFAULT_EMAIL;}
 function getAdminPass(){return localStorage.getItem('dc_pass')||DEFAULT_PASS;}
 
-var generatedOTP='';
-var otpTimer=null, otpSeconds=120;
 var resetOTP='';
 var resetTimer=null, resetSeconds=120;
 
@@ -411,13 +397,13 @@ function showStep(id){
   document.getElementById(id).classList.add('active');
 }
 function backToStep1(){
-  clearInterval(otpTimer);clearInterval(resetTimer);
+  clearInterval(resetTimer);
   showStep('step1');
   document.getElementById('msg1').className='msg';
 }
 
-/* ============ STEP 1: SEND OTP ============ */
-function sendOTP(){
+/* ============ LOGIN ============ */
+function login(){
   var email=document.getElementById('adminEmail').value.trim();
   var pass=document.getElementById('adminPass').value.trim();
   var msg=document.getElementById('msg1');
@@ -430,52 +416,21 @@ function sendOTP(){
     msg.className='msg error';msg.textContent='❌ ভুল ইমেইল!';return;
   }
   if(pass!==getAdminPass()){
-    msg.className='msg error';msg.textContent='❌ ভুল পাসওয়ার্ড! "পাসওয়ার্ড ভুলে গেছেন?" চাপুন।';return;
+    msg.className='msg error';msg.textContent='❌ ভুল পাসওয়ার্ড! "পাসওয়ার্ড ভুলে গেছেন?" লিংকে ক্লিক করুন।';return;
   }
-  generatedOTP=String(Math.floor(100000+Math.random()*900000));
-  document.getElementById('otpShow').textContent=generatedOTP;
-  document.getElementById('otpInput').value='';
-  document.getElementById('msg2').className='msg';
-  showStep('step2');
-  startOTPTimer();
-}
 
-function verifyOTP(){
-  var input=document.getElementById('otpInput').value.trim();
-  var msg=document.getElementById('msg2');
-  msg.className='msg';
-  if(otpSeconds<=0){msg.className='msg error';msg.textContent='⏰ OTP এর সময় শেষ!';return;}
-  if(input.length!==6){msg.className='msg error';msg.textContent='⚠️ ৬ ডিজিটের কোড দিন!';return;}
-  if(input===generatedOTP){
-    msg.className='msg success';msg.textContent='✅ ভেরিফিকেশন সফল!';
-    clearInterval(otpTimer);
-    localStorage.setItem('dc_admin','yes');
-    setTimeout(function(){
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('adminPanel').classList.add('active');
-      loadAll();
-    },700);
-  } else {
-    msg.className='msg error';msg.textContent='❌ ভুল OTP কোড!';
-  }
-}
-
-/* ============ STEP TIMER ============ */
-function startOTPTimer(){
-  otpSeconds=120;clearInterval(otpTimer);updateOTPTimer();
-  otpTimer=setInterval(function(){
-    otpSeconds--;updateOTPTimer();
-    if(otpSeconds<=0){clearInterval(otpTimer);document.getElementById('timer').textContent='সময় শেষ';}
-  },1000);
-}
-function updateOTPTimer(){
-  var m=Math.floor(otpSeconds/60),s=otpSeconds%60;
-  document.getElementById('timer').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  msg.className='msg success';msg.textContent='✅ লগইন সফল!';
+  localStorage.setItem('dc_admin','yes');
+  setTimeout(function(){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').classList.add('active');
+    loadAll();
+  },500);
 }
 
 /* ============ FORGOT PASSWORD ============ */
 function goToForgot(){
-  clearInterval(otpTimer);clearInterval(resetTimer);
+  clearInterval(resetTimer);
   document.getElementById('forgotEmail').value='';
   document.getElementById('msgF1').className='msg';
   showStep('stepForgot');
@@ -573,6 +528,22 @@ function saveNewPassword(){
     document.getElementById('msg1').textContent='✅ নতুন পাসওয়ার্ড দিয়ে লগইন করুন।';
     showStep('step1');
   },1200);
+}
+
+/* ============ CHANGE PASSWORD (from Settings) ============ */
+function changePassword(e){
+  e.preventDefault();
+  var oldP=document.getElementById('oldPass').value;
+  var n1=document.getElementById('newPassAdmin').value;
+  var n2=document.getElementById('newPassAdmin2').value;
+
+  if(oldP!==getAdminPass()){alert('❌ পুরোনো পাসওয়ার্ড ভুল!');return;}
+  if(n1.length<6){alert('⚠️ নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!');return;}
+  if(n1!==n2){alert('❌ দুটো নতুন পাসওয়ার্ড মিলছে না!');return;}
+
+  localStorage.setItem('dc_pass',n1);
+  alert('✅ পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!');
+  e.target.reset();
 }
 
 /* ============ RESET ============ */
