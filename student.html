@@ -1,87 +1,304 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>শিক্ষার্থী লগইন | Dynamic Classroom</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>শিক্ষার্থী লগইন | Dynamic Classroom</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --primary:#1a365d;
+  --accent:#f59e0b;
+  --green:#10b981;
+  --red:#ef4444;
+  --blue:#3b82f6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hind Siliguri',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+
+.login-container{width:100%;max-width:420px}
+.login-box{background:#fff;padding:36px 30px;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;animation:slideUp .5s}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.login-logo{width:75px;height:75px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:#fff;font-size:2rem;box-shadow:0 8px 20px rgba(102,126,234,.4)}
+
+.login-box h2{color:#1a365d;margin-bottom:6px;font-size:1.5rem}
+.login-box p.sub{color:#64748b;font-size:.9rem;margin-bottom:26px}
+
+.form-group{text-align:left;margin-bottom:16px}
+.form-group label{display:block;margin-bottom:7px;color:#334155;font-weight:600;font-size:.9rem}
+.form-group label i{color:#667eea;margin-right:6px}
+
+.form-group input{width:100%;padding:13px 16px;border:2px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:1rem;transition:.25s;background:#f8fafc}
+.form-group input:focus{outline:none;border-color:#667eea;background:#fff;box-shadow:0 0 0 4px rgba(102,126,234,.12)}
+
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-weight:600;font-size:1.05rem;cursor:pointer;font-family:inherit;transition:.3s;margin-top:8px;box-shadow:0 6px 18px rgba(102,126,234,.35)}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(102,126,234,.45)}
+.login-btn:active{transform:translateY(0)}
+.login-btn i{margin-right:6px}
+
+.message{padding:12px;border-radius:9px;font-size:.92rem;margin-bottom:18px;display:none;font-weight:500}
+.message.error{background:#fee2e2;color:#b91c1c;display:block}
+.message.success{background:#dcfce7;color:#166534;display:block}
+
+.login-footer{text-align:center;margin-top:22px;padding-top:18px;border-top:1px solid #e2e8f0}
+.login-footer a{color:#667eea;text-decoration:none;font-weight:600;font-size:.92rem;display:inline-flex;align-items:center;gap:6px}
+.login-footer a:hover{text-decoration:underline}
+
+.demo-hint{background:#fef3c7;border:2px dashed #f59e0b;color:#78350f;padding:14px;border-radius:10px;margin-top:18px;font-size:.85rem;text-align:left}
+.demo-hint strong{display:block;margin-bottom:4px;color:#92400e}
+.demo-hint b{font-family:monospace;background:#fff;padding:2px 8px;border-radius:5px;color:#b45309}
+
+/* Dashboard */
+.dashboard{display:none;width:100%;max-width:900px}
+.dashboard.active{display:block;animation:slideUp .5s}
+
+.dash-header{background:#fff;padding:20px 26px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;box-shadow:0 8px 25px rgba(0,0,0,.12);flex-wrap:wrap;gap:12px}
+.dash-header .info{display:flex;align-items:center;gap:14px}
+.dash-header .avatar{width:52px;height:52px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;font-weight:700}
+.dash-header h3{color:#1a365d;font-size:1.15rem}
+.dash-header p{color:#64748b;font-size:.85rem}
+.logout-btn{background:#ef4444;color:#fff;border:none;padding:10px 18px;border-radius:9px;font-family:inherit;font-weight:600;cursor:pointer;font-size:.9rem;transition:.2s}
+.logout-btn:hover{background:#b91c1c}
+
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px}
+.dash-card{background:#fff;padding:22px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08);text-align:center}
+.dash-card .icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.3rem;color:#fff}
+.dash-card .icon.blue{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
+.dash-card .icon.green{background:linear-gradient(135deg,#10b981,#34d399)}
+.dash-card .icon.orange{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.dash-card h3{color:#1a365d;font-size:1.5rem;margin-bottom:4px}
+.dash-card p{color:#64748b;font-size:.88rem}
+
+.dash-section{background:#fff;padding:22px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin-bottom:16px}
+.dash-section h3{color:#1a365d;margin-bottom:14px;font-size:1.05rem;border-bottom:2px solid #f1f5f9;padding-bottom:10px}
+.dash-section ul{list-style:none}
+.dash-section li{padding:11px 0;border-bottom:1px solid #f1f5f9;color:#334155;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.dash-section li:last-child{border-bottom:none}
+.dash-section li .badge{background:#dcfce7;color:#166534;padding:4px 12px;border-radius:50px;font-size:.78rem;font-weight:600}
+.dash-section li .badge.pending{background:#fef3c7;color:#b45309}
+
+@media(max-width:600px){
+  .login-box{padding:28px 22px}
+  .dash-header{flex-direction:column;align-items:flex-start}
+}
+</style>
 </head>
-<body class="login-page">
+<body>
 
-    <div class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <i class="fas fa-user-graduate"></i>
-                <h2>শিক্ষার্থী লগইন</h2>
-                <p>Dynamic Classroom-এ স্বাগতম</p>
-            </div>
+<!-- ============ LOGIN ============ -->
+<div class="login-container" id="loginContainer">
+  <div class="login-box">
+    <div class="login-logo"><i class="fa-solid fa-user-graduate"></i></div>
+    <h2>শিক্ষার্থী লগইন</h2>
+    <p class="sub">Dynamic Classroom-এ স্বাগতম</p>
 
-            <form id="studentLoginForm" onsubmit="return studentLogin(event)">
-                <div class="form-group">
-                    <label for="studentId"><i class="fas fa-id-card"></i> শিক্ষার্থী আইডি</label>
-                    <input type="text" id="studentId" placeholder="আপনার আইডি লিখুন" required>
-                </div>
+    <div class="message" id="msg"></div>
 
-                <div class="form-group">
-                    <label for="studentPass"><i class="fas fa-lock"></i> পাসওয়ার্ড</label>
-                    <input type="password" id="studentPass" placeholder="পাসওয়ার্ড লিখুন" required>
-                </div>
+    <form onsubmit="studentLogin(event)">
+      <div class="form-group">
+        <label><i class="fa-solid fa-id-card"></i> শিক্ষার্থী আইডি</label>
+        <input type="text" id="loginId" placeholder="যেমন: STU001" required autocomplete="off">
+      </div>
 
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-sign-in-alt"></i> লগইন করুন
-                </button>
+      <div class="form-group">
+        <label><i class="fa-solid fa-lock"></i> পাসওয়ার্ড</label>
+        <input type="password" id="loginPass" placeholder="আপনার পাসওয়ার্ড" required>
+      </div>
 
-                <p class="login-footer">
-                    <a href="index.html"><i class="fas fa-arrow-left"></i> হোমে ফিরে যান</a>
-                </p>
-            </form>
+      <button type="submit" class="login-btn">
+        <i class="fa-solid fa-right-to-bracket"></i> লগইন করুন
+      </button>
+    </form>
 
-            <div id="loginMessage" class="login-message"></div>
-        </div>
+    <div class="login-footer">
+      <a href="index.html"><i class="fa-solid fa-arrow-left"></i> হোমে ফিরে যান</a>
     </div>
+  </div>
+</div>
 
-    <script>
-        // === শিক্ষার্থী লগইন ===
-        // ডেমো: এখানে ডেমো আইডি/পাসওয়ার্ড দেওয়া হলো।
-        // পরে ডেটাবেজ/API এর সাথে যুক্ত করবেন।
+<!-- ============ DASHBOARD ============ -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <div class="info">
+      <div class="avatar" id="avatar">S</div>
+      <div>
+        <h3 id="dashName">শিক্ষার্থী</h3>
+        <p id="dashInfo">শ্রেণি: — | বাচ: —</p>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="studentLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i> লগআউট
+    </button>
+  </div>
 
-        const STUDENT_ACCOUNTS = [
-            { id: "student1", pass: "1234", name: "শিক্ষার্থী ১", class: "১০" },
-            { id: "student2", pass: "1234", name: "শিক্ষার্থী ২", class: "৯" }
-        ];
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="icon blue"><i class="fa-solid fa-book-open"></i></div>
+      <h3>৩</h3>
+      <p>আজকের ক্লাস</p>
+    </div>
+    <div class="dash-card">
+      <div class="icon green"><i class="fa-solid fa-check-circle"></i></div>
+      <h3>৮৫%</h3>
+      <p>উপস্থিতি</p>
+    </div>
+    <div class="dash-card">
+      <div class="icon orange"><i class="fa-solid fa-file-alt"></i></div>
+      <h3>২</h3>
+      <p>অপেক্ষমাণ অ্যাসাইনমেন্ট</p>
+    </div>
+  </div>
 
-        function studentLogin(e) {
-            e.preventDefault();
+  <div class="dash-section">
+    <h3>📖 আজকের ক্লাস</h3>
+    <ul>
+      <li><span>গণিত — অধ্যায় ৩</span> <span class="badge">সকাল ১০টা</span></li>
+      <li><span>ইংরেজি — Grammar</span> <span class="badge">সকাল ১১টা</span></li>
+      <li><span>বিজ্ঞান — রসায়ন</span> <span class="badge">দুপুর ১২টা</span></li>
+    </ul>
+  </div>
 
-            const id = document.getElementById("studentId").value.trim();
-            const pass = document.getElementById("studentPass").value.trim();
-            const msg = document.getElementById("loginMessage");
+  <div class="dash-section">
+    <h3>📢 নোটিশ</h3>
+    <ul id="noticeList">
+      <li><span>আগামীকাল কোচিং বন্ধ</span> <span class="badge pending">জরুরি</span></li>
+      <li><span>নতুন ব্যাচ শুরু</span> <span class="badge">তথ্য</span></li>
+    </ul>
+  </div>
+</div>
 
-            // অ্যাকাউন্ট খোঁজা
-            const found = STUDENT_ACCOUNTS.find(s => s.id === id && s.pass === pass);
+<script>
+/* ============================================
+   শিক্ষার্থী লগইন সিস্টেম
+   - admin.html যেভাবে সেভ করে: dc_students (array)
+   - প্রতিটি শিক্ষার্থীর ফিল্ড: id, name, cls, phone, batch, pass
+   ============================================ */
 
-            if (found) {
-                // সেশন সেভ
-                localStorage.setItem("role", "student");
-                localStorage.setItem("studentName", found.name);
-                localStorage.setItem("studentId", found.id);
-                localStorage.setItem("studentClass", found.class);
+var STUDENT_KEY = "dc_students";
 
-                msg.style.color = "green";
-                msg.textContent = "লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...";
+/* ---- সব শিক্ষার্থী পড়া ---- */
+function getAllStudents() {
+  try {
+    var raw = localStorage.getItem(STUDENT_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) {
+    return [];
+  }
+}
 
-                setTimeout(() => {
-                    window.location.href = "student-dashboard.html";
-                }, 800);
-            } else {
-                msg.style.color = "red";
-                msg.textContent = "ভুল আইডি বা পাসওয়ার্ড!";
-            }
+/* ---- লগইন ---- */
+function studentLogin(e) {
+  e.preventDefault();
 
-            return false;
-        }
-    </script>
+  var id   = document.getElementById("loginId").value.trim().toUpperCase();
+  var pass = document.getElementById("loginPass").value.trim();
+  var msg  = document.getElementById("msg");
+
+  msg.className = "message";
+
+  if (!id || !pass) {
+    msg.className = "message error";
+    msg.textContent = "⚠️ আইডি ও পাসওয়ার্ড দুটোই দিন!";
+    return false;
+  }
+
+  var students = getAllStudents();
+
+  if (students.length === 0) {
+    msg.className = "message error";
+    msg.textContent = "⚠️ এখনো কোনো শিক্ষার্থী যোগ করা হয়নি। আগে অ্যাডমিন প্যানেল থেকে শিক্ষার্থী যোগ করুন।";
+    return false;
+  }
+
+  /* আইডি দিয়ে খোঁজা */
+  var found = null;
+  for (var i = 0; i < students.length; i++) {
+    if (String(students[i].id).toUpperCase() === id) {
+      found = students[i];
+      break;
+    }
+  }
+
+  if (!found) {
+    msg.className = "message error";
+    msg.textContent = "❌ এই আইডিতে কোনো শিক্ষার্থী নেই!";
+    return false;
+  }
+
+  if (String(found.pass) !== pass) {
+    msg.className = "message error";
+    msg.textContent = "❌ পাসওয়ার্ড ভুল!";
+    return false;
+  }
+
+  /* সফল — সেশন সেভ */
+  localStorage.setItem("dc_student_logged", "yes");
+  localStorage.setItem("dc_student_id", found.id);
+  localStorage.setItem("dc_student_name", found.name);
+  localStorage.setItem("dc_student_class", found.cls);
+  localStorage.setItem("dc_student_batch", found.batch);
+
+  msg.className = "message success";
+  msg.textContent = "✅ লগইন সফল! ড্যাশবোর্ড লোড হচ্ছে...";
+
+  setTimeout(function() {
+    showDashboard();
+  }, 700);
+
+  return false;
+}
+
+/* ---- ড্যাশবোর্ড দেখানো ---- */
+function showDashboard() {
+  document.getElementById("loginContainer").style.display = "none";
+  document.getElementById("dashboard").classList.add("active");
+
+  var name  = localStorage.getItem("dc_student_name")  || "শিক্ষার্থী";
+  var cls   = localStorage.getItem("dc_student_class") || "—";
+  var batch = localStorage.getItem("dc_student_batch") || "—";
+  var id    = localStorage.getItem("dc_student_id")    || "—";
+
+  document.getElementById("dashName").textContent = name;
+  document.getElementById("dashInfo").textContent = "শ্রেণি: " + cls + " | বাচ: " + batch + " | আইডি: " + id;
+  document.getElementById("avatar").textContent = name.charAt(0);
+
+  /* নোটিশ লোড */
+  try {
+    var notices = JSON.parse(localStorage.getItem("dc_notices") || "[]");
+    if (notices.length > 0) {
+      var list = document.getElementById("noticeList");
+      list.innerHTML = "";
+      notices.slice(0, 5).forEach(function(n) {
+        var li = document.createElement("li");
+        li.innerHTML = "<span>" + n.title + "</span> <span class='badge " +
+                       (n.type === 'জরুরি' ? 'pending' : '') + "'>" + n.type + "</span>";
+        list.appendChild(li);
+      });
+    }
+  } catch(e) {}
+}
+
+/* ---- লগআউট ---- */
+function studentLogout() {
+  if (!confirm("লগআউট করবেন?")) return;
+
+  localStorage.removeItem("dc_student_logged");
+  localStorage.removeItem("dc_student_id");
+  localStorage.removeItem("dc_student_name");
+  localStorage.removeItem("dc_student_class");
+  localStorage.removeItem("dc_student_batch");
+
+  location.reload();
+}
+
+/* ---- অটো লগইন (আগে লগইন করা থাকলে) ---- */
+window.addEventListener("DOMContentLoaded", function() {
+  if (localStorage.getItem("dc_student_logged") === "yes") {
+    showDashboard();
+  }
+});
+</script>
 </body>
 </html>
