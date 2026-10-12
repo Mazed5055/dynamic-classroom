@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>শিক্ষার্থী লগইন | Dynamic Classroom</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-user-graduate"></i>
+                <h2>শিক্ষার্থী লগইন</h2>
+                <p>Dynamic Classroom-এ স্বাগতম</p>
+            </div>
+
+            <form id="studentLoginForm" onsubmit="return studentLogin(event)">
+                <div class="form-group">
+                    <label for="studentId"><i class="fas fa-id-card"></i> শিক্ষার্থী আইডি</label>
+                    <input type="text" id="studentId" placeholder="আপনার আইডি লিখুন" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentPass"><i class="fas fa-lock"></i> পাসওয়ার্ড</label>
+                    <input type="password" id="studentPass" placeholder="পাসওয়ার্ড লিখুন" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> লগইন করুন
+                </button>
+
+                <p class="login-footer">
+                    <a href="index.html"><i class="fas fa-arrow-left"></i> হোমে ফিরে যান</a>
+                </p>
+            </form>
+
+            <div id="loginMessage" class="login-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // === শিক্ষার্থী লগইন ===
+        // ডেমো: এখানে ডেমো আইডি/পাসওয়ার্ড দেওয়া হলো।
+        // পরে ডেটাবেজ/API এর সাথে যুক্ত করবেন।
+
+        const STUDENT_ACCOUNTS = [
+            { id: "student1", pass: "1234", name: "শিক্ষার্থী ১", class: "১০" },
+            { id: "student2", pass: "1234", name: "শিক্ষার্থী ২", class: "৯" }
+        ];
+
+        function studentLogin(e) {
+            e.preventDefault();
+
+            const id = document.getElementById("studentId").value.trim();
+            const pass = document.getElementById("studentPass").value.trim();
+            const msg = document.getElementById("loginMessage");
+
+            // অ্যাকাউন্ট খোঁজা
+            const found = STUDENT_ACCOUNTS.find(s => s.id === id && s.pass === pass);
+
+            if (found) {
+                // সেশন সেভ
+                localStorage.setItem("role", "student");
+                localStorage.setItem("studentName", found.name);
+                localStorage.setItem("studentId", found.id);
+                localStorage.setItem("studentClass", found.class);
+
+                msg.style.color = "green";
+                msg.textContent = "লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...";
+
+                setTimeout(() => {
+                    window.location.href = "student-dashboard.html";
+                }, 800);
+            } else {
+                msg.style.color = "red";
+                msg.textContent = "ভুল আইডি বা পাসওয়ার্ড!";
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>
