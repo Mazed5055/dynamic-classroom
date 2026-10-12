@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>এডমিন ড্যাশবোর্ড - Dynamic Classroom</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Dynamic Classroom</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active" data-tab="overview"><i class="fas fa-tachometer-alt"></i> ওভারভিউ</li>
+                <li data-tab="students"><i class="fas fa-users"></i> শিক্ষার্থী</li>
+                <li data-tab="notices"><i class="fas fa-bullhorn"></i> নোটিশ</li>
+                <li data-tab="classes"><i class="fas fa-book"></i> ক্লাস (৬-১২)</li>
+                <li data-tab="settings"><i class="fas fa-cog"></i> সেটিংস</li>
+            </ul>
+            <button class="btn btn-logout" id="adminLogout"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <header class="dashboard-header">
+                <h1 id="pageTitle">ওভারভিউ</h1>
+                <div class="admin-info">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="adminName">এডমিন</span>
+                </div>
+            </header>
+
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="totalStudents">0</h3>
+                        <p>মোট শিক্ষার্থী</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-book"></i>
+                        <h3>৭</h3>
+                        <p>শ্রেণী (৬-১২)</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-bullhorn"></i>
+                        <h3 id="totalNotices">0</h3>
+                        <p>নোটিশ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Tab -->
+            <div class="tab-content" id="students">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>শিক্ষার্থী ব্যবস্থাপনা</h2>
+                        <button class="btn btn-primary" id="addStudentBtn"><i class="fas fa-plus"></i> নতুন শিক্ষার্থী</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>নাম</th>
+                                    <th>রোল</th>
+                                    <th>পিন</th>
+                                    <th>শ্রেণী</th>
+                                    <th>অ্যাকশন</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notices Tab -->
+            <div class="tab-content" id="notices">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>নোটিশ ব্যবস্থাপনা</h2>
+                        <button class="btn btn-primary" id="addNoticeBtn"><i class="fas fa-plus"></i> নতুন নোটিশ</button>
+                    </div>
+                    <div id="noticesList" class="notices-list"></div>
+                </div>
+            </div>
+
+            <!-- Classes Tab -->
+            <div class="tab-content" id="classes">
+                <div class="card">
+                    <h2>শ্রেণী ব্যবস্থাপনা (৬-১২)</h2>
+                    <div class="class-grid">
+                        <div class="class-card"><div class="class-icon">৬</div><h3>ষষ্ঠ শ্রেণী</h3></div>
+                        <div class="class-card"><div class="class-icon">৭</div><h3>সপ্তম শ্রেণী</h3></div>
+                        <div class="class-card"><div class="class-icon">৮</div><h3>অষ্টম শ্রেণী</h3></div>
+                        <div class="class-card"><div class="class-icon">৯</div><h3>নবম শ্রেণী</h3></div>
+                        <div class="class-card"><div class="class-icon">১০</div><h3>দশম শ্রেণী</h3></div>
+                        <div class="class-card"><div class="class-icon">১১</div><h3>একাদশ শ্রেণী</h3></div>
+                        <div class="class-card"><div class="class-icon">১২</div><h3>দ্বাদশ শ্রেণী</h3></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings">
+                <div class="card">
+                    <h2>এডমিন সেটিংস</h2>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label>ইমেইল পরিবর্তন</label>
+                            <input type="email" id="newAdminEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>নতুন পাসওয়ার্ড</label>
+                            <input type="password" id="newAdminPassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary">সংরক্ষণ করুন</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <h2 id="studentModalTitle">নতুন শিক্ষার্থী যোগ করুন</h2>
+            <form id="studentForm">
+                <input type="hidden" id="studentIndex">
+                <div class="form-group">
+                    <label>নাম</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label>রোল</label>
+                    <input type="text" id="studentRoll" required>
+                </div>
+                <div class="form-group">
+                    <label>পিন (৪ ডিজিট)</label>
+                    <input type="text" id="studentPin" maxlength="4" required>
+                </div>
+                <div class="form-group">
+                    <label>শ্রেণী</label>
+                    <select id="studentClass" required>
+                        <option value="6">৬ষ্ঠ</option>
+                        <option value="7">৭ম</option>
+                        <option value="8">৮ম</option>
+                        <option value="9">৯ম</option>
+                        <option value="10">১০ম</option>
+                        <option value="11">১১তম</option>
+                        <option value="12">১২তম</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('studentModal')">বাতিল</button>
+                    <button type="submit" class="btn btn-primary">সংরক্ষণ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="noticeModal">
+        <div class="modal-content">
+            <h2>নতুন নোটিশ</h2>
+            <form id="noticeForm">
+                <div class="form-group">
+                    <label>শিরোনাম</label>
+                    <input type="text" id="noticeTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>বিবরণ</label>
+                    <textarea id="noticeBody" rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('noticeModal')">বাতিল</button>
+                    <button type="submit" class="btn btn-primary">প্রকাশ করুন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
