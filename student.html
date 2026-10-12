@@ -58,6 +58,7 @@ body{font-family:'Hind Siliguri',sans-serif;background:linear-gradient(135deg,#6
 .dash-card .icon.blue{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
 .dash-card .icon.green{background:linear-gradient(135deg,#10b981,#34d399)}
 .dash-card .icon.orange{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.dash-card .icon.purple{background:linear-gradient(135deg,#8b5cf6,#a78bfa)}
 .dash-card h3{color:#1a365d;font-size:1.5rem;margin-bottom:4px}
 .dash-card p{color:#64748b;font-size:.88rem}
 
@@ -68,6 +69,22 @@ body{font-family:'Hind Siliguri',sans-serif;background:linear-gradient(135deg,#6
 .dash-section li:last-child{border-bottom:none}
 .dash-section li .badge{background:#dcfce7;color:#166534;padding:4px 12px;border-radius:50px;font-size:.78rem;font-weight:600}
 .dash-section li .badge.pending{background:#fef3c7;color:#b45309}
+
+/* Result */
+.exam-block{text-align:left;margin-bottom:22px;background:#f8fafc;padding:14px;border-radius:10px;border:1px solid #e2e8f0}
+.exam-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.exam-head h4{color:#1a365d;font-size:1rem;margin:0}
+.exam-total{font-size:.85rem;color:#64748b}
+.exam-table{width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:8px;overflow:hidden}
+.exam-table th{background:#e2e8f0;color:#1a365d;padding:9px 8px;font-weight:600;font-size:.82rem}
+.exam-table td{padding:9px 8px;border-bottom:1px solid #f1f5f9;color:#334155}
+.exam-table tr:last-child td{border-bottom:none}
+.exam-table .center{text-align:center}
+.mini-badge{padding:2px 10px;border-radius:50px;font-weight:600;font-size:.78rem;display:inline-block}
+.mini-pass{background:#dcfce7;color:#166534}
+.mini-fail{background:#fee2e2;color:#b91c1c}
+.mini-grade-pass{background:#dcfce7;color:#166534}
+.mini-grade-fail{background:#fee2e2;color:#b91c1c}
 
 @media(max-width:600px){
   .login-box{padding:28px 22px}
@@ -125,29 +142,27 @@ body{font-family:'Hind Siliguri',sans-serif;background:linear-gradient(135deg,#6
 
   <div class="dash-grid">
     <div class="dash-card">
-      <div class="icon blue"><i class="fa-solid fa-book-open"></i></div>
-      <h3>৩</h3>
-      <p>আজকের ক্লাস</p>
+      <div class="icon blue"><i class="fa-solid fa-file-lines"></i></div>
+      <h3 id="statExams">০</h3>
+      <p>মোট পরীক্ষা</p>
     </div>
     <div class="dash-card">
       <div class="icon green"><i class="fa-solid fa-check-circle"></i></div>
-      <h3>৮৫%</h3>
-      <p>উপস্থিতি</p>
+      <h3 id="statPass">০</h3>
+      <p>পাস</p>
     </div>
     <div class="dash-card">
-      <div class="icon orange"><i class="fa-solid fa-file-alt"></i></div>
-      <h3>২</h3>
-      <p>অপেক্ষমাণ কাজ</p>
+      <div class="icon orange"><i class="fa-solid fa-star"></i></div>
+      <h3 id="statGrade">—</h3>
+      <p>সামগ্রিক গ্রেড</p>
     </div>
   </div>
 
   <div class="dash-section">
-    <h3>📖 আজকের ক্লাস</h3>
-    <ul>
-      <li><span>গণিত — অধ্যায় ৩</span> <span class="badge">সকাল ১০টা</span></li>
-      <li><span>ইংরেজি — Grammar</span> <span class="badge">সকাল ১১টা</span></li>
-      <li><span>বিজ্ঞান — রসায়ন</span> <span class="badge">দুপুর ১২টা</span></li>
-    </ul>
+    <h3>📊 আমার রেজাল্ট</h3>
+    <div id="resultArea" style="text-align:center;color:#64748b;padding:10px">
+      লোড হচ্ছে...
+    </div>
   </div>
 
   <div class="dash-section">
@@ -198,7 +213,6 @@ console.log("✅ Firebase connected (student)!");
 /* ============ লগইন ============ */
 async function studentLogin(e){
   e.preventDefault();
-
   var id   = document.getElementById("loginId").value.trim().toUpperCase();
   var pass = document.getElementById("loginPass").value.trim();
   var msg  = document.getElementById("msg");
@@ -218,7 +232,6 @@ async function studentLogin(e){
   msg.textContent = "⏳ Firebase-এ খোঁজা হচ্ছে...";
 
   try {
-    // Firebase থেকে সব Students পড়ি
     var snap = await window.fbGetDocs(window.fbCollection(window.db, "Students"));
 
     if(snap.size === 0){
@@ -253,7 +266,6 @@ async function studentLogin(e){
       return false;
     }
 
-    // সফল — সেশন সেভ
     localStorage.setItem("dc_student_logged", "yes");
     localStorage.setItem("dc_student_id", found.studentId);
     localStorage.setItem("dc_student_name", found.name);
@@ -297,7 +309,7 @@ async function showDashboard(){
   document.getElementById("infoBatch").textContent = batch;
   document.getElementById("infoPhone").textContent = phone;
 
-  // Firebase থেকে নোটিশ আনি (যদি Notices কালেকশনে থাকে)
+  // নোটিশ লোড
   try {
     var snap = await window.fbGetDocs(window.fbCollection(window.db, "Notices"));
     var list = document.getElementById("noticeList");
@@ -315,6 +327,127 @@ async function showDashboard(){
     }
   } catch(err){
     document.getElementById("noticeList").innerHTML = "<li><span>নোটিশ লোড হয়নি</span></li>";
+  }
+
+  // রেজাল্ট লোড
+  loadMyResults();
+}
+
+/* ============ রেজাল্ট ============ */
+function gradeOf(marks, full){
+  if(!full || full<=0) return 'F';
+  var p=(marks/full)*100;
+  if(p>=80)return 'A+';
+  if(p>=70)return 'A';
+  if(p>=60)return 'A-';
+  if(p>=50)return 'B';
+  if(p>=40)return 'C';
+  if(p>=33)return 'D';
+  return 'F';
+}
+
+async function loadMyResults(){
+  var area=document.getElementById('resultArea');
+  var myId=localStorage.getItem('dc_student_id');
+  if(!myId){ area.innerHTML='<p>আইডি পাওয়া যায়নি</p>'; return; }
+
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Results'));
+    var mine=[];
+    snap.forEach(function(doc){
+      var r=doc.data();
+      if(String(r.studentId).toUpperCase()===String(myId).toUpperCase()){
+        mine.push(r);
+      }
+    });
+
+    if(mine.length===0){
+      area.innerHTML='<p style="color:#999;padding:15px">এখনো কোনো রেজাল্ট যোগ করা হয়নি</p>';
+      document.getElementById('statExams').textContent='০';
+      document.getElementById('statPass').textContent='০';
+      document.getElementById('statGrade').textContent='—';
+      return;
+    }
+
+    // পরীক্ষা অনুযায়ী গ্রুপ
+    var byExam={};
+    var examOrder=['প্রথম মিডটার্ম','অর্ধ বার্ষিক','দ্বিতীয় মিডটার্ম','বার্ষিক পরীক্ষা',
+                   'প্রথম টেস্ট','দ্বিতীয় টেস্ট','তৃতীয় টেস্ট','চতুর্থ টেস্ট','পঞ্চম টেস্ট',
+                   'ষষ্ঠ টেস্ট','সপ্তম টেস্ট','অষ্টম টেস্ট','নবম টেস্ট','দশম টেস্ট'];
+
+    mine.forEach(function(r){
+      if(!byExam[r.exam]) byExam[r.exam]=[];
+      byExam[r.exam].push(r);
+    });
+
+    // পরিসংখ্যান
+    var totalExams=mine.length;
+    var totalPass=0;
+    mine.forEach(function(r){ if(r.status==='পাস') totalPass++; });
+
+    var grandFull=0, grandGot=0;
+    mine.forEach(function(r){ grandFull+=(r.full||0); grandGot+=(r.marks||0); });
+    var overallGrade=gradeOf(grandGot, grandFull);
+
+    document.getElementById('statExams').textContent=totalExams;
+    document.getElementById('statPass').textContent=totalPass;
+    document.getElementById('statGrade').textContent=overallGrade;
+
+    // পরীক্ষাগুলো সাজানো
+    var exams=Object.keys(byExam).sort(function(a,b){
+      var ia=examOrder.indexOf(a), ib=examOrder.indexOf(b);
+      if(ia===-1)ia=999;
+      if(ib===-1)ib=999;
+      return ia-ib;
+    });
+
+    var html='';
+    exams.forEach(function(exam){
+      var items=byExam[exam];
+      var eFull=0, eGot=0;
+      items.forEach(function(r){ eFull+=(r.full||0); eGot+=(r.marks||0); });
+      var eGrade=gradeOf(eGot, eFull);
+      var eGradeCls = eGrade==='F'?'mini-grade-fail':'mini-grade-pass';
+
+      html+='<div class="exam-block">';
+      html+='<div class="exam-head">';
+      html+='<h4>📝 '+exam+'</h4>';
+      html+='<div class="exam-total">মোট: <b style="color:#1a365d">'+eGot+'/'+eFull+'</b> <span class="mini-badge '+eGradeCls+'">'+eGrade+'</span></div>';
+      html+='</div>';
+
+      html+='<table class="exam-table">';
+      html+='<thead><tr>'+
+        '<th>বিষয়</th>'+
+        '<th class="center">পূর্ণ</th>'+
+        '<th class="center">পাস</th>'+
+        '<th class="center">পেয়েছে</th>'+
+        '<th class="center">গ্রেড</th>'+
+        '<th class="center">ফলাফল</th>'+
+      '</tr></thead><tbody>';
+
+      items.forEach(function(r){
+        var gc = r.grade==='F'?'mini-grade-fail':'mini-grade-pass';
+        var sc = r.status==='পাস'?'mini-pass':'mini-fail';
+        html+='<tr>'+
+          '<td>'+r.subject+'</td>'+
+          '<td class="center">'+r.full+'</td>'+
+          '<td class="center">'+r.pass+'</td>'+
+          '<td class="center"><b>'+r.marks+'</b></td>'+
+          '<td class="center"><span class="mini-badge '+gc+'">'+r.grade+'</span></td>'+
+          '<td class="center"><span class="mini-badge '+sc+'">'+r.status+'</span></td>'+
+        '</tr>';
+      });
+
+      html+='</tbody></table></div>';
+    });
+
+    area.innerHTML=html;
+    area.style.textAlign='left';
+    area.style.padding='0';
+
+  }catch(err){
+    area.innerHTML='<p style="color:#ef4444">রেজাল্ট লোড হয়নি: '+err.message+'</p>';
+    console.error(err);
   }
 }
 
