@@ -206,6 +206,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="stat-grid">
         <div class="stat-box"><div class="ic blue"><i class="fa-solid fa-user-graduate"></i></div><div><h3 id="sStudents">0</h3><p>মোট শিক্ষার্থী</p></div></div>
@@ -225,6 +226,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- NOTICE -->
     <div class="page" id="page-notice">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন নোটিশ</h3></div>
@@ -243,6 +245,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- COURSE -->
     <div class="page" id="page-course">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন কোর্স</h3></div>
@@ -262,6 +265,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- STUDENT -->
     <div class="page" id="page-student">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন শিক্ষার্থী</h3></div>
@@ -304,6 +308,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- PAYMENT -->
     <div class="page" id="page-payment">
       <div class="card">
         <div class="card-head"><h3>💳 ফি পরিশোধ</h3></div>
@@ -323,25 +328,83 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- ============ RESULT (নতুন সিস্টেম) ============ -->
     <div class="page" id="page-result">
       <div class="card">
-        <div class="card-head"><h3>📝 রেজাল্ট এন্ট্রি</h3></div>
+        <div class="card-head"><h3>📝 নতুন রেজাল্ট এন্ট্রি</h3></div>
         <form class="form-grid" onsubmit="addResult(event)">
-          <input type="text" id="rName" placeholder="শিক্ষার্থীর নাম" required>
-          <input type="text" id="rClass" placeholder="শ্রেণি" required>
-          <input type="text" id="rSubject" placeholder="বিষয়" required>
-          <input type="text" id="rMarks" placeholder="নম্বর" required>
-          <button type="submit"><i class="fa-solid fa-plus"></i> রেজাল্ট যোগ করুন</button>
+
+          <select id="rStudent" required>
+            <option value="">শিক্ষার্থী নির্বাচন করুন</option>
+          </select>
+
+          <select id="rExam" required>
+            <option value="">পরীক্ষা নির্বাচন করুন</option>
+            <optgroup label="🏫 স্কুলের পরীক্ষা">
+              <option value="প্রথম মিডটার্ম">প্রথম মিডটার্ম</option>
+              <option value="অর্ধ বার্ষিক">অর্ধ বার্ষিক</option>
+              <option value="দ্বিতীয় মিডটার্ম">দ্বিতীয় মিডটার্ম</option>
+              <option value="বার্ষিক পরীক্ষা">বার্ষিক পরীক্ষা</option>
+            </optgroup>
+            <optgroup label="📚 কোচিংয়ের টেস্ট">
+              <option value="প্রথম টেস্ট">প্রথম টেস্ট</option>
+              <option value="দ্বিতীয় টেস্ট">দ্বিতীয় টেস্ট</option>
+              <option value="তৃতীয় টেস্ট">তৃতীয় টেস্ট</option>
+              <option value="চতুর্থ টেস্ট">চতুর্থ টেস্ট</option>
+              <option value="পঞ্চম টেস্ট">পঞ্চম টেস্ট</option>
+              <option value="ষষ্ঠ টেস্ট">ষষ্ঠ টেস্ট</option>
+              <option value="সপ্তম টেস্ট">সপ্তম টেস্ট</option>
+              <option value="অষ্টম টেস্ট">অষ্টম টেস্ট</option>
+              <option value="নবম টেস্ট">নবম টেস্ট</option>
+              <option value="দশম টেস্ট">দশম টেস্ট</option>
+              <option value="একাদশ টেস্ট">একাদশ টেস্ট</option>
+              <option value="দ্বাদশ টেস্ট">দ্বাদশ টেস্ট</option>
+              <option value="ত্রয়োদশ টেস্ট">ত্রয়োদশ টেস্ট</option>
+              <option value="চতুর্দশ টেস্ট">চতুর্দশ টেস্ট</option>
+              <option value="পঞ্চদশ টেস্ট">পঞ্চদশ টেস্ট</option>
+              <option value="ষোড়শ টেস্ট">ষোড়শ টেস্ট</option>
+              <option value="সপ্তদশ টেস্ট">সপ্তদশ টেস্ট</option>
+              <option value="অষ্টাদশ টেস্ট">অষ্টাদশ টেস্ট</option>
+              <option value="ঊনবিংশ টেস্ট">ঊনবিংশ টেস্ট</option>
+              <option value="বিংশ টেস্ট">বিংশ টেস্ট</option>
+            </optgroup>
+          </select>
+
+          <input type="text" id="rSubject" placeholder="বিষয় (যেমন: গণিত)" required>
+
+          <input type="number" id="rFull" placeholder="পূর্ণ নম্বর (যেমন: 100)" value="100" required min="1">
+
+          <input type="number" id="rPass" placeholder="পাস নম্বর (যেমন: 33)" value="33" required min="0">
+
+          <input type="number" id="rMarks" placeholder="প্রাপ্ত নম্বর" required min="0">
+
+          <button type="submit"><i class="fa-solid fa-plus"></i> রেজাল্ট সেভ করুন</button>
         </form>
       </div>
+
       <div class="card">
-        <div class="card-head"><h3>📊 রেজাল্ট তালিকা</h3></div>
-        <div class="table-wrap"><table id="resultTable">
-          <tr><th>শিক্ষার্থী</th><th>শ্রেণি</th><th>বিষয়</th><th>নম্বর</th><th>গ্রেড</th></tr>
-        </table></div>
+        <div class="card-head">
+          <h3>📊 রেজাল্ট তালিকা</h3>
+          <button onclick="renderResults()" style="background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-family:inherit">
+            <i class="fa-solid fa-rotate"></i> রিফ্রেশ
+          </button>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="rSearch" placeholder="🔍 শিক্ষার্থী, বিষয় বা পরীক্ষা..." onkeyup="renderResults()">
+        </div>
+        <div class="table-wrap">
+          <table id="resultTable">
+            <tr>
+              <th>আইডি</th><th>শিক্ষার্থী</th><th>পরীক্ষা</th>
+              <th>বিষয়</th><th>পূর্ণ</th><th>পাস</th>
+              <th>পেয়েছে</th><th>গ্রেড</th><th>ফলাফল</th><th>অ্যাকশন</th>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
 
+    <!-- TEACHER -->
     <div class="page" id="page-teacher">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন শিক্ষক</h3></div>
@@ -361,6 +424,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
       </div>
     </div>
 
+    <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="card">
         <div class="card-head"><h3>⚙️ সেটিংস</h3></div>
@@ -389,7 +453,7 @@ code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:mono
 <!-- ============ FIREBASE ============ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy }
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
   from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -405,15 +469,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// window-এ এক্সপোর্ট করি যাতে onclick থেকে কল করা যায়
 window.db = db;
 window.fbCollection = collection;
 window.fbAddDoc = addDoc;
 window.fbGetDocs = getDocs;
 window.fbDeleteDoc = deleteDoc;
 window.fbDoc = doc;
-window.fbQuery = query;
-window.fbOrderBy = orderBy;
 
 console.log("✅ Firebase connected!");
 </script>
@@ -521,6 +582,10 @@ function showPage(id,el){
   var t={dashboard:'📊 ড্যাশবোর্ড',notice:'📢 নোটিশ',course:'📚 কোর্স',student:'👨‍🎓 শিক্ষার্থী',payment:'💳 পেমেন্ট',result:'📝 রেজাল্ট',teacher:'👨‍🏫 শিক্ষক',settings:'⚙️ সেটিংস'};
   document.getElementById('pageTitle').textContent=t[id];
   document.getElementById('sidebar').classList.remove('open');
+
+  // পেজ অনুযায়ী ডেটা লোড
+  if(id==='student'){ renderStudents(); }
+  if(id==='result'){ loadStudentDropdown(); renderResults(); }
 }
 
 /* ============ STUDENT (Firebase) ============ */
@@ -534,7 +599,6 @@ async function addStudent(e){
 
   if(!name||!cls||!phone||!batch||!pass){alert('⚠️ সব ফিল্ড পূরণ করুন!');return;}
 
-  // সব শিক্ষার্থী পড়ে max ID বের করা
   var snap=await window.fbGetDocs(window.fbCollection(window.db,'Students'));
   var maxNum=0;
   snap.forEach(function(d){
@@ -573,7 +637,6 @@ async function renderStudents(){
     var list=[];
     snap.forEach(function(d){list.push({fireId:d.id,...d.data()});});
 
-    // সার্চ ফিল্টার
     var q=(document.getElementById('stSearch')?.value||'').toLowerCase();
     if(q){
       list=list.filter(function(s){
@@ -619,7 +682,152 @@ async function deleteStudent(fireId){
   }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
 }
 
-/* ============ OTHER SECTIONS (LocalStorage ডেমো) ============ */
+/* ============ RESULT (নতুন সিস্টেম) ============ */
+async function loadStudentDropdown(){
+  var sel=document.getElementById('rStudent');
+  if(!sel) return;
+  var cur=sel.value;
+  sel.innerHTML='<option value="">শিক্ষার্থী নির্বাচন করুন</option>';
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Students'));
+    var list=[];
+    snap.forEach(function(d){list.push(d.data());});
+    list.sort(function(a,b){return (a.studentId||'').localeCompare(b.studentId||'');});
+    list.forEach(function(s){
+      var op=document.createElement('option');
+      op.value=s.studentId;
+      op.textContent=s.studentId+' — '+s.name+' ('+s.className+')';
+      op.dataset.name=s.name;
+      op.dataset.cls=s.className;
+      sel.appendChild(op);
+    });
+    if(cur) sel.value=cur;
+  }catch(err){console.error(err);}
+}
+
+function calcGrade(marks, full){
+  if(!full || full<=0) return 'F';
+  var p=(marks/full)*100;
+  if(p>=80)return 'A+';
+  if(p>=70)return 'A';
+  if(p>=60)return 'A-';
+  if(p>=50)return 'B';
+  if(p>=40)return 'C';
+  if(p>=33)return 'D';
+  return 'F';
+}
+
+async function addResult(e){
+  e.preventDefault();
+  var sel=document.getElementById('rStudent');
+  var studentId=sel.value;
+  var studentName=sel.options[sel.selectedIndex].dataset.name||'';
+  var studentCls=sel.options[sel.selectedIndex].dataset.cls||'';
+  var exam=document.getElementById('rExam').value;
+  var subject=document.getElementById('rSubject').value.trim();
+  var full=parseInt(document.getElementById('rFull').value);
+  var pass=parseInt(document.getElementById('rPass').value);
+  var marks=parseInt(document.getElementById('rMarks').value);
+
+  if(!studentId){alert('⚠️ শিক্ষার্থী নির্বাচন করুন');return;}
+  if(!exam){alert('⚠️ পরীক্ষা নির্বাচন করুন');return;}
+  if(!subject){alert('⚠️ বিষয় লিখুন');return;}
+  if(isNaN(full)||full<=0){alert('⚠️ পূর্ণ নম্বর সঠিকভাবে দিন');return;}
+  if(isNaN(pass)||pass<0){alert('⚠️ পাস নম্বর সঠিকভাবে দিন');return;}
+  if(isNaN(marks)){alert('⚠️ প্রাপ্ত নম্বর দিন');return;}
+  if(marks>full){alert('⚠️ প্রাপ্ত নম্বর পূর্ণ নম্বরের চেয়ে বেশি হতে পারে না');return;}
+
+  var grade=calcGrade(marks,full);
+  var status= marks>=pass ? 'পাস' : 'ফেল';
+
+  try{
+    await window.fbAddDoc(window.fbCollection(window.db,'Results'),{
+      studentId:studentId,
+      studentName:studentName,
+      className:studentCls,
+      exam:exam,
+      subject:subject,
+      full:full,
+      pass:pass,
+      marks:marks,
+      grade:grade,
+      status:status,
+      createdAt:new Date().toISOString()
+    });
+    e.target.reset();
+    document.getElementById('rFull').value='100';
+    document.getElementById('rPass').value='33';
+    await renderResults();
+    alert('✅ রেজাল্ট সেভ হয়েছে!\n\n'+studentName+'\n'+exam+' — '+subject+'\n'+marks+'/'+full+' ('+grade+')\nফলাফল: '+status);
+  }catch(err){
+    alert('❌ সমস্যা: '+err.message);
+    console.error(err);
+  }
+}
+
+async function renderResults(){
+  var t=document.getElementById('resultTable');
+  t.innerHTML='<tr><td colspan="10" class="loading"><i class="fa-solid fa-spinner"></i>লোড হচ্ছে...</td></tr>';
+
+  try{
+    var snap=await window.fbGetDocs(window.fbCollection(window.db,'Results'));
+    var list=[];
+    snap.forEach(function(d){list.push({fireId:d.id,...d.data()});});
+
+    var q=(document.getElementById('rSearch')?.value||'').toLowerCase();
+    if(q){
+      list=list.filter(function(r){
+        return (r.studentName||'').toLowerCase().indexOf(q)>-1 ||
+               (r.subject||'').toLowerCase().indexOf(q)>-1 ||
+               (r.exam||'').toLowerCase().indexOf(q)>-1 ||
+               (r.studentId||'').toLowerCase().indexOf(q)>-1;
+      });
+    }
+
+    list.sort(function(a,b){return (a.studentId||'').localeCompare(b.studentId||'');});
+
+    t.innerHTML='<tr>'+
+      '<th>আইডি</th><th>শিক্ষার্থী</th><th>পরীক্ষা</th>'+
+      '<th>বিষয়</th><th>পূর্ণ</th><th>পাস</th>'+
+      '<th>পেয়েছে</th><th>গ্রেড</th><th>ফলাফল</th><th>অ্যাকশন</th>'+
+    '</tr>';
+
+    if(list.length===0){
+      t.innerHTML+='<tr><td colspan="10" class="empty-msg">এখনো কোনো রেজাল্ট নেই</td></tr>';
+      return;
+    }
+
+    list.forEach(function(r){
+      var gc=r.grade==='F'?'red':'green';
+      var sc=r.status==='পাস'?'green':'red';
+      t.innerHTML+='<tr>'+
+        '<td><strong>'+r.studentId+'</strong></td>'+
+        '<td>'+r.studentName+'</td>'+
+        '<td>'+r.exam+'</td>'+
+        '<td>'+r.subject+'</td>'+
+        '<td>'+r.full+'</td>'+
+        '<td>'+r.pass+'</td>'+
+        '<td><b>'+r.marks+'</b></td>'+
+        '<td><span class="badge '+gc+'">'+r.grade+'</span></td>'+
+        '<td><span class="badge '+sc+'">'+r.status+'</span></td>'+
+        '<td><button class="btn-red" onclick="deleteResult(\''+r.fireId+'\')"><i class="fa-solid fa-trash"></i></button></td>'+
+      '</tr>';
+    });
+  }catch(err){
+    t.innerHTML='<tr><td colspan="10" class="empty-msg">❌ লোড ব্যর্থ: '+err.message+'</td></tr>';
+    console.error(err);
+  }
+}
+
+async function deleteResult(fireId){
+  if(!confirm('এই রেজাল্ট মুছে ফেলবেন?'))return;
+  try{
+    await window.fbDeleteDoc(window.fbDoc(window.db,'Results',fireId));
+    await renderResults();
+  }catch(err){alert('❌ মুছতে পারিনি: '+err.message);}
+}
+
+/* ============ OTHER SECTIONS (LocalStorage) ============ */
 function get(k){try{return JSON.parse(localStorage.getItem('dc_'+k)||'[]')}catch(e){return[]}}
 function set(k,v){localStorage.setItem('dc_'+k,JSON.stringify(v))}
 
@@ -662,22 +870,6 @@ function renderPayments(){
     t.innerHTML+='<tr><td>'+p.student+'</td><td>৳'+p.amount+'</td><td>'+p.method+'</td><td>'+p.month+'</td><td><span class="badge green">'+p.status+'</span></td></tr>';
   });
 }
-function addResult(e){
-  e.preventDefault();
-  var marks=parseInt(document.getElementById('rMarks').value);
-  var g='F';
-  if(marks>=80)g='A+';else if(marks>=70)g='A';else if(marks>=60)g='A-';else if(marks>=50)g='B';else if(marks>=40)g='C';else if(marks>=33)g='D';
-  var list=get('results');
-  list.push({name:document.getElementById('rName').value,cls:document.getElementById('rClass').value,subject:document.getElementById('rSubject').value,marks:marks,grade:g});
-  set('results',list);e.target.reset();renderResults();
-}
-function renderResults(){
-  var t=document.getElementById('resultTable');
-  t.innerHTML='<tr><th>শিক্ষার্থী</th><th>শ্রেণি</th><th>বিষয়</th><th>নম্বর</th><th>গ্রেড</th></tr>';
-  get('results').forEach(function(r){
-    t.innerHTML+='<tr><td>'+r.name+'</td><td>'+r.cls+'</td><td>'+r.subject+'</td><td>'+r.marks+'</td><td><span class="badge '+(r.grade==='F'?'red':'green')+'">'+r.grade+'</span></td></tr>';
-  });
-}
 function addTeacher(e){
   e.preventDefault();
   var list=get('teachers');
@@ -696,7 +888,6 @@ function delItem(k,i,cb){
   var l=get(k);l.splice(i,1);set(k,l);cb();loadStats();
 }
 function loadStats(){
-  // শিক্ষার্থীর সংখ্যা Firebase থেকে
   window.fbGetDocs(window.fbCollection(window.db,'Students')).then(function(s){
     document.getElementById('sStudents').textContent=s.size;
   }).catch(function(){});
@@ -708,8 +899,14 @@ function loadStats(){
 
 /* ============ LOAD ALL ============ */
 function loadAll(){
-  renderNotices();renderCourses();renderPayments();renderResults();renderTeachers();
-  renderStudents();loadStats();
+  renderNotices();
+  renderCourses();
+  renderPayments();
+  renderTeachers();
+  renderStudents();
+  loadStats();
+  loadStudentDropdown();
+  renderResults();
 }
 </script>
 </body>
