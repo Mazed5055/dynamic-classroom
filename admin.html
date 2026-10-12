@@ -1,840 +1,769 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dynamic Classroom Admin</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Classroom - আধুনিক কোচিং সেন্টার</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-*{box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f1f5f9;margin:0;color:#1e293b}
-header{background:#123c69;color:white;text-align:center;padding:20px}
-main{max-width:750px;margin:20px auto;padding:15px}
-.card{background:white;padding:20px;margin-bottom:18px;border-radius:10px;box-shadow:0 2px 8px #0001}
-input,textarea,select{box-sizing:border-box;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #ccc;border-radius:6px;font:inherit}
-textarea{min-height:100px}
-button{background:#123c69;color:white;border:0;padding:11px 15px;border-radius:6px;margin:4px;cursor:pointer;font:inherit}
-button:disabled{opacity:.6}
-.del{background:#b91c1c}
-.notice,.student,.payment{border:1px solid #ddd;padding:12px;margin:12px 0;border-radius:8px;overflow-wrap:anywhere}
-.stat{background:#eff6ff;padding:12px;border-radius:8px;margin:8px 0}
-small{color:#475569}
-[hidden]{display:none!important}
-.receipt{border:1px solid #cbd5e1;padding:20px;border-radius:8px;background:white}
-.receipt-head{text-align:center;border-bottom:2px solid #123c69;padding-bottom:12px;margin-bottom:16px}
-.receipt-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e2e8f0}
-.receipt-row span:first-child{flex:1}
-.receipt-row span:last-child{text-align:right;flex:1;overflow-wrap:anywhere}
-.receipt-total{font-size:18px;font-weight:bold;color:#123c69}
-.receipt-footer{text-align:center;margin-top:25px}
-@media(max-width:480px){
- main{padding:10px}
- .card{padding:14px}
- .receipt{padding:12px}
- .receipt-row{font-size:14px;gap:8px}
+:root{
+  --primary:#1a365d;--primary-light:#2c5282;--accent:#f59e0b;--accent-dark:#d97706;
+  --bg:#f8fafc;--text:#1e293b;--muted:#64748b;--white:#fff;
+  --green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;
+  --radius:14px;--shadow:0 4px 20px rgba(0,0,0,.08);--shadow-lg:0 10px 40px rgba(0,0,0,.12);
 }
-@media print{
- @page{size:A4;margin:12mm}
- body *{visibility:hidden!important}
- #receiptPrint,#receiptPrint *{visibility:visible!important}
- #receiptPrint{display:block!important;position:absolute!important;left:0;top:0;width:100%;margin:0;padding:0;box-sizing:border-box;background:white;box-shadow:none}
- #receiptPrint .receipt{border:1px solid #999;box-shadow:none}
- #receiptPrint button{display:none!important}
-}
-</style>
-</head>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
 
-<body>
-<header>
-<h1>Dynamic Classroom</h1>
-<p>অ্যাডমিন প্যানেল</p>
-</header>
+/* TOP BAR */
+.topbar{background:var(--primary);color:#cbd5e1;font-size:.85rem;padding:8px 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.topbar a{color:#cbd5e1;text-decoration:none;margin-left:14px}
+.topbar a:hover{color:var(--accent)}
+.topbar .left i{margin-right:5px;color:var(--accent)}
 
-<main>
+/* NAVBAR */
+header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);box-shadow:0 2px 15px rgba(0,0,0,.06)}
+.nav{max-width:1250px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:14px 20px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.3rem;color:var(--primary);text-decoration:none}
+.logo i{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;padding:9px;border-radius:10px;font-size:1.1rem}
+.nav-links{display:flex;gap:4px;list-style:none;align-items:center}
+.nav-links a{text-decoration:none;color:var(--text);padding:8px 12px;border-radius:8px;font-weight:500;font-size:.92rem;transition:.25s}
+.nav-links a:hover{background:#eef2ff;color:var(--primary)}
+.btn-login{background:var(--primary)!important;color:#fff!important;padding:9px 18px!important}
+.btn-login:hover{background:var(--accent)!important}
+.hamburger{display:none;font-size:1.5rem;background:none;border:none;color:var(--primary);cursor:pointer}
 
-<section class="card" id="login">
-<h2>অ্যাডমিন লগইন</h2>
-<form id="loginForm">
-<label>ইমেইল</label>
-<input id="email" type="email" required autocomplete="username">
-<label>পাসওয়ার্ড</label>
-<input id="password" type="password" required autocomplete="current-password">
-<button type="submit">লগইন</button>
-</form>
-</section>
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a365d 0%,#2c5282 60%,#2b6cb0 100%);color:#fff;padding:100px 20px 120px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(245,158,11,.25),transparent 70%);top:-150px;right:-100px;border-radius:50%}
+.hero::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);bottom:-150px;left:-80px;border-radius:50%}
+.hero-content{position:relative;z-index:2;max-width:850px;margin:auto}
+.hero .badge{display:inline-block;background:rgba(245,158,11,.2);border:1px solid var(--accent);color:#fbbf24;padding:6px 18px;border-radius:50px;font-size:.9rem;margin-bottom:22px}
+.hero h1{font-size:3rem;font-weight:700;margin-bottom:18px;line-height:1.3}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:1.15rem;opacity:.9;margin-bottom:34px}
+.hero-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{padding:13px 28px;border-radius:10px;text-decoration:none;font-weight:600;font-size:.98rem;transition:.3s;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 20px rgba(245,158,11,.4)}
+.btn-primary:hover{background:var(--accent-dark);transform:translateY(-3px)}
+.btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}
+.btn-outline:hover{background:#fff;color:var(--primary)}
 
-<section id="panel" hidden>
+/* STATS */
+.stats{max-width:1150px;margin:-60px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;position:relative;z-index:5}
+.stat-card{background:#fff;padding:28px 20px;border-radius:var(--radius);box-shadow:var(--shadow-lg);text-align:center;transition:.3s}
+.stat-card:hover{transform:translateY(-6px)}
+.stat-card i{font-size:2rem;color:var(--accent);margin-bottom:10px}
+.stat-card h3{font-size:2rem;color:var(--primary);font-weight:700}
+.stat-card p{color:var(--muted);font-size:.95rem}
 
-<div class="card">
-<h2>নোটিশ প্রকাশ করুন</h2>
-<form id="noticeForm">
-<label>শিরোনাম</label>
-<input id="title" required maxlength="150">
-<label>বিবরণ</label>
-<textarea id="message" required maxlength="10000"></textarea>
-<button id="saveNotice" type="submit">নোটিশ প্রকাশ</button>
-<button id="cancelNotice" type="button" hidden>বাতিল</button>
-</form>
-<div id="noticeList">লোড হচ্ছে...</div>
-</div>
+/* SECTION */
+section{padding:80px 20px}
+.container{max-width:1200px;margin:auto}
+.section-title{text-align:center;margin-bottom:50px}
+.section-title h2{font-size:2.1rem;color:var(--primary);margin-bottom:10px;position:relative;display:inline-block}
+.section-title h2::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:70px;height:4px;background:var(--accent);border-radius:5px}
+.section-title p{color:var(--muted);margin-top:20px}
 
-<div class="card">
-<h2>শিক্ষার্থী যোগ করুন</h2>
-<form id="studentForm">
-<label>শিক্ষার্থীর নাম</label>
-<input id="studentName" required maxlength="120">
+/* NOTICE */
+.notice-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+.notice-card{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-left:5px solid var(--accent);transition:.3s}
+.notice-card:hover{transform:translateX(6px);box-shadow:var(--shadow-lg)}
+.notice-card .tag{display:inline-block;font-size:.75rem;padding:3px 12px;border-radius:50px;background:#fef3c7;color:#b45309;font-weight:600;margin-bottom:10px}
+.notice-card .tag.urgent{background:#fee2e2;color:#b91c1c}
+.notice-card .tag.info{background:#dbeafe;color:#1e40af}
+.notice-card h4{color:var(--primary);font-size:1.15rem;margin-bottom:8px}
+.notice-card p{color:var(--muted);font-size:.95rem}
+.notice-card .date{font-size:.82rem;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:6px}
 
-<label>Student ID</label>
-<input id="studentId" required maxlength="40">
+/* COURSES */
+.course-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.course-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:.35s;display:flex;flex-direction:column}
+.course-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.course-head{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:24px;text-align:center;position:relative}
+.course-head i{font-size:2.2rem;margin-bottom:8px;display:block;color:var(--accent)}
+.course-head h3{font-size:1.25rem}
+.course-head .ribbon{position:absolute;top:12px;right:-30px;background:var(--accent);color:#fff;padding:4px 40px;font-size:.75rem;transform:rotate(35deg);font-weight:600}
+.course-body{padding:22px;flex:1;display:flex;flex-direction:column}
+.course-body ul{list-style:none;margin-bottom:18px;flex:1}
+.course-body li{padding:6px 0;font-size:.93rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.course-body li i{color:var(--green);font-size:.85rem}
+.course-price{display:flex;justify-content:space-between;align-items:center;padding-top:15px;border-top:1px dashed #e2e8f0}
+.course-price span{font-weight:700;color:var(--primary);font-size:1.1rem}
+.course-price .btn{padding:8px 20px;font-size:.9rem;background:var(--accent);color:#fff}
+.course-price .btn:hover{background:var(--accent-dark)}
 
-<label>শ্রেণি</label>
-<select id="className" required>
-<option value="">শ্রেণি নির্বাচন করুন</option>
-<option value="6">ষষ্ঠ শ্রেণি</option>
-<option value="7">সপ্তম শ্রেণি</option>
-<option value="8">অষ্টম শ্রেণি</option>
-<option value="9">নবম শ্রেণি</option>
-<option value="10">দশম শ্রেণি</option>
-<option value="11">একাদশ শ্রেণি</option>
-<option value="12">দ্বাদশ শ্রেণি</option>
-</select>
+/* CLASSES */
+.class-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.class-item{background:#fff;padding:26px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;transition:.3s;border-top:4px solid var(--primary)}
+.class-item:hover{transform:translateY(-6px);border-top-color:var(--accent)}
+.class-item i{font-size:2rem;color:var(--primary);margin-bottom:12px}
+.class-item h4{color:var(--primary);margin-bottom:8px}
+.class-item p{font-size:.9rem;color:var(--muted)}
+.class-item .meta{margin-top:14px;font-size:.82rem;color:var(--accent);font-weight:600}
 
-<label>রোল</label>
-<input id="roll" required maxlength="30">
-
-<label>অভিভাবকের ফোন</label>
-<input id="guardianPhone" type="tel" required maxlength="20">
-
-<label>মাসিক বেতন (টাকা)</label>
-<input id="monthlyFee" type="number" required min="0" max="1000000" step="1">
-
-<button id="saveStudent" type="submit">শিক্ষার্থী সংরক্ষণ</button>
-<button id="cancelStudent" type="button" hidden>বাতিল</button>
-</form>
-<div id="studentList">লোড হচ্ছে...</div>
-</div>
-
-<div class="card">
-<h2>মাসিক বেতন গ্রহণ</h2>
-<p><small>একই মাসে একাধিক কিস্তিতে বেতন জমা নেওয়া যাবে।</small></p>
-
-<form id="paymentForm">
-<label>শিক্ষার্থী নির্বাচন</label>
-<select id="paymentStudent" required>
-<option value="">শিক্ষার্থী নির্বাচন করুন</option>
-</select>
-
-<label>যে মাসের বেতন</label>
-<input id="paymentMonth" type="month" required>
-
-<div id="paymentSummary" class="stat">
-হিসাব দেখতে শিক্ষার্থী ও মাস নির্বাচন করুন।
-</div>
-
-<label>জমার পরিমাণ (টাকা)</label>
-<input id="amountPaid" type="number" required min="1" max="1000000" step="1">
-
-<label>জমার তারিখ</label>
-<input id="paymentDate" type="date" required>
-
-<label>পেমেন্টের মাধ্যম</label>
-<select id="paymentMethod" required>
-<option value="নগদ">নগদ</option>
-<option value="বিকাশ">বিকাশ</option>
-</select>
-
-<label>বিকাশ Transaction ID (ঐচ্ছিক)</label>
-<input id="transactionRef" maxlength="100" placeholder="প্রযোজ্য হলে লিখুন">
-
-<button id="savePayment" type="submit">জমা সংরক্ষণ করুন</button>
-</form>
-</div>
-
-<div class="card">
-<h2>নির্বাচিত মাসের পেমেন্ট ইতিহাস</h2>
-<div id="paymentHistory">শিক্ষার্থী ও মাস নির্বাচন করুন।</div>
-</div>
-
-<div class="card" id="receiptPrint" hidden>
-<div class="receipt">
-<div class="receipt-head">
-<h2>Dynamic Classroom</h2>
-<p>বেতন জমার রসিদ</p>
-<p id="receiptNumber"></p>
-</div>
-
-<div id="receiptDetails"></div>
-
-<div class="receipt-footer">
-<p>বেতন জমা দেওয়ার জন্য ধন্যবাদ।</p>
-<p><small>এই রসিদটি Dynamic Classroom-এর পেমেন্ট রেকর্ড অনুযায়ী তৈরি।</small></p>
-</div>
-
-<button type="button" id="printReceipt">রসিদ প্রিন্ট / PDF সংরক্ষণ</button>
-<button type="button" id="closeReceipt">রসিদ বন্ধ করুন</button>
-</div>
-</div>
-
-<button id="logout">লগআউট</button>
-</section>
-
-<p id="status" role="status" aria-live="polite"></p>
-<a href="./index.html">মূল ওয়েবসাইটে ফিরে যান</a>
-
-</main>
-
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-
-import {
- getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
-} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
-import {
- getFirestore,collection,onSnapshot,addDoc,updateDoc,deleteDoc,doc
-} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
-
-const firebaseConfig={
- apiKey:"AIzaSyBNwcshjGf5joK2bpzrTdxzNd5juOPwoaQ",
- authDomain:"dynamic-classroom.firebaseapp.com",
- projectId:"dynamic-classroom",
- storageBucket:"dynamic-classroom.firebasestorage.app",
- messagingSenderId:"911104617826",
- appId:"1:911104617826:web:dab7751b928fc6f946103b",
- measurementId:"G-39ZTSYEPNB"
-};
-
-const ADMIN_UID="pypHsESFjka54eeQiM7VYQ029hI3";
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const $=id=>document.getElementById(id);
-
-let editingNoticeId=null;
-let editingStudentDocId=null;
-let stopNotices=null,stopStudents=null,stopPayments=null;
-let students=[],payments=[];
-
-function status(message){
- $("status").textContent=message;
-}
-
-function money(value){
- return "৳"+Number(value||0).toLocaleString("en-BD");
-}
-
-function currentAdmin(){
- return auth.currentUser && auth.currentUser.uid===ADMIN_UID;
-}
-
-function btn(label,cls,action){
- const b=document.createElement("button");
- b.type="button";
- b.textContent=label;
- if(cls)b.className=cls;
- b.addEventListener("click",action);
- return b;
-}
-
-function stopListeners(){
- [stopNotices,stopStudents,stopPayments].forEach(fn=>{
-  if(fn)fn();
- });
- stopNotices=stopStudents=stopPayments=null;
-}
-
-/* LOGIN */
-
-$("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();
- status("লগইন হচ্ছে...");
-
- try{
-  await signInWithEmailAndPassword(
-   auth,$("email").value.trim(),$("password").value
-  );
- }catch(error){
-  console.error(error);
-  status("লগইন হয়নি। ইমেইল ও পাসওয়ার্ড পরীক্ষা করুন।");
- }
-});
-
-onAuthStateChanged(auth,user=>{
- stopListeners();
- $("login").hidden=false;
- $("panel").hidden=true;
-
- if(!user){
-  status("");
-  return;
- }
-
- if(user.uid!==ADMIN_UID){
-  status("এই অ্যাকাউন্টের অ্যাডমিন অনুমতি নেই।");
-  signOut(auth);
-  return;
- }
-
- $("login").hidden=true;
- $("panel").hidden=false;
- status("অ্যাডমিন হিসেবে লগইন হয়েছে।");
-
- loadNotices();
- loadStudents();
- loadPayments();
-});
-
-/* NOTICES */
-
-function loadNotices(){
- stopNotices=onSnapshot(collection(db,"Notices"),snap=>{
-  const list=$("noticeList");
-  list.replaceChildren();
-
-  if(snap.empty){
-   list.textContent="কোনো নোটিশ নেই।";
-   return;
-  }
-
-  snap.forEach(item=>{
-   const d=item.data();
-   const box=document.createElement("div");
-   box.className="notice";
-
-   const h=document.createElement("h3");
-   h.textContent=d.title||"শিরোনাম নেই";
-
-   const p=document.createElement("p");
-   p.textContent=d.message||"";
-
-   box.append(
-    h,p,
-    btn("সম্পাদনা","",()=>{
-     editingNoticeId=item.id;
-     $("title").value=d.title||"";
-     $("message").value=d.message||"";
-     $("saveNotice").textContent="পরিবর্তন সংরক্ষণ";
-     $("cancelNotice").hidden=false;
-     window.scrollTo({top:0,behavior:"smooth"});
-    }),
-    btn("মুছুন","del",async()=>{
-     if(!confirm("নোটিশটি মুছবেন?"))return;
-     try{
-      await deleteDoc(doc(db,"Notices",item.id));
-      status("নোটিশ মুছে ফেলা হয়েছে।");
-     }catch(error){
-      console.error(error);
-      status("নোটিশ মুছতে পারেনি।");
-     }
-    })
-   );
-
-   list.appendChild(box);
-  });
- },error=>{
-  console.error(error);
-  status("নোটিশ লোড হয়নি।");
- });
-}
-
-function resetNotice(){
- editingNoticeId=null;
- $("noticeForm").reset();
- $("saveNotice").textContent="নোটিশ প্রকাশ";
- $("cancelNotice").hidden=true;
-}
-
-$("cancelNotice").onclick=resetNotice;
-
-$("noticeForm").onsubmit=async e=>{
- e.preventDefault();
-
- if(!currentAdmin()){
-  status("অ্যাডমিন অনুমতি নেই।");
-  return;
- }
-
- const title=$("title").value.trim();
- const message=$("message").value.trim();
- $("saveNotice").disabled=true;
-
- try{
-  if(editingNoticeId){
-   await updateDoc(doc(db,"Notices",editingNoticeId),{title,message});
-  }else{
-   await addDoc(collection(db,"Notices"),{
-    title,message,createdAt:new Date().toISOString()
-   });
-  }
-  resetNotice();
-  status("নোটিশ সংরক্ষণ হয়েছে।");
- }catch(error){
-  console.error(error);
-  status("নোটিশ সংরক্ষণ হয়নি।");
- }finally{
-  $("saveNotice").disabled=false;
- }
-};
+/* ROUTINE TABLE */
+.routine-wrap{overflow-x:auto;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:10px}
+table.routine{width:100%;border-collapse:collapse;min-width:600px}
+table.routine th,table.routine td{padding:13px 14px;text-align:center;font-size:.92rem;border-bottom:1px solid #e2e8f0}
+table.routine th{background:var(--primary);color:#fff;font-weight:600}
+table.routine tr:hover{background:#f1f5f9}
+table.routine td:first-child{font-weight:600;color:var(--primary);background:#f8fafc}
 
 /* STUDENTS */
+.student-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:var(--radius);padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+.student-info h3{color:var(--primary);font-size:1.6rem;margin-bottom:16px}
+.student-info ul{list-style:none}
+.student-info li{padding:10px 0;display:flex;align-items:center;gap:12px;border-bottom:1px solid #cbd5e1}
+.student-info li i{color:var(--accent);width:24px}
+.student-form{background:#fff;padding:28px;border-radius:var(--radius);box-shadow:var(--shadow)}
+.student-form h4{margin-bottom:18px;color:var(--primary)}
+.student-form input,.student-form select,.student-form textarea{width:100%;padding:12px 15px;border:1px solid #cbd5e1;border-radius:9px;margin-bottom:14px;font-family:inherit;font-size:.95rem}
+.student-form input:focus,.student-form select:focus{outline:none;border-color:var(--primary)}
+.student-form button{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-family:inherit;font-size:1rem;transition:.3s}
+.student-form button:hover{background:var(--accent)}
 
-function loadStudents(){
- stopStudents=onSnapshot(collection(db,"Students"),snap=>{
-  students=snap.docs.map(x=>({docId:x.id,...x.data()}));
-  renderStudents();
-  renderStudentOptions();
-  renderPaymentSummary();
-  renderPaymentHistory();
- },error=>{
-  console.error(error);
-  status("শিক্ষার্থীর তালিকা লোড হয়নি। Firebase Rules পরীক্ষা করুন।");
- });
+/* ID CARD */
+.id-section{background:#fff;padding:40px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center}
+.id-card{width:340px;max-width:100%;background:linear-gradient(135deg,#1a365d,#2c5282);color:#fff;border-radius:16px;padding:22px;margin:24px auto;position:relative;box-shadow:0 15px 40px rgba(26,54,93,.3);text-align:left}
+.id-card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--accent),#fbbf24);border-radius:16px 16px 0 0}
+.id-card .id-head{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed rgba(255,255,255,.3)}
+.id-card .id-logo{background:var(--accent);width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff}
+.id-card .id-head h5{font-size:1rem}
+.id-card .id-head p{font-size:.75rem;opacity:.8}
+.id-card .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#fbbf24);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto 12px;border:3px solid #fff;color:#fff}
+.id-card .info-row{display:flex;justify-content:space-between;font-size:.85rem;padding:5px 0}
+.id-card .info-row span:first-child{opacity:.7}
+.id-card .info-row span:last-child{font-weight:600}
+.id-card .id-footer{margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.3);font-size:.72rem;text-align:center;opacity:.85}
+
+/* PAYMENT */
+.payment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-bottom:34px}
+.pay-card{background:#fff;padding:28px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;transition:.3s;border-top:4px solid var(--green)}
+.pay-card.bkash{border-top-color:#e2136e}
+.pay-card.nagad{border-top-color:#f7941d}
+.pay-card.rocket{border-top-color:#8c3494}
+.pay-card i{font-size:2rem;color:var(--green);margin-bottom:14px}
+.pay-card.bkash i{color:#e2136e}
+.pay-card.nagad i{color:#f7941d}
+.pay-card.rocket i{color:#8c3494}
+.pay-card h4{color:var(--primary);margin-bottom:10px}
+.pay-card p{color:var(--muted);font-size:.92rem;margin-bottom:16px}
+.pay-card .btn{background:var(--primary);color:#fff;padding:10px 22px;font-size:.9rem}
+.pay-card .btn:hover{background:var(--accent)}
+.fee-table{overflow-x:auto;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:10px}
+table.fee{width:100%;border-collapse:collapse;min-width:500px}
+table.fee th,table.fee td{padding:13px;text-align:center;border-bottom:1px solid #e2e8f0;font-size:.92rem}
+table.fee th{background:var(--primary);color:#fff}
+.paid{color:var(--green);font-weight:600}
+.due{color:var(--red);font-weight:600}
+
+/* TABS + RESOURCES */
+.tabs{display:flex;gap:10px;justify-content:center;margin-bottom:34px;flex-wrap:wrap}
+.tab-btn{padding:10px 24px;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:var(--muted);font-weight:600;cursor:pointer;font-family:inherit;transition:.3s}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.resource-card{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);display:flex;gap:16px;align-items:flex-start;transition:.3s}
+.resource-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.resource-card .icon{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;width:52px;height:52px;min-width:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.resource-card h4{color:var(--primary);margin-bottom:6px;font-size:1.05rem}
+.resource-card p{color:var(--muted);font-size:.88rem;margin-bottom:10px}
+.resource-card a{color:var(--accent);text-decoration:none;font-weight:600;font-size:.9rem}
+.resource-card a:hover{text-decoration:underline}
+
+/* RESULT */
+.result-search{max-width:500px;margin:0 auto 30px;display:flex;gap:10px;background:#fff;padding:10px;border-radius:50px;box-shadow:var(--shadow)}
+.result-search input{flex:1;padding:12px 20px;border:none;outline:none;font-family:inherit;font-size:.95rem;border-radius:50px}
+.result-search button{background:var(--primary);color:#fff;border:none;padding:12px 26px;border-radius:50px;font-weight:600;cursor:pointer;font-family:inherit}
+.result-search button:hover{background:var(--accent)}
+
+/* MERIT */
+.merit-card{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;margin-bottom:14px;transition:.3s}
+.merit-card:hover{transform:translateX(6px)}
+.merit-rank{width:52px;height:52px;min-width:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#fbbf24);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem}
+.merit-card .info{flex:1}
+.merit-card h4{color:var(--primary);font-size:1.05rem}
+.merit-card p{color:var(--muted);font-size:.85rem}
+.merit-card .gpa{background:#dcfce7;color:#166534;padding:5px 14px;border-radius:50px;font-weight:700;font-size:.88rem}
+
+/* TEACHERS */
+.teacher-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.teacher-card{background:#fff;border-radius:var(--radius);padding:26px;text-align:center;box-shadow:var(--shadow);transition:.3s}
+.teacher-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.teacher-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto 16px;border:4px solid #fff;box-shadow:0 6px 18px rgba(26,54,93,.25)}
+.teacher-card h4{color:var(--primary);margin-bottom:5px}
+.teacher-card p{color:var(--accent);font-weight:600;font-size:.9rem;margin-bottom:10px}
+.teacher-card .subject{background:#eef2ff;color:var(--primary);padding:4px 12px;border-radius:50px;font-size:.8rem;display:inline-block}
+
+/* GALLERY */
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.gallery-item{height:200px;border-radius:var(--radius);overflow:hidden;position:relative;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-size:2rem;transition:.3s;cursor:pointer}
+.gallery-item:hover{transform:scale(1.03)}
+.gallery-item span{position:absolute;bottom:12px;left:12px;font-size:.85rem;font-weight:600}
+
+/* ADMISSION INFO */
+.admission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.admission-card{background:#fff;padding:26px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;transition:.3s;border-bottom:4px solid var(--accent)}
+.admission-card:hover{transform:translateY(-6px)}
+.admission-card i{font-size:2rem;color:var(--accent);margin-bottom:14px}
+.admission-card h4{color:var(--primary);margin-bottom:10px}
+.admission-card p{font-size:.9rem;color:var(--muted)}
+
+/* FOUNDERS */
+.founder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;max-width:700px;margin:auto}
+.founder-card{background:#fff;border-radius:var(--radius);padding:34px 24px;text-align:center;box-shadow:var(--shadow);transition:.3s}
+.founder-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.founder-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;color:#fff;font-size:2.3rem;font-weight:700;border:4px solid #fff;box-shadow:0 6px 18px rgba(26,54,93,.25)}
+.founder-card h3{color:var(--primary);margin-bottom:6px;font-size:1.2rem}
+.founder-card p{color:var(--accent);font-weight:600;font-size:.92rem;margin-bottom:14px}
+.founder-social{display:flex;justify-content:center;gap:12px}
+.founder-social a{width:36px;height:36px;border-radius:50%;background:#eef2ff;color:var(--primary);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:.3s}
+.founder-social a:hover{background:var(--primary);color:#fff}
+
+/* FAQ */
+.faq-item{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.faq-q{padding:18px 22px;font-weight:600;color:var(--primary);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q:hover{background:#f8fafc}
+.faq-a{padding:0 22px;max-height:0;overflow:hidden;transition:.4s;color:var(--muted);font-size:.95rem}
+.faq-item.open .faq-a{max-height:300px;padding:0 22px 18px}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+.faq-q i{transition:.3s}
+
+/* CONTACT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.contact-info{background:#fff;padding:34px;border-radius:var(--radius);box-shadow:var(--shadow)}
+.contact-info h3{color:var(--primary);margin-bottom:20px}
+.contact-item{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+.contact-item .ic{background:#eef2ff;color:var(--primary);width:46px;height:46px;min-width:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.contact-item h5{color:var(--primary);margin-bottom:3px}
+.contact-item p{color:var(--muted);font-size:.92rem}
+.contact-form{background:#fff;padding:34px;border-radius:var(--radius);box-shadow:var(--shadow)}
+.contact-form input,.contact-form textarea{width:100%;padding:13px 15px;border:1px solid #cbd5e1;border-radius:10px;margin-bottom:15px;font-family:inherit;font-size:.95rem}
+.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--primary)}
+.contact-form button{padding:13px 30px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.3s}
+.contact-form button:hover{background:var(--accent)}
+.map-wrap{margin-top:30px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.map-wrap iframe{width:100%;height:300px;border:0}
+
+/* FOOTER */
+footer{background:var(--primary);color:#cbd5e1;padding:60px 20px 20px;margin-top:40px}
+.footer-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:34px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.12)}
+.footer-col h4{color:#fff;margin-bottom:18px;font-size:1.1rem}
+.footer-col p,.footer-col a{color:#94a3b8;font-size:.92rem;text-decoration:none;display:block;margin-bottom:9px}
+.footer-col a:hover{color:var(--accent);padding-left:5px;transition:.3s}
+.footer-social{display:flex;gap:12px;margin-top:16px}
+.footer-social a{width:38px;height:38px;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.footer-social a:hover{background:var(--accent);padding-left:0}
+.footer-bottom{text-align:center;padding-top:22px;color:#64748b;font-size:.88rem}
+
+/* FLOATING */
+.whatsapp-float{position:fixed;bottom:90px;right:22px;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 8px 25px rgba(37,211,102,.4);z-index:998;text-decoration:none;transition:.3s;animation:pulse 2s infinite}
+.whatsapp-float:hover{transform:scale(1.1)}
+@keyframes pulse{0%,100%{box-shadow:0 8px 25px rgba(37,211,102,.4)}50%{box-shadow:0 8px 35px rgba(37,211,102,.7)}}
+.top-btn{position:fixed;bottom:22px;right:22px;background:var(--primary);color:#fff;width:56px;height:56px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 8px 25px rgba(26,54,93,.4);z-index:998;cursor:pointer;border:none;transition:.3s}
+.top-btn.show{display:flex}
+.top-btn:hover{background:var(--accent);transform:scale(1.1)}
+
+/* LOGIN MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
+.modal.open{display:flex}
+.modal-box{background:#fff;border-radius:var(--radius);padding:34px;max-width:420px;width:100%;position:relative;animation:fade .3s}
+.modal-box .close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.5rem;color:var(--muted);cursor:pointer}
+.modal-box h3{color:var(--primary);margin-bottom:6px}
+.modal-box p.sub{color:var(--muted);font-size:.9rem;margin-bottom:22px}
+.modal-box input{width:100%;padding:12px 15px;border:1px solid #cbd5e1;border-radius:9px;margin-bottom:14px;font-family:inherit}
+.modal-box button.submit{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-family:inherit}
+.modal-box button.submit:hover{background:var(--accent)}
+
+/* MOBILE */
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}.contact-wrap,.student-box{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .hamburger{display:block}
+  .nav-links{position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;padding:16px;gap:4px;box-shadow:0 10px 25px rgba(0,0,0,.1);display:none}
+  .nav-links.open{display:flex}
+  .nav-links a{width:100%;text-align:center}
+  .hero h1{font-size:2rem}.hero p{font-size:1rem}.hero{padding:70px 20px 90px}
+  section{padding:55px 18px}.section-title h2{font-size:1.6rem}
+  .stats{margin-top:-40px}
+  .topbar{font-size:.78rem;justify-content:center;text-align:center}
 }
+@media(max-width:500px){.footer-grid{grid-template-columns:1fr}.btn{padding:11px 20px;font-size:.9rem}}
+</style>
+</head>
+<body>
 
-function renderStudents(){
- const list=$("studentList");
- list.replaceChildren();
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="left"><i class="fa-solid fa-phone"></i> +880 1XXX-XXXXXX &nbsp; <i class="fa-solid fa-envelope"></i> info@dynamicclassroom.com</div>
+  <div class="right">
+    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+    <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+  </div>
+</div>
 
- if(!students.length){
-  list.textContent="এখনও শিক্ষার্থী যোগ করা হয়নি।";
-  return;
- }
+<!-- NAVBAR -->
+<header>
+  <nav class="nav">
+    <a href="#" class="logo"><i class="fa-solid fa-graduation-cap"></i> Dynamic Classroom</a>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">হোম</a></li>
+      <li><a href="#notice">নোটিশ</a></li>
+      <li><a href="#courses">কোর্স</a></li>
+      <li><a href="#classes">ক্লাস</a></li>
+      <li><a href="#routine">রুটিন</a></li>
+      <li><a href="#students">শিক্ষার্থী</a></li>
+      <li><a href="#payment">পেমেন্ট</a></li>
+      <li><a href="#resources">সাজেশন</a></li>
+      <li><a href="#results">রেজাল্ট</a></li>
+      <li><a href="#contact">যোগাযোগ</a></li>
+      <li><a href="#" class="btn-login" onclick="document.getElementById('loginModal').classList.add('open');return false"><i class="fa-solid fa-user"></i> লগইন</a></li>
+    </ul>
+  </nav>
+</header>
 
- students.forEach(s=>{
-  const box=document.createElement("div");
-  box.className="student";
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <span class="badge"><i class="fa-solid fa-star"></i> বিশ্বস্ত শিক্ষাকেন্দ্র</span>
+    <h1>জ্ঞান অর্জন হোক <span>সহজ</span>, শিক্ষা হোক <span>আনন্দময়</span></h1>
+    <p>শিক্ষার্থীদের সাফল্যের পথে আপনার নির্ভরযোগ্য শিক্ষাকেন্দ্র। অভিজ্ঞ শিক্ষক, আধুনিক পদ্ধতি ও ডিজিটাল শিক্ষাসামগ্রী।</p>
+    <div class="hero-buttons">
+      <a href="#courses" class="btn btn-primary"><i class="fa-solid fa-book-open"></i> কোর্স দেখুন</a>
+      <a href="#students" class="btn btn-outline"><i class="fa-solid fa-user-plus"></i> ভর্তি হোন</a>
+    </div>
+  </div>
+</section>
 
-  const h=document.createElement("h3");
-  h.textContent=s.name||"নাম নেই";
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-card"><i class="fa-solid fa-user-graduate"></i><h3>৫০০+</h3><p>শিক্ষার্থী</p></div>
+  <div class="stat-card"><i class="fa-solid fa-chalkboard-user"></i><h3>১৫+</h3><p>অভিজ্ঞ শিক্ষক</p></div>
+  <div class="stat-card"><i class="fa-solid fa-book"></i><h3>২০+</h3><p>কোর্স</p></div>
+  <div class="stat-card"><i class="fa-solid fa-award"></i><h3>৯৫%</h3><p>সাফল্যের হার</p></div>
+</div>
 
-  const p=document.createElement("p");
-  p.textContent=`ID: ${s.studentId||"-"} | শ্রেণি: ${s.className||"-"} | রোল: ${s.roll||"-"}`;
+<!-- NOTICE -->
+<section id="notice">
+  <div class="container">
+    <div class="section-title"><h2>📢 নোটিশ বোর্ড</h2><p>সর্বশেষ নোটিশ ও ঘোষণাসমূহ</p></div>
+    <div class="notice-wrap">
+      <div class="notice-card">
+        <span class="tag urgent">জরুরি</span>
+        <h4>আগামীকাল কোচিং বন্ধ</h4>
+        <p>আগামীকাল (শুক্রবার) সকল ক্লাস বন্ধ থাকবে। পরদিন যথারীতি ক্লাস চলবে।</p>
+        <div class="date"><i class="fa-regular fa-calendar"></i> ১০ অক্টোবর, ২০২৬</div>
+      </div>
+      <div class="notice-card">
+        <span class="tag info">তথ্য</span>
+        <h4>নতুন ব্যাচ শুরু</h4>
+        <p>অষ্টম শ্রেণির নতুন ব্যাচ আগামী সপ্তাহে শুরু হবে। আগ্রহীরা দ্রুত ভর্তি হোন।</p>
+        <div class="date"><i class="fa-regular fa-calendar"></i> ০৮ অক্টোবর, ২০২৬</div>
+      </div>
+      <div class="notice-card">
+        <span class="tag">সাধারণ</span>
+        <h4>Dynamic Classroom-এ স্বাগতম</h4>
+        <p>আমাদের নতুন শিক্ষাবর্ষে সবাইকে স্বাগতম জানাই।</p>
+        <div class="date"><i class="fa-regular fa-calendar"></i> ০১ অক্টোবর, ২০২৬</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  const g=document.createElement("p");
-  g.textContent="অভিভাবক: "+(s.guardianPhone||"-");
+<!-- COURSES -->
+<section id="courses" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>📚 আমাদের কোর্স</h2><p>বিভিন্ন শ্রেণির জন্য বিশেষ কোর্স</p></div>
+    <div class="course-grid">
+      <div class="course-card">
+        <div class="course-head"><i class="fa-solid fa-book-open-reader"></i><h3>ষষ্ঠ-অষ্টম শ্রেণি</h3></div>
+        <div class="course-body"><ul>
+          <li><i class="fa-solid fa-check"></i> সকল বিষয়</li>
+          <li><i class="fa-solid fa-check"></i> সাপ্তাহিক পরীক্ষা</li>
+          <li><i class="fa-solid fa-check"></i> বিশেষ ক্লাস</li>
+        </ul><div class="course-price"><span>৳৮০০/মাস</span><a href="#students" class="btn">ভর্তি</a></div></div>
+      </div>
+      <div class="course-card">
+        <div class="course-head"><span class="ribbon">জনপ্রিয়</span><i class="fa-solid fa-flask"></i><h3>নবম-দশম (SSC)</h3></div>
+        <div class="course-body"><ul>
+          <li><i class="fa-solid fa-check"></i> বিজ্ঞান/মানবিক/ব্যবসায়</li>
+          <li><i class="fa-solid fa-check"></i> মডেল টেস্ট</li>
+          <li><i class="fa-solid fa-check"></i> বোর্ড প্রশ্ন সমাধান</li>
+        </ul><div class="course-price"><span>৳১২০০/মাস</span><a href="#students" class="btn">ভর্তি</a></div></div>
+      </div>
+      <div class="course-card">
+        <div class="course-head"><i class="fa-solid fa-microscope"></i><h3>একাদশ-দ্বাদশ (HSC)</h3></div>
+        <div class="course-body"><ul>
+          <li><i class="fa-solid fa-check"></i> বিজ্ঞান/মানবিক/ব্যবসায়</li>
+          <li><i class="fa-solid fa-check"></i> ল্যাব সাপোর্ট</li>
+          <li><i class="fa-solid fa-check"></i> ভর্তি প্রস্তুতি</li>
+        </ul><div class="course-price"><span>৳১৫০০/মাস</span><a href="#students" class="btn">ভর্তি</a></div></div>
+      </div>
+      <div class="course-card">
+        <div class="course-head"><i class="fa-solid fa-pen-fancy"></i><h3>ইংরেজি স্পোকেন</h3></div>
+        <div class="course-body"><ul>
+          <li><i class="fa-solid fa-check"></i> গ্রামার বেসিক</li>
+          <li><i class="fa-solid fa-check"></i> দৈনন্দিন কথাবার্তা</li>
+          <li><i class="fa-solid fa-check"></i> উপস্থাপনা</li>
+        </ul><div class="course-price"><span>৳১০০০/মাস</span><a href="#students" class="btn">ভর্তি</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  const f=document.createElement("p");
-  f.textContent="মাসিক বেতন: "+money(s.monthlyFee);
+<!-- CLASSES -->
+<section id="classes">
+  <div class="container">
+    <div class="section-title"><h2>🏫 ক্লাস ব্যাচ</h2><p>আমাদের নিয়মিত ক্লাস ও ব্যাচসমূহ</p></div>
+    <div class="class-grid">
+      <div class="class-item"><i class="fa-regular fa-clock"></i><h4>সকালের ব্যাচ</h4><p>সকাল ৭টা - ১০টা</p><div class="meta">শনি - বৃহস্পতি</div></div>
+      <div class="class-item"><i class="fa-regular fa-sun"></i><h4>বিকেলের ব্যাচ</h4><p>বিকেল ৩টা - ৬টা</p><div class="meta">শনি - বৃহস্পতি</div></div>
+      <div class="class-item"><i class="fa-regular fa-moon"></i><h4>সান্ধ্যকালীন ব্যাচ</h4><p>সন্ধ্যা ৬টা - ৯টা</p><div class="meta">শনি - বৃহস্পতি</div></div>
+      <div class="class-item"><i class="fa-solid fa-calendar-week"></i><h4>সাপ্তাহিক পরীক্ষা</h4><p>প্রতি শুক্রবার</p><div class="meta">সকাল ৯টা</div></div>
+    </div>
+  </div>
+</section>
 
-  box.append(
-   h,p,g,f,
-   btn("সম্পাদনা","",()=>{
-    editingStudentDocId=s.docId;
-    $("studentName").value=s.name||"";
-    $("studentId").value=s.studentId||"";
-    $("className").value=String(s.className||"");
-    $("roll").value=s.roll||"";
-    $("guardianPhone").value=s.guardianPhone||"";
-    $("monthlyFee").value=s.monthlyFee??0;
-    $("saveStudent").textContent="পরিবর্তন সংরক্ষণ";
-    $("cancelStudent").hidden=false;
-    window.scrollTo({top:0,behavior:"smooth"});
-   }),
-   btn("মুছুন","del",async()=>{
-    if(!confirm("শিক্ষার্থীর প্রোফাইল মুছবেন? পেমেন্টের ইতিহাস থেকে যেতে পারে।"))return;
-    try{
-     await deleteDoc(doc(db,"Students",s.docId));
-     status("শিক্ষার্থীর প্রোফাইল মুছে ফেলা হয়েছে।");
-    }catch(error){
-     console.error(error);
-     status("শিক্ষার্থীর তথ্য মুছতে পারেনি।");
-    }
-   })
-  );
+<!-- ROUTINE -->
+<section id="routine" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>📅 ক্লাস রুটিন</h2><p>সাপ্তাহিক ক্লাসের সময়সূচি</p></div>
+    <div class="routine-wrap">
+      <table class="routine">
+        <tr><th>দিন</th><th>সকাল</th><th>বিকেল</th><th>সন্ধ্যা</th></tr>
+        <tr><td>শনিবার</td><td>গণিত</td><td>ইংরেজি</td><td>বিজ্ঞান</td></tr>
+        <tr><td>রবিবার</td><td>বাংলা</td><td>গণিত</td><td>ICT</td></tr>
+        <tr><td>সোমবার</td><td>ইংরেজি</td><td>বিজ্ঞান</td><td>গণিত</td></tr>
+        <tr><td>মঙ্গলবার</td><td>বিজ্ঞান</td><td>বাংলা</td><td>ইংরেজি</td></tr>
+        <tr><td>বুধবার</td><td>গণিত</td><td>ICT</td><td>বাংলা</td></tr>
+        <tr><td>বৃহস্পতিবার</td><td>বাংলা</td><td>ইংরেজি</td><td>গণিত</td></tr>
+        <tr><td>শুক্রবার</td><td colspan="3" style="color:var(--red);font-weight:600">সাপ্তাহিক পরীক্ষা</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
 
-  list.appendChild(box);
- });
+<!-- STUDENTS -->
+<section id="students">
+  <div class="container">
+    <div class="section-title"><h2>👨‍🎓 শিক্ষার্থী কর্নার</h2><p>ভর্তি ফরম, আইডি কার্ড ও শিক্ষার্থী তথ্য</p></div>
+    <div class="student-box">
+      <div class="student-info">
+        <h3>শিক্ষার্থীদের সুবিধা</h3>
+        <ul>
+          <li><i class="fa-solid fa-id-card"></i> ডিজিটাল আইডি কার্ড</li>
+          <li><i class="fa-solid fa-file-lines"></i> অনলাইন রেজাল্ট চেক</li>
+          <li><i class="fa-solid fa-money-check"></i> অনলাইন ফি পেমেন্ট</li>
+          <li><i class="fa-solid fa-bell"></i> নোটিশ নোটিফিকেশন</li>
+          <li><i class="fa-solid fa-download"></i> সাজেশন ডাউনলোড</li>
+        </ul>
+      </div>
+      <form class="student-form" onsubmit="event.preventDefault();alert('✅ ভর্তি ফরম সফলভাবে জমা হয়েছে!')">
+        <h4>অনলাইন ভর্তি ফরম</h4>
+        <input type="text" placeholder="শিক্ষার্থীর নাম" required>
+        <input type="text" placeholder="অভিভাবকের নাম" required>
+        <input type="tel" placeholder="মোবাইল নম্বর" required>
+        <select required><option value="">শ্রেণি নির্বাচন করুন</option><option>ষষ্ঠ শ্রেণি</option><option>সপ্তম শ্রেণি</option><option>অষ্টম শ্রেণি</option><option>নবম শ্রেণি</option><option>দশম শ্রেণি</option><option>একাদশ শ্রেণি</option></select>
+        <select required><option value="">কোর্স নির্বাচন করুন</option><option>নিয়মিত কোর্স</option><option>SSC প্রস্তুতি</option><option>HSC প্রস্তুতি</option><option>ইংরেজি স্পোকেন</option></select>
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i> জমা দিন</button>
+      </form>
+    </div>
+
+    <!-- ID CARD DEMO -->
+    <div class="id-section" style="margin-top:40px">
+      <h3 style="color:var(--primary)">🎫 ডিজিটাল আইডি কার্ড (নমুনা)</h3>
+      <div class="id-card">
+        <div class="id-head">
+          <div class="id-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div><h5>Dynamic Classroom</h5><p>Student ID Card</p></div>
+        </div>
+        <div class="avatar">M</div>
+        <div style="text-align:center;margin-bottom:12px"><strong>Md. Mazed Hossain</strong></div>
+        <div class="info-row"><span>আইডি</span><span>DC-2026-001</span></div>
+        <div class="info-row"><span>শ্রেণি</span><span>দশম</span></div>
+        <div class="info-row"><span>ব্যাচ</span><span>সকাল</span></div>
+        <div class="info-row"><span>মোবাইল</span><span>01XXX-XXXXXX</span></div>
+        <div class="id-footer">এই কার্ডটি কোচিং প্রাঙ্গণে সর্বদা সাথে রাখুন</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section id="payment" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>💳 পেমেন্ট</h2><p>সহজে অনলাইনে ফি পরিশোধ করুন</p></div>
+    <div class="payment-grid">
+      <div class="pay-card bkash"><i class="fa-solid fa-mobile-screen-button"></i><h4>বিকাশ</h4><p>মার্চেন্ট: <strong>01XXXXXXXXX</strong></p><a href="#" class="btn">পেমেন্ট করুন</a></div>
+      <div class="pay-card nagad"><i class="fa-solid fa-wallet"></i><h4>নগদ</h4><p>মার্চেন্ট: <strong>01XXXXXXXXX</strong></p><a href="#" class="btn">পেমেন্ট করুন</a></div>
+      <div class="pay-card rocket"><i class="fa-solid fa-rocket"></i><h4>রকেট</h4><p>মার্চেন্ট: <strong>01XXXXXXXXX</strong></p><a href="#" class="btn">পেমেন্ট করুন</a></div>
+    </div>
+
+    <h3 style="text-align:center;color:var(--primary);margin-bottom:20px">📊 ফি স্ট্যাটাস (নমুনা)</h3>
+    <div class="fee-table">
+      <table class="fee">
+        <tr><th>শিক্ষার্থী</th><th>শ্রেণি</th><th>মাস</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr>
+        <tr><td>Md. Mazed Hossain</td><td>দশম</td><td>অক্টোবর</td><td>৳১২০০</td><td class="paid">পরিশোধিত</td></tr>
+        <tr><td>Ahsanullah Akanda</td><td>নবম</td><td>অক্টোবর</td><td>৳১২০০</td><td class="due">বকেয়া</td></tr>
+        <tr><td>রাহুল আহমেদ</td><td>অষ্টম</td><td>অক্টোবর</td><td>৳৮০০</td><td class="paid">পরিশোধিত</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES / SUGGESTION -->
+<section id="resources">
+  <div class="container">
+    <div class="section-title"><h2>📝 সাজেশন ও রিসোর্স</h2><p>পরীক্ষার প্রস্তুতির জন্য প্রয়োজনীয় সবকিছু</p></div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(event,'suggestion')">সাজেশন</button>
+      <button class="tab-btn" onclick="showTab(event,'model')">মডেল টেস্ট</button>
+      <button class="tab-btn" onclick="showTab(event,'question')">প্রশ্নব্যাংক</button>
+      <button class="tab-btn" onclick="showTab(event,'note')">নোটস</button>
+    </div>
+
+    <div id="suggestion" class="tab-content active">
+      <div class="resource-grid">
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-file-pdf"></i></div><div><h4>SSC গণিত সাজেশন ২০২৬</h4><p>অধ্যায়ভিত্তিক গুরুত্বপূর্ণ প্রশ্ন</p><a href="#">ডাউনলোড →</a></div></div>
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-file-pdf"></i></div><div><h4>ইংরেজি ১ম পত্র সাজেশন</h4><p>সকল বোর্ডের প্রশ্ন বিশ্লেষণ</p><a href="#">ডাউনলোড →</a></div></div>
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-file-pdf"></i></div><div><h4>বিজ্ঞান সাজেশন</h4><p>গুরুত্বপূর্ণ অধ্যায় ও সূত্র</p><a href="#">ডাউনলোড →</a></div></div>
+      </div>
+    </div>
+    <div id="model" class="tab-content">
+      <div class="resource-grid">
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-clipboard-check"></i></div><div><h4>মডেল টেস্ট - ০১</h4><p>পূর্ণাঙ্গ মডেল টেস্ট (সময়: ৩ ঘণ্টা)</p><a href="#">শুরু করুন →</a></div></div>
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-clipboard-check"></i></div><div><h4>মডেল টেস্ট - ০২</h4><p>MCQ + CQ প্রশ্ন</p><a href="#">শুরু করুন →</a></div></div>
+      </div>
+    </div>
+    <div id="question" class="tab-content">
+      <div class="resource-grid">
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-book"></i></div><div><h4>বিগত সালের প্রশ্ন</h4><p>২০১৫-২০২৫ বোর্ড প্রশ্ন</p><a href="#">ডাউনলোড →</a></div></div>
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-book"></i></div><div><h4>বিষয়ভিত্তিক প্রশ্নব্যাংক</h4><p>সকল বিষয়ের প্রশ্ন সংগ্রহ</p><a href="#">ডাউনলোড →</a></div></div>
+      </div>
+    </div>
+    <div id="note" class="tab-content">
+      <div class="resource-grid">
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-note-sticky"></i></div><div><h4>গণিত হ্যান্ডনোট</h4><p>সহজ ভাষায় সূত্র ও ব্যাখ্যা</p><a href="#">দেখুন →</a></div></div>
+        <div class="resource-card"><div class="icon"><i class="fa-solid fa-note-sticky"></i></div><div><h4>ইংরেজি গ্রামার নোট</h4><p>বেসিক থেকে অ্যাডভান্স</p><a href="#">দেখুন →</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>📊 রেজাল্ট ও মেরিট লিস্ট</h2><p>আপনার ফলাফল অনলাইনে দেখুন</p></div>
+
+    <div class="result-search">
+      <input type="text" placeholder="শিক্ষার্থীর আইডি লিখুন (যেমন: DC-2026-001)">
+      <button onclick="alert('🔍 রেজাল্ট খোঁজা হচ্ছে...')"><i class="fa-solid fa-magnifying-glass"></i> খুঁজুন</button>
+    </div>
+
+    <h3 style="text-align:center;color:var(--primary);margin:30px 0 20px">🏆 মেরিট লিস্ট (নমুনা)</h3>
+    <div class="merit-card"><div class="merit-rank">১</div><div class="info"><h4>Md. Mazed Hossain</h4><p>দশম শ্রেণি • রোল: ০১</p></div><span class="gpa">GPA 5.00</span></div>
+    <div class="merit-card"><div class="merit-rank">২</div><div class="info"><h4>Ahsanullah Akanda</h4><p>দশম শ্রেণি • রোল: ০২</p></div><span class="gpa">GPA 4.95</span></div>
+    <div class="merit-card"><div class="merit-rank">৩</div><div class="info"><h4>রাহুল আহমেদ</h4><p>নবম শ্রেণি • রোল: ০৩</p></div><span class="gpa">GPA 4.88</span></div>
+  </div>
+</section>
+
+<!-- TEACHERS -->
+<section id="teachers">
+  <div class="container">
+    <div class="section-title"><h2>👨‍🏫 আমাদের শিক্ষকমণ্ডলী</h2><p>অভিজ্ঞ ও দক্ষ শিক্ষকগণ</p></div>
+    <div class="teacher-grid">
+      <div class="teacher-card"><div class="teacher-avatar">M</div><h4>Md. Mazed Hossain</h4><p>প্রধান শিক্ষক</p><span class="subject">গণিত</span></div>
+      <div class="teacher-card"><div class="teacher-avatar">A</div><h4>Ahsanullah A. Shakil</h4><p>সিনিয়র শিক্ষক</p><span class="subject">ইংরেজি</span></div>
+      <div class="teacher-card"><div class="teacher-avatar">R</div><h4>রফিকুল ইসলাম</h4><p>সহকারী শিক্ষক</p><span class="subject">বিজ্ঞান</span></div>
+      <div class="teacher-card"><div class="teacher-avatar">S</div><h4>সাদিয়া আক্তার</h4><p>সহকারী শিক্ষক</p><span class="subject">বাংলা</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>🖼️ গ্যালারি</h2><p>আমাদের কার্যক্রমের কিছু মুহূর্ত</p></div>
+    <div class="gallery">
+      <div class="gallery-item"><i class="fa-solid fa-image"></i><span>ক্লাস রুম</span></div>
+      <div class="gallery-item"><i class="fa-solid fa-image"></i><span>পরীক্ষা হল</span></div>
+      <div class="gallery-item"><i class="fa-solid fa-image"></i><span>পুরস্কার বিতরণ</span></div>
+      <div class="gallery-item"><i class="fa-solid fa-image"></i><span>সাংস্কৃতিক অনুষ্ঠান</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMISSION INFO -->
+<section id="admission">
+  <div class="container">
+    <div class="section-title"><h2>🎓 ভর্তি তথ্য</h2><p>ভর্তির নিয়ম ও প্রয়োজনীয় কাগজপত্র</p></div>
+    <div class="admission-grid">
+      <div class="admission-card"><i class="fa-solid fa-file-signature"></i><h4>ভর্তির সময়</h4><p>প্রতি মাসের ১-১০ তারিখের মধ্যে ভর্তি সম্পন্ন করতে হবে।</p></div>
+      <div class="admission-card"><i class="fa-solid fa-folder-open"></i><h4>প্রয়োজনীয় কাগজ</h4><p>ছবি ২ কপি, জন্মনিবন্ধন/আইডি কার্ড, পূর্ববর্তী রেজাল্ট।</p></div>
+      <div class="admission-card"><i class="fa-solid fa-percent"></i><h4>ছাড়ের সুবিধা</h4><p>মেধাবী ও অসচ্ছল শিক্ষার্থীদের জন্য বিশেষ ছাড়।</p></div>
+      <div class="admission-card"><i class="fa-solid fa-clock"></i><h4>অফিস সময়</h4><p>শনি-বৃহস্পতি: সকাল ৮টা - রাত ৮টা</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS -->
+<section id="founders" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>👥 আমাদের প্রতিষ্ঠাতাগণ</h2><p>Dynamic Classroom-এর প্রতিষ্ঠাতা</p></div>
+    <div class="founder-grid">
+      <div class="founder-card">
+        <div class="founder-avatar">M</div>
+        <h3>Md. Mazed Hossain</h3><p>প্রতিষ্ঠাতা</p>
+        <div class="founder-social">
+          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="founder-card">
+        <div class="founder-avatar">A</div>
+        <h3>Ahsanullah Akanda Shakil</h3><p>প্রতিষ্ঠাতা</p>
+        <div class="founder-social">
+          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container" style="max-width:800px">
+    <div class="section-title"><h2>❓ সচরাচর জিজ্ঞাসা</h2><p>আপনার প্রশ্নের উত্তর এখানে</p></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">ভর্তি হতে কী কী লাগবে? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-a">শিক্ষার্থীর ২ কপি ছবি, জন্মনিবন্ধন বা আইডি কার্ড এবং পূর্ববর্তী শ্রেণির রেজাল্ট কার্ড নিয়ে অফিসে আসুন।</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">অনলাইনে ফি দেওয়া যাবে কি? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-a">হ্যাঁ, বিকাশ, নগদ ও রকেটের মাধ্যমে অনলাইনে ফি পরিশোধ করা যাবে।</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">ক্লাস কতদিনে হয়? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-a">সপ্তাহে ৬ দিন ক্লাস হয়। শুক্রবার সাপ্তাহিক পরীক্ষা অনুষ্ঠিত হয়।</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">রেজাল্ট কীভাবে দেখা যাবে? <i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-a">ওয়েবসাইটের রেজাল্ট সেকশনে গিয়ে শিক্ষার্থীর আইডি দিয়ে রেজাল্ট দেখা যাবে।</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="background:#fff">
+  <div class="container">
+    <div class="section-title"><h2>📞 যোগাযোগ</h2><p>কোর্স ও ভর্তি সম্পর্কে জানতে যোগাযোগ করুন</p></div>
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <h3>আমাদের ঠিকানা</h3>
+        <div class="contact-item"><div class="ic"><i class="fa-solid fa-location-dot"></i></div><div><h5>ঠিকানা</h5><p>১২৩, প্রধান সড়ক, ঢাকা, বাংলাদেশ</p></div></div>
+        <div class="contact-item"><div class="ic"><i class="fa-solid fa-envelope"></i></div><div><h5>ইমেইল</h5><p>mazedhossain50555@gmail.com</p></div></div>
+        <div class="contact-item"><div class="ic"><i class="fa-solid fa-phone"></i></div><div><h5>ফোন</h5><p>+880 1XXX-XXXXXX</p></div></div>
+        <div class="contact-item"><div class="ic"><i class="fa-solid fa-clock"></i></div><div><h5>অফিস সময়</h5><p>শনি-বৃহস্পতি: সকাল ৮টা - রাত ৮টা</p></div></div>
+      </div>
+      <form class="contact-form" onsubmit="event.preventDefault();alert('✅ আপনার বার্তা পাঠানো হয়েছে!')">
+        <h3 style="color:var(--primary);margin-bottom:20px">বার্তা পাঠান</h3>
+        <input type="text" placeholder="আপনার নাম" required>
+        <input type="email" placeholder="ইমেইল" required>
+        <input type="text" placeholder="বিষয়" required>
+        <textarea rows="5" placeholder="আপনার বার্তা লিখুন..." required></textarea>
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i> পাঠান</button>
+      </form>
+    </div>
+    <div class="map-wrap">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.902876449391!2d90.391219!3d23.750855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzAzLjEiTiA5MMKwMjMnMzYuNCJF!5e0!3m2!1sen!2sbd!4v1234567890" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4><i class="fa-solid fa-graduation-cap"></i> Dynamic Classroom</h4>
+      <p>শিক্ষার্থীদের সাফল্যের পথে আপনার নির্ভরযোগ্য শিক্ষাকেন্দ্র। আধুনিক ও মানসম্মত শিক্ষা আমাদের লক্ষ্য।</p>
+      <div class="footer-social">
+        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>কুইক লিংক</h4>
+      <a href="#home">হোম</a>
+      <a href="#courses">কোর্স</a>
+      <a href="#notice">নোটিশ</a>
+      <a href="#results">রেজাল্ট</a>
+      <a href="#admission">ভর্তি</a>
+    </div>
+    <div class="footer-col">
+      <h4>সেবাসমূহ</h4>
+      <a href="#students">অনলাইন ভর্তি</a>
+      <a href="#payment">ফি পেমেন্ট</a>
+      <a href="#resources">সাজেশন</a>
+      <a href="#routine">ক্লাস রুটিন</a>
+      <a href="#gallery">গ্যালারি</a>
+    </div>
+    <div class="footer-col">
+      <h4>যোগাযোগ</h4>
+      <p><i class="fa-solid fa-location-dot"></i> ১২৩, প্রধান সড়ক, ঢাকা</p>
+      <p><i class="fa-solid fa-phone"></i> +880 1XXX-XXXXXX</p>
+      <p><i class="fa-solid fa-envelope"></i> mazedhossain50555@gmail.com</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© ২০২৬ Dynamic Classroom | সর্বস্বত্ব সংরক্ষিত | Designed with ❤️</div>
+</footer>
+
+<!-- FLOATING -->
+<a href="https://wa.me/8801XXXXXXXXX" class="whatsapp-float" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+<button class="top-btn" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="loginModal">
+  <div class="modal-box">
+    <button class="close" onclick="document.getElementById('loginModal').classList.remove('open')">×</button>
+    <h3>🔐 শিক্ষার্থী লগইন</h3>
+    <p class="sub">আপনার আইডি ও পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
+    <input type="text" placeholder="শিক্ষার্থী আইডি">
+    <input type="password" placeholder="পাসওয়ার্ড">
+    <button class="submit" onclick="alert('✅ লগইন সফল!');document.getElementById('loginModal').classList.remove('open')">লগইন করুন</button>
+  </div>
+</div>
+
+<script>
+// TABS
+function showTab(e,id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
 }
-
-function renderStudentOptions(){
- const select=$("paymentStudent");
- const old=select.value;
- select.replaceChildren();
-
- const placeholder=document.createElement("option");
- placeholder.value="";
- placeholder.textContent="শিক্ষার্থী নির্বাচন করুন";
- select.appendChild(placeholder);
-
- students.forEach(s=>{
-  const option=document.createElement("option");
-  option.value=s.docId;
-  option.textContent=`${s.name||"নাম নেই"} — ${s.studentId||"ID নেই"}`;
-  select.appendChild(option);
- });
-
- if(students.some(s=>s.docId===old))select.value=old;
-}
-
-function resetStudent(){
- editingStudentDocId=null;
- $("studentForm").reset();
- $("saveStudent").textContent="শিক্ষার্থী সংরক্ষণ";
- $("cancelStudent").hidden=true;
-}
-
-$("cancelStudent").onclick=resetStudent;
-
-$("studentForm").onsubmit=async e=>{
- e.preventDefault();
-
- if(!currentAdmin()){
-  status("অ্যাডমিন অনুমতি নেই।");
-  return;
- }
-
- const fee=Number($("monthlyFee").value);
- if(!Number.isSafeInteger(fee)||fee<0){
-  status("মাসিক বেতন পূর্ণ টাকা হিসেবে লিখুন।");
-  return;
- }
-
- const data={
-  name:$("studentName").value.trim(),
-  studentId:$("studentId").value.trim(),
-  className:$("className").value,
-  roll:$("roll").value.trim(),
-  guardianPhone:$("guardianPhone").value.trim(),
-  monthlyFee:fee,
-  active:true,
-  updatedAt:new Date().toISOString()
- };
-
- $("saveStudent").disabled=true;
-
- try{
-  if(editingStudentDocId){
-   await updateDoc(doc(db,"Students",editingStudentDocId),data);
-  }else{
-   data.createdAt=new Date().toISOString();
-   await addDoc(collection(db,"Students"),data);
-  }
-
-  resetStudent();
-  status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়েছে।");
- }catch(error){
-  console.error(error);
-  status("শিক্ষার্থীর তথ্য সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।");
- }finally{
-  $("saveStudent").disabled=false;
- }
-};
-
-/* PAYMENTS */
-
-function loadPayments(){
- stopPayments=onSnapshot(collection(db,"Payments"),snap=>{
-  payments=snap.docs.map(x=>({docId:x.id,...x.data()}));
-  renderPaymentSummary();
-  renderPaymentHistory();
- },error=>{
-  console.error(error);
-  status("পেমেন্ট লোড হয়নি। Firebase Rules পরীক্ষা করুন।");
- });
-}
-
-function chosenStudent(){
- return students.find(s=>s.docId===$("paymentStudent").value);
-}
-
-function matchingPayments(){
- const student=chosenStudent();
- const month=$("paymentMonth").value;
- if(!student||!month)return [];
-
- return payments.filter(p=>
-  p.studentDocId===student.docId && p.month===month
- );
-}
-
-function orderedPayments(records){
- return [...records].sort((a,b)=>{
-  const at=a.createdAt||((a.paymentDate||"")+"T00:00:00");
-  const bt=b.createdAt||((b.paymentDate||"")+"T00:00:00");
-  return at.localeCompare(bt)||(a.docId||"").localeCompare(b.docId||"");
- });
-}
-
-function renderPaymentSummary(){
- const student=chosenStudent();
- const month=$("paymentMonth").value;
- const box=$("paymentSummary");
-
- if(!student||!month){
-  box.textContent="হিসাব দেখতে শিক্ষার্থী ও মাস নির্বাচন করুন।";
-  return;
- }
-
- const paid=matchingPayments().reduce(
-  (sum,p)=>sum+Number(p.amountPaid||0),0
- );
- const fee=Number(student.monthlyFee||0);
- const due=Math.max(0,fee-paid);
-
- box.replaceChildren();
-
- [
-  ["শিক্ষার্থী",student.name],
-  ["মাস",month],
-  ["মাসিক বেতন",money(fee)],
-  ["এই মাসে মোট জমা",money(paid)],
-  ["এই মাসে বকেয়া",money(due)]
- ].forEach(([label,value])=>{
-  const p=document.createElement("p");
-  p.textContent=label+": "+value;
-  box.appendChild(p);
- });
-
- if(paid>fee){
-  const warn=document.createElement("p");
-  warn.textContent="সতর্কতা: মোট জমা মাসিক বেতনের চেয়ে বেশি। হিসাব যাচাই করুন।";
-  box.appendChild(warn);
- }
-}
-
-/* DIGITAL RECEIPT */
-
-function renderReceipt(p){
- const student=students.find(s=>s.docId===p.studentDocId);
- const fee=Number(student?.monthlyFee||0);
-
- /*
-  * Realtime snapshot আপডেট হওয়ার আগেই নতুন রসিদ খুললেও
-  * নির্বাচিত পেমেন্টটি হিসাবের তালিকায় অন্তর্ভুক্ত করা হয়।
-  */
- const records=payments.filter(x=>
-  x.studentDocId===p.studentDocId && x.month===p.month
- );
-
- if(!records.some(x=>x.docId===p.docId)){
-  records.push(p);
- }
-
- const ordered=orderedPayments(records);
- const index=ordered.findIndex(x=>x.docId===p.docId);
- const relevant=index>=0?ordered.slice(0,index+1):[p];
-
- const total=relevant.reduce(
-  (sum,x)=>sum+Number(x.amountPaid||0),0
- );
- const due=Math.max(0,fee-total);
-
- const receiptNo="DC-"+
-  String(p.month||"").replace("-","")+"-"+
-  String(p.docId||"").slice(-8).toUpperCase();
-
- $("receiptNumber").textContent="রসিদ নম্বর: "+receiptNo;
-
- const details=$("receiptDetails");
- details.replaceChildren();
-
- const rows=[
-  ["শিক্ষার্থীর নাম",p.studentName||student?.name||"-"],
-  ["Student ID",p.studentId||student?.studentId||"-"],
-  ["শ্রেণি",student?.className||"-"],
-  ["রোল",student?.roll||"-"],
-  ["বেতনের মাস",p.month||"-"],
-  ["জমার তারিখ",p.paymentDate||"-"],
-  ["পেমেন্টের মাধ্যম",p.method||"-"],
-  ["এই কিস্তিতে জমা",money(p.amountPaid)],
-  ["মাসিক বেতন",money(fee)],
-  ["এই জমাসহ মোট জমা",money(total)],
-  ["এই কিস্তির পর বকেয়া",money(due)],
-  ["Transaction ID",p.transactionRef||"প্রযোজ্য নয়"]
- ];
-
- rows.forEach(([label,value],i)=>{
-  const row=document.createElement("div");
-  row.className="receipt-row"+(i===7?" receipt-total":"");
-
-  const left=document.createElement("span");
-  left.textContent=label;
-
-  const right=document.createElement("span");
-  right.textContent=String(value);
-
-  row.append(left,right);
-  details.appendChild(row);
- });
-
- $("receiptPrint").hidden=false;
- $("receiptPrint").scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-$("printReceipt").onclick=()=>window.print();
-
-$("closeReceipt").onclick=()=>{
- $("receiptPrint").hidden=true;
-};
-
-/* PAYMENT HISTORY */
-
-function renderPaymentHistory(){
- const box=$("paymentHistory");
- box.replaceChildren();
-
- const student=chosenStudent();
- const month=$("paymentMonth").value;
-
- if(!student||!month){
-  box.textContent="শিক্ষার্থী ও মাস নির্বাচন করুন।";
-  return;
- }
-
- const records=matchingPayments().sort((a,b)=>
-  (b.paymentDate||"").localeCompare(a.paymentDate||"")||
-  (b.createdAt||"").localeCompare(a.createdAt||"")
- );
-
- if(!records.length){
-  box.textContent="এই মাসে কোনো জমার রেকর্ড নেই।";
-  return;
- }
-
- records.forEach(p=>{
-  const item=document.createElement("div");
-  item.className="payment";
-
-  const h=document.createElement("strong");
-  h.textContent=money(p.amountPaid)+" — "+(p.method||"মাধ্যম উল্লেখ নেই");
-
-  const detail=document.createElement("p");
-  detail.textContent="তারিখ: "+(p.paymentDate||"-")+" | মাস: "+(p.month||"-");
-
-  item.append(h,detail);
-
-  if(p.transactionRef){
-   const ref=document.createElement("p");
-   ref.textContent="Transaction ID: "+p.transactionRef;
-   item.appendChild(ref);
-  }
-
-  item.appendChild(btn("রসিদ দেখুন / প্রিন্ট","",()=>{
-   renderReceipt(p);
-  }));
-
-  box.appendChild(item);
- });
-}
-
-$("paymentStudent").onchange=()=>{
- renderPaymentSummary();
- renderPaymentHistory();
-};
-
-$("paymentMonth").onchange=()=>{
- renderPaymentSummary();
- renderPaymentHistory();
-};
-
-/* DEFAULT DATE */
-
-const now=new Date();
-
-$("paymentMonth").value=
- now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
-
-$("paymentDate").value=
- now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+
- String(now.getDate()).padStart(2,"0");
-
-/* SAVE PAYMENT */
-
-$("paymentForm").onsubmit=async e=>{
- e.preventDefault();
-
- if(!currentAdmin()){
-  status("অ্যাডমিন অনুমতি নেই।");
-  return;
- }
-
- const student=chosenStudent();
- const month=$("paymentMonth").value;
- const amount=Number($("amountPaid").value);
- const paymentDate=$("paymentDate").value;
- const method=$("paymentMethod").value;
- const transactionRef=$("transactionRef").value.trim();
-
- if(!student||!month){
-  status("শিক্ষার্থী ও মাস নির্বাচন করুন।");
-  return;
- }
-
- if(!Number.isSafeInteger(amount)||amount<=0){
-  status("জমার পরিমাণ পূর্ণ টাকা হিসেবে লিখুন।");
-  return;
- }
-
- if(!paymentDate){
-  status("জমার তারিখ দিন।");
-  return;
- }
-
- const existing=matchingPayments();
- const paid=existing.reduce(
-  (sum,p)=>sum+Number(p.amountPaid||0),0
- );
- const fee=Number(student.monthlyFee||0);
- const due=fee-paid;
-
- if(due<=0){
-  status("এই মাসের বেতন ইতিমধ্যে পরিশোধ হয়েছে।");
-  return;
- }
-
- if(amount>due){
-  status("জমার পরিমাণ বকেয়ার চেয়ে বেশি। বকেয়া "+money(due));
-  return;
- }
-
- $("savePayment").disabled=true;
-
- try{
-  const paymentData={
-   studentDocId:student.docId,
-   studentUid:"",
-   studentId:student.studentId||"",
-   studentName:student.name||"",
-   month,
-   year:Number(month.slice(0,4)),
-   amountPaid:amount,
-   paymentDate,
-   method,
-   transactionRef,
-   createdAt:new Date().toISOString()
-  };
-
-  const paymentRef=await addDoc(
-   collection(db,"Payments"),paymentData
-  );
-
-  $("amountPaid").value="";
-  $("transactionRef").value="";
-
-  status("পেমেন্ট সংরক্ষণ হয়েছে। রসিদ তৈরি করা হয়েছে।");
-
-  renderReceipt({
-   ...paymentData,
-   docId:paymentRef.id
-  });
-
- }catch(error){
-  console.error(error);
-  status("পেমেন্ট সংরক্ষণ হয়নি। Firebase Rules পরীক্ষা করুন।");
- }finally{
-  $("savePayment").disabled=false;
- }
-};
-
-$("logout").onclick=async()=>{
- try{
-  await signOut(auth);
- }catch(error){
-  console.error(error);
-  status("লগআউট করা যায়নি।");
- }
-};
+// TOP BUTTON
+window.addEventListener('scroll',()=>{
+  document.getElementById('topBtn').classList.toggle('show',window.scrollY>400);
+});
+// NAV CLOSE ON CLICK (mobile)
+document.querySelectorAll('.nav-links a').forEach(a=>{
+  a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open'));
+});
+// MODAL OUTSIDE CLICK
+document.getElementById('loginModal').addEventListener('click',e=>{
+  if(e.target.id==='loginModal')e.target.classList.remove('open');
+});
 </script>
 </body>
 </html>
