@@ -94,11 +94,16 @@ body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--tex
 .btn-red:hover{background:#b91c1c}
 
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.form-grid input,.form-grid select,.form-grid textarea{padding:12px 15px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;font-size:.93rem;width:100%}
-.form-grid input:focus,.form-grid select:focus,.form-grid textarea:focus{outline:none;border-color:var(--primary)}
+.form-grid input,.form-grid select,.form-grid textarea{padding:12px 15px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit;font-size:.93rem;width:100%;background:#fff;color:var(--text)}
+.form-grid input:focus,.form-grid select:focus,.form-grid textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,54,93,.08)}
+.form-grid select{
+  appearance:none;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:16px;padding-right:40px;cursor:pointer;
+}
 .form-grid .full{grid-column:1/-1}
 .form-grid textarea{resize:vertical;min-height:90px}
-.form-grid button{padding:12px 26px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-family:inherit;grid-column:1/-1}
+.form-grid button{padding:12px 26px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-family:inherit;grid-column:1/-1;transition:.3s}
 .form-grid button:hover{background:var(--accent)}
 
 .table-wrap{overflow-x:auto}
@@ -106,11 +111,13 @@ table{width:100%;border-collapse:collapse;min-width:600px}
 table th,table td{padding:12px 14px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:.9rem}
 table th{background:#f8fafc;color:var(--primary);font-weight:600;font-size:.85rem}
 table tr:hover{background:#f8fafc}
-.badge{padding:4px 12px;border-radius:50px;font-size:.78rem;font-weight:600}
+.badge{padding:4px 12px;border-radius:50px;font-size:.78rem;font-weight:600;display:inline-block}
 .badge.green{background:#dcfce7;color:#166534}
 .badge.red{background:#fee2e2;color:#b91c1c}
 .badge.blue{background:#dbeafe;color:#1e40af}
 .badge.orange{background:#fef3c7;color:#b45309}
+.empty-msg{text-align:center;padding:30px;color:#94a3b8;font-size:.95rem}
+code.pass{background:#f1f5f9;padding:3px 10px;border-radius:5px;font-family:monospace;color:#b45309;font-weight:600}
 
 .search-bar{display:flex;gap:10px;margin-bottom:16px}
 .search-bar input{flex:1;padding:11px 16px;border:1px solid #cbd5e1;border-radius:9px;font-family:inherit}
@@ -134,7 +141,6 @@ table tr:hover{background:#f8fafc}
     <h2>Admin Panel</h2>
     <p class="sub">Dynamic Classroom ম্যানেজমেন্ট সিস্টেম</p>
 
-    <!-- STEP 1: Login with Email -->
     <div class="step active" id="step1">
       <div class="msg" id="msg1"></div>
       <input type="email" id="adminEmail" placeholder="📧 ইমেইল অ্যাড্রেস">
@@ -148,7 +154,6 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
-    <!-- STEP 2: Forgot Password - Email -->
     <div class="step" id="stepForgot">
       <h3 style="color:var(--primary);margin-bottom:8px">🔐 পাসওয়ার্ড রিসেট</h3>
       <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">আপনার ইমেইল দিন, OTP কোড পাঠানো হবে</p>
@@ -158,7 +163,6 @@ table tr:hover{background:#f8fafc}
       <button class="back" onclick="backToStep1()"><i class="fa-solid fa-arrow-left"></i> লগইনে ফিরে যান</button>
     </div>
 
-    <!-- STEP 3: Forgot Password - OTP -->
     <div class="step" id="stepResetOTP">
       <h3 style="color:var(--primary);margin-bottom:8px">📨 OTP যাচাই</h3>
       <div class="otp-display">
@@ -172,7 +176,6 @@ table tr:hover{background:#f8fafc}
       <button class="back" onclick="goToForgot()"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</button>
     </div>
 
-    <!-- STEP 4: New Password -->
     <div class="step" id="stepNewPass">
       <h3 style="color:var(--primary);margin-bottom:8px">🔑 নতুন পাসওয়ার্ড</h3>
       <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">শক্তিশালী পাসওয়ার্ড ব্যবহার করুন</p>
@@ -220,6 +223,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== DASHBOARD ===== -->
     <div class="page active" id="page-dashboard">
       <div class="stat-grid">
         <div class="stat-box"><div class="ic blue"><i class="fa-solid fa-user-graduate"></i></div><div><h3 id="sStudents">0</h3><p>মোট শিক্ষার্থী</p></div></div>
@@ -240,6 +244,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== NOTICE ===== -->
     <div class="page" id="page-notice">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন নোটিশ</h3></div>
@@ -258,6 +263,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== COURSE ===== -->
     <div class="page" id="page-course">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন কোর্স</h3></div>
@@ -277,26 +283,47 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== STUDENT (নতুন আপডেট) ===== -->
     <div class="page" id="page-student">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন শিক্ষার্থী</h3></div>
         <form class="form-grid" onsubmit="addStudent(event)">
           <input type="text" id="stName" placeholder="শিক্ষার্থীর নাম" required>
-          <input type="text" id="stClass" placeholder="শ্রেণি" required>
-          <input type="tel" id="stPhone" placeholder="মোবাইল" required>
-          <input type="text" id="stBatch" placeholder="ব্যাচ (সকাল/বিকেল)" required>
+
+          <select id="stClass" required>
+            <option value="">শ্রেণি নির্বাচন করুন</option>
+            <option value="৬ষ্ঠ">ষষ্ঠ শ্রেণি</option>
+            <option value="৭ম">সপ্তম শ্রেণি</option>
+            <option value="৮ম">অষ্টম শ্রেণি</option>
+            <option value="৯ম">নবম শ্রেণি</option>
+            <option value="১০ম">দশম শ্রেণি</option>
+            <option value="১১শ">একাদশ শ্রেণি</option>
+            <option value="১২শ">দ্বাদশ শ্রেণি</option>
+          </select>
+
+          <input type="tel" id="stPhone" placeholder="মোবাইল নম্বর" required>
+
+          <select id="stBatch" required>
+            <option value="">বাচ নির্বাচন করুন</option>
+            <option value="সকাল">সকাল</option>
+            <option value="বিকেল">বিকেল</option>
+          </select>
+
+          <input type="text" id="stPass" placeholder="পাসওয়ার্ড (শিক্ষার্থী লগইনে ব্যবহার করবে)" required>
+
           <button type="submit"><i class="fa-solid fa-plus"></i> শিক্ষার্থী যোগ করুন</button>
         </form>
       </div>
       <div class="card">
         <div class="card-head"><h3>👨‍🎓 শিক্ষার্থী তালিকা</h3></div>
-        <div class="search-bar"><input type="text" id="stSearch" placeholder="🔍 নাম বা আইডি দিয়ে খুঁজুন..." onkeyup="searchStudent()"></div>
+        <div class="search-bar"><input type="text" id="stSearch" placeholder="🔍 নাম বা আইডি বা মোবাইল দিয়ে খুঁজুন..." onkeyup="searchStudent()"></div>
         <div class="table-wrap"><table id="studentTable">
-          <tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th><th>ব্যাচ</th><th>অ্যাকশন</th></tr>
+          <tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th><th>বাচ</th><th>পাসওয়ার্ড</th><th>অ্যাকশন</th></tr>
         </table></div>
       </div>
     </div>
 
+    <!-- ===== PAYMENT ===== -->
     <div class="page" id="page-payment">
       <div class="card">
         <div class="card-head"><h3>💳 ফি পরিশোধ এন্ট্রি</h3></div>
@@ -316,6 +343,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== RESULT ===== -->
     <div class="page" id="page-result">
       <div class="card">
         <div class="card-head"><h3>📝 রেজাল্ট এন্ট্রি</h3></div>
@@ -335,6 +363,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== TEACHER ===== -->
     <div class="page" id="page-teacher">
       <div class="card">
         <div class="card-head"><h3>➕ নতুন শিক্ষক</h3></div>
@@ -354,6 +383,7 @@ table tr:hover{background:#f8fafc}
       </div>
     </div>
 
+    <!-- ===== SETTINGS ===== -->
     <div class="page" id="page-settings">
       <div class="card">
         <div class="card-head"><h3>⚙️ সাইট সেটিংস</h3></div>
@@ -396,340 +426,4 @@ function showStep(id){
   for(var i=0;i<steps.length;i++){steps[i].classList.remove('active');}
   document.getElementById(id).classList.add('active');
 }
-function backToStep1(){
-  clearInterval(resetTimer);
-  showStep('step1');
-  document.getElementById('msg1').className='msg';
-}
-
-/* ============ LOGIN ============ */
-function login(){
-  var email=document.getElementById('adminEmail').value.trim();
-  var pass=document.getElementById('adminPass').value.trim();
-  var msg=document.getElementById('msg1');
-  msg.className='msg';
-
-  if(!email || !pass){
-    msg.className='msg error';msg.textContent='⚠️ ইমেইল ও পাসওয়ার্ড দুটোই দিন!';return;
-  }
-  if(email.toLowerCase()!==getAdminEmail().toLowerCase()){
-    msg.className='msg error';msg.textContent='❌ ভুল ইমেইল!';return;
-  }
-  if(pass!==getAdminPass()){
-    msg.className='msg error';msg.textContent='❌ ভুল পাসওয়ার্ড! "পাসওয়ার্ড ভুলে গেছেন?" লিংকে ক্লিক করুন।';return;
-  }
-
-  msg.className='msg success';msg.textContent='✅ লগইন সফল!';
-  localStorage.setItem('dc_admin','yes');
-  setTimeout(function(){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').classList.add('active');
-    loadAll();
-  },500);
-}
-
-/* ============ FORGOT PASSWORD ============ */
-function goToForgot(){
-  clearInterval(resetTimer);
-  document.getElementById('forgotEmail').value='';
-  document.getElementById('msgF1').className='msg';
-  showStep('stepForgot');
-}
-
-function sendResetOTP(){
-  var email=document.getElementById('forgotEmail').value.trim();
-  var msg=document.getElementById('msgF1');
-  msg.className='msg';
-
-  if(!email){msg.className='msg error';msg.textContent='⚠️ ইমেইল দিন!';return;}
-  if(email.toLowerCase()!==getAdminEmail().toLowerCase()){
-    msg.className='msg error';msg.textContent='❌ এই ইমেইল নিবন্ধিত নয়!';return;
-  }
-  resetOTP=String(Math.floor(100000+Math.random()*900000));
-  document.getElementById('otpShow2').textContent=resetOTP;
-  document.getElementById('resetOtpInput').value='';
-  document.getElementById('msgF2').className='msg';
-  showStep('stepResetOTP');
-  startResetTimer();
-}
-
-function startResetTimer(){
-  resetSeconds=120;clearInterval(resetTimer);updateResetTimer();
-  resetTimer=setInterval(function(){
-    resetSeconds--;updateResetTimer();
-    if(resetSeconds<=0){clearInterval(resetTimer);document.getElementById('timer2').textContent='সময় শেষ';}
-  },1000);
-}
-function updateResetTimer(){
-  var m=Math.floor(resetSeconds/60),s=resetSeconds%60;
-  document.getElementById('timer2').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-}
-
-function verifyResetOTP(){
-  var input=document.getElementById('resetOtpInput').value.trim();
-  var msg=document.getElementById('msgF2');
-  msg.className='msg';
-  if(resetSeconds<=0){msg.className='msg error';msg.textContent='⏰ OTP এর সময় শেষ!';return;}
-  if(input.length!==6){msg.className='msg error';msg.textContent='⚠️ ৬ ডিজিটের কোড দিন!';return;}
-  if(input===resetOTP){
-    msg.className='msg success';msg.textContent='✅ যাচাই সফল!';
-    clearInterval(resetTimer);
-    document.getElementById('newPass').value='';
-    document.getElementById('newPass2').value='';
-    document.getElementById('msgF3').className='msg';
-    document.getElementById('strengthBar').style.width='0';
-    document.getElementById('strengthText').textContent='';
-    setTimeout(function(){showStep('stepNewPass');},600);
-  } else {
-    msg.className='msg error';msg.textContent='❌ ভুল OTP কোড!';
-  }
-}
-
-/* ============ PASSWORD STRENGTH ============ */
-function checkStrength(){
-  var p=document.getElementById('newPass').value;
-  var bar=document.getElementById('strengthBar');
-  var txt=document.getElementById('strengthText');
-  var score=0;
-  if(p.length>=6)score++;
-  if(p.length>=10)score++;
-  if(/[A-Z]/.test(p))score++;
-  if(/[0-9]/.test(p))score++;
-  if(/[^A-Za-z0-9]/.test(p))score++;
-
-  var levels=[
-    {w:'0%',c:'',t:''},
-    {w:'20%',c:'#ef4444',t:'🔴 দুর্বল'},
-    {w:'40%',c:'#f97316',t:'🟠 মাঝারি'},
-    {w:'60%',c:'#f59e0b',t:'🟡 ভালো'},
-    {w:'80%',c:'#3b82f6',t:'🔵 শক্তিশালী'},
-    {w:'100%',c:'#10b981',t:'🟢 খুব শক্তিশালী'}
-  ];
-  var lv=levels[Math.min(score,5)];
-  bar.style.width=lv.w;bar.style.background=lv.c;txt.textContent=lv.t;
-}
-
-/* ============ SAVE NEW PASSWORD ============ */
-function saveNewPassword(){
-  var p1=document.getElementById('newPass').value;
-  var p2=document.getElementById('newPass2').value;
-  var msg=document.getElementById('msgF3');
-  msg.className='msg';
-
-  if(p1.length<6){msg.className='msg error';msg.textContent='⚠️ পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!';return;}
-  if(p1!==p2){msg.className='msg error';msg.textContent='❌ দুটো পাসওয়ার্ড মিলছে না!';return;}
-
-  localStorage.setItem('dc_pass',p1);
-  msg.className='msg success';msg.textContent='✅ পাসওয়ার্ড সফলভাবে পরিবর্তিত! এখন লগইন করুন।';
-  setTimeout(function(){
-    document.getElementById('adminPass').value='';
-    document.getElementById('adminEmail').value=getAdminEmail();
-    document.getElementById('msg1').className='msg info';
-    document.getElementById('msg1').textContent='✅ নতুন পাসওয়ার্ড দিয়ে লগইন করুন।';
-    showStep('step1');
-  },1200);
-}
-
-/* ============ CHANGE PASSWORD (from Settings) ============ */
-function changePassword(e){
-  e.preventDefault();
-  var oldP=document.getElementById('oldPass').value;
-  var n1=document.getElementById('newPassAdmin').value;
-  var n2=document.getElementById('newPassAdmin2').value;
-
-  if(oldP!==getAdminPass()){alert('❌ পুরোনো পাসওয়ার্ড ভুল!');return;}
-  if(n1.length<6){alert('⚠️ নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!');return;}
-  if(n1!==n2){alert('❌ দুটো নতুন পাসওয়ার্ড মিলছে না!');return;}
-
-  localStorage.setItem('dc_pass',n1);
-  alert('✅ পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!');
-  e.target.reset();
-}
-
-/* ============ RESET ============ */
-function resetAll(){
-  if(confirm('সব ডেটা মুছে যাবে (ইমেইল/পাসওয়ার্ড সহ)। নিশ্চিত?')){
-    localStorage.clear();
-    alert('✅ সব ডেটা রিসেট হয়েছে!');
-    location.reload();
-  }
-}
-
-/* ============ LOGOUT ============ */
-function logout(){
-  if(confirm('লগআউট করবেন?')){
-    localStorage.removeItem('dc_admin');
-    location.reload();
-  }
-}
-
-/* ============ AUTO LOGIN ============ */
-window.addEventListener('DOMContentLoaded',function(){
-  if(localStorage.getItem('dc_admin')==='yes'){
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('adminPanel').classList.add('active');
-    loadAll();
-  }
-});
-
-/* ============ PAGE NAV ============ */
-function showPage(id,el){
-  var pages=document.querySelectorAll('.page');
-  for(var i=0;i<pages.length;i++){pages[i].classList.remove('active');}
-  document.getElementById('page-'+id).classList.add('active');
-  var links=document.querySelectorAll('.sidebar nav a');
-  for(var j=0;j<links.length;j++){links[j].classList.remove('active');}
-  el.classList.add('active');
-  var titles={dashboard:'📊 ড্যাশবোর্ড',notice:'📢 নোটিশ',course:'📚 কোর্স',student:'👨‍🎓 শিক্ষার্থী',payment:'💳 পেমেন্ট',result:'📝 রেজাল্ট',teacher:'👨‍🏫 শিক্ষক',settings:'⚙️ সেটিংস'};
-  document.getElementById('pageTitle').textContent=titles[id];
-  document.getElementById('sidebar').classList.remove('open');
-}
-
-/* ============ STORAGE ============ */
-function get(k){try{return JSON.parse(localStorage.getItem('dc_'+k)||'[]')}catch(e){return[]}}
-function set(k,v){localStorage.setItem('dc_'+k,JSON.stringify(v))}
-
-/* ============ NOTICE ============ */
-function addNotice(e){
-  e.preventDefault();
-  var list=get('notices');
-  list.push({title:document.getElementById('nTitle').value,type:document.getElementById('nType').value,body:document.getElementById('nBody').value,date:new Date().toLocaleDateString('bn-BD')});
-  set('notices',list);
-  e.target.reset();renderNotices();loadStats();
-}
-function renderNotices(){
-  var t=document.getElementById('noticeTable');
-  t.innerHTML='<tr><th>শিরোনাম</th><th>ধরন</th><th>বিবরণ</th><th>তারিখ</th><th>অ্যাকশন</th></tr>';
-  get('notices').forEach(function(n,i){
-    t.innerHTML+='<tr><td><strong>'+n.title+'</strong></td><td><span class="badge orange">'+n.type+'</span></td><td>'+n.body+'</td><td>'+n.date+'</td><td><button class="btn-red" onclick="delItem(\'notices\','+i+',renderNotices)"><i class="fa-solid fa-trash"></i></button></td></tr>';
-  });
-}
-
-/* ============ COURSE ============ */
-function addCourse(e){
-  e.preventDefault();
-  var list=get('courses');
-  list.push({name:document.getElementById('cName').value,price:document.getElementById('cPrice').value,duration:document.getElementById('cDuration').value,seats:document.getElementById('cSeats').value});
-  set('courses',list);
-  e.target.reset();renderCourses();loadStats();
-}
-function renderCourses(){
-  var t=document.getElementById('courseTable');
-  t.innerHTML='<tr><th>কোর্স</th><th>ফি</th><th>মেয়াদ</th><th>আসন</th><th>অ্যাকশন</th></tr>';
-  get('courses').forEach(function(c,i){
-    t.innerHTML+='<tr><td><strong>'+c.name+'</strong></td><td>৳'+c.price+'</td><td>'+c.duration+'</td><td>'+c.seats+'</td><td><button class="btn-red" onclick="delItem(\'courses\','+i+',renderCourses)"><i class="fa-solid fa-trash"></i></button></td></tr>';
-  });
-}
-
-/* ============ STUDENT ============ */
-function addStudent(e){
-  e.preventDefault();
-  var list=get('students');
-  var id='DC-'+String(list.length+1).padStart(4,'0');
-  list.push({id:id,name:document.getElementById('stName').value,cls:document.getElementById('stClass').value,phone:document.getElementById('stPhone').value,batch:document.getElementById('stBatch').value});
-  set('students',list);
-  e.target.reset();renderStudents();loadStats();
-}
-function renderStudents(filter){
-  filter=filter||'';
-  var t=document.getElementById('studentTable');
-  t.innerHTML='<tr><th>আইডি</th><th>নাম</th><th>শ্রেণি</th><th>মোবাইল</th><th>ব্যাচ</th><th>অ্যাকশন</th></tr>';
-  get('students').filter(function(s){return s.name.toLowerCase().indexOf(filter.toLowerCase())>-1||s.id.toLowerCase().indexOf(filter.toLowerCase())>-1}).forEach(function(s,i){
-    t.innerHTML+='<tr><td><strong>'+s.id+'</strong></td><td>'+s.name+'</td><td>'+s.cls+'</td><td>'+s.phone+'</td><td><span class="badge blue">'+s.batch+'</span></td><td><button class="btn-red" onclick="delItem(\'students\','+i+',renderStudents)"><i class="fa-solid fa-trash"></i></button></td></tr>';
-  });
-}
-function searchStudent(){renderStudents(document.getElementById('stSearch').value)}
-
-/* ============ PAYMENT ============ */
-function addPayment(e){
-  e.preventDefault();
-  var list=get('payments');
-  list.push({student:document.getElementById('pStudent').value,amount:document.getElementById('pAmount').value,method:document.getElementById('pMethod').value,month:document.getElementById('pMonth').value,status:'পরিশোধিত'});
-  set('payments',list);
-  e.target.reset();renderPayments();loadStats();
-}
-function renderPayments(){
-  var t=document.getElementById('paymentTable');
-  t.innerHTML='<tr><th>শিক্ষার্থী</th><th>পরিমাণ</th><th>মাধ্যম</th><th>মাস</th><th>স্ট্যাটাস</th></tr>';
-  get('payments').forEach(function(p){
-    t.innerHTML+='<tr><td>'+p.student+'</td><td>৳'+p.amount+'</td><td>'+p.method+'</td><td>'+p.month+'</td><td><span class="badge green">'+p.status+'</span></td></tr>';
-  });
-}
-
-/* ============ RESULT ============ */
-function addResult(e){
-  e.preventDefault();
-  var marks=parseInt(document.getElementById('rMarks').value);
-  var grade='F';
-  if(marks>=80)grade='A+';else if(marks>=70)grade='A';else if(marks>=60)grade='A-';else if(marks>=50)grade='B';else if(marks>=40)grade='C';else if(marks>=33)grade='D';
-  var list=get('results');
-  list.push({name:document.getElementById('rName').value,cls:document.getElementById('rClass').value,subject:document.getElementById('rSubject').value,marks:marks,grade:grade});
-  set('results',list);
-  e.target.reset();renderResults();
-}
-function renderResults(){
-  var t=document.getElementById('resultTable');
-  t.innerHTML='<tr><th>শিক্ষার্থী</th><th>শ্রেণি</th><th>বিষয়</th><th>নম্বর</th><th>গ্রেড</th></tr>';
-  get('results').forEach(function(r){
-    t.innerHTML+='<tr><td>'+r.name+'</td><td>'+r.cls+'</td><td>'+r.subject+'</td><td>'+r.marks+'</td><td><span class="badge '+(r.grade==='F'?'red':'green')+'">'+r.grade+'</span></td></tr>';
-  });
-}
-
-/* ============ TEACHER ============ */
-function addTeacher(e){
-  e.preventDefault();
-  var list=get('teachers');
-  list.push({name:document.getElementById('tName').value,subject:document.getElementById('tSubject').value,phone:document.getElementById('tPhone').value,qual:document.getElementById('tQualification').value});
-  set('teachers',list);
-  e.target.reset();renderTeachers();
-}
-function renderTeachers(){
-  var t=document.getElementById('teacherTable');
-  t.innerHTML='<tr><th>নাম</th><th>বিষয়</th><th>মোবাইল</th><th>যোগ্যতা</th><th>অ্যাকশন</th></tr>';
-  get('teachers').forEach(function(tc,i){
-    t.innerHTML+='<tr><td><strong>'+tc.name+'</strong></td><td>'+tc.subject+'</td><td>'+tc.phone+'</td><td>'+tc.qual+'</td><td><button class="btn-red" onclick="delItem(\'teachers\','+i+',renderTeachers)"><i class="fa-solid fa-trash"></i></button></td></tr>';
-  });
-}
-
-/* ============ DELETE ============ */
-function delItem(key,index,callback){
-  if(!confirm('মুছে ফেলবেন?'))return;
-  var list=get(key);
-  list.splice(index,1);
-  set(key,list);
-  callback();
-  loadStats();
-}
-
-/* ============ STATS ============ */
-function loadStats(){
-  document.getElementById('sStudents').textContent=get('students').length;
-  var income=0;
-  get('payments').forEach(function(p){income+=parseInt(p.amount||0);});
-  document.getElementById('sIncome').textContent=income;
-  document.getElementById('sNotice').textContent=get('notices').length;
-  document.getElementById('sCourse').textContent=get('courses').length;
-}
-
-/* ============ LOAD ALL ============ */
-function loadAll(){
-  renderNotices();renderCourses();renderStudents();renderPayments();renderResults();renderTeachers();loadStats();
-  if(get('notices').length===0){
-    set('notices',[
-      {title:'আগামীকাল কোচিং বন্ধ',type:'জরুরি',body:'আগামীকাল (শুক্রবার) সকল ক্লাস বন্ধ থাকবে।',date:'১০/১০/২০২৬'},
-      {title:'নতুন ব্যাচ শুরু',type:'তথ্য',body:'অষ্টম শ্রেণির নতুন ব্যাচ আগামী সপ্তাহে শুরু হবে।',date:'০৮/১০/২০২৬'}
-    ]);
-    renderNotices();loadStats();
-  }
-  if(get('courses').length===0){
-    set('courses',[
-      {name:'ষষ্ঠ-অষ্টম শ্রেণি',price:'800',duration:'৩ মাস',seats:'50'},
-      {name:'SSC প্রস্তুতি',price:'1200',duration:'৬ মাস',seats:'40'},
-      {name:'HSC প্রস্তুতি',price:'1500',duration:'৬ মাস',seats:'30'}
-    ]);
-    renderCourses();loadStats();
-  }
-}
-</script>
-</body>
-</html>
+function
