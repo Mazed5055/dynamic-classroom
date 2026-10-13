@@ -3,289 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Classroom - আধুনিক কোচিং সেন্টার</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Dynamic Classroom</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-info">
-                <span><i class="fas fa-phone"></i> 01633354664</span>
-                <span><i class="fas fa-envelope"></i> mazedhossain50555@gmail.com</span>
-            </div>
-            <div class="top-links">
-                <a href="admin.html"><i class="fas fa-user-shield"></i> এডমিন লগইন</a>
-                <a href="student.html"><i class="fas fa-user-graduate"></i> শিক্ষার্থী লগইন</a>
-            </div>
-        </div>
-    </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Dynamic Classroom</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#home">হোম</a></li>
-                <li><a href="#courses">কোর্স</a></li>
-                <li><a href="#classes">ক্লাস ৬-১২</a></li>
-                <li><a href="#teachers">শিক্ষক</a></li>
-                <li><a href="#notice">নোটিশ</a></li>
-                <li><a href="#contact">যোগাযোগ</a></li>
-            </ul>
-            <div class="hamburger">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-    </nav>
+    <!-- হেডার / নেভিগেশন -->
+    <header class="navbar">
+        <div class="logo">🎓 Dynamic Classroom</div>
+        <nav>
+            <a href="#">হোম</a>
+            <a href="#courses">কোর্স</a>
+            <a href="#">ক্লাস ৬-১২</a>
+            <a href="#">শিক্ষক</a>
+            <a href="#">নোটিশ</a>
+            <a href="#">যোগাযোগ</a>
+        </nav>
+    </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-overlay"></div>
-        <div class="container hero-content">
-            <h1>জ্ঞান অর্জন হোক সহজ, শিক্ষা হোক আনন্দময়</h1>
-            <p>শিক্ষার্থীদের সাফল্যের পথে আপনার নির্ভরযোগ্য শিক্ষাকেন্দ্র। ক্লাস ৬ থেকে ১২ পর্যন্ত মানসম্মত শিক্ষা।</p>
-            <div class="hero-buttons">
-                <a href="#courses" class="btn btn-primary">আমাদের কোর্স দেখুন</a>
-                <a href="#contact" class="btn btn-outline">ভর্তি হোন</a>
+    <!-- হিরো সেকশন -->
+    <section class="hero">
+        <h1>Dynamic Classroom</h1>
+        <p>Dynamic Classroom একটি শিক্ষামূলক উদ্যোগ। আমাদের লক্ষ্য হলো শিক্ষার্থীদের মানসম্মত শিক্ষা ও অনুশীলনের সুযোগ করে দেওয়া। ক্লাস ৬ থেকে ১২ পর্যন্ত প্রতিটি শিক্ষার্থীর জন্য আমরা আধুনিক ও কার্যকর শিক্ষা পদ্ধতি নিশ্চিত করি।</p>
+        <ul class="features">
+            <li>✔ আধুনিক শিক্ষা পদ্ধতি</li>
+            <li>✔ অভিজ্ঞ শিক্ষকমণ্ডলী</li>
+            <li>✔ ডিজিটাল লাইভ সাপোর্ট</li>
+            <li>✔ সাশ্রয়ী মূল্যায়ন কোর্স</li>
+        </ul>
+    </section>
+
+    <!-- প্রতিষ্ঠাতা সেকশন শুরু -->
+    <section class="founders-section">
+        <h2 class="section-title">আমাদের প্রতিষ্ঠাতাগণ</h2>
+        <p class="section-subtitle">Dynamic Classroom-এর প্রতিষ্ঠাতা</p>
+
+        <div class="founders-grid">
+
+            <!-- প্রতিষ্ঠাতা ১ -->
+            <div class="founder-card">
+                <div class="founder-image">
+                    <img src="images/mazed.jpg" alt="Md. Mazed Hossain">
+                </div>
+                <h3>Md. Mazed Hossain</h3>
+                <p class="designation">প্রতিষ্ঠাতা</p>
+                <div class="education-info">
+                    <p>🎓 বি.এসসি ইন কম্পিউটার সায়েন্স</p>
+                    <p>🏫 [আপনার বিশ্ববিদ্যালয়ের নাম]</p>
+                </div>
             </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <h3>৫০০+</h3>
-                    <p>শিক্ষার্থী</p>
+
+            <!-- প্রতিষ্ঠাতা ২ -->
+            <div class="founder-card">
+                <div class="founder-image">
+                    <img src="images/shakil.jpg" alt="Ahsanullah Akanda Shakil">
                 </div>
-                <div class="stat">
-                    <h3>২০+</h3>
-                    <p>শিক্ষক</p>
-                </div>
-                <div class="stat">
-                    <h3>৭</h3>
-                    <p>শ্রেণী (৬-১২)</p>
-                </div>
-                <div class="stat">
-                    <h3>৯৮%</h3>
-                    <p>সাফল্য</p>
+                <h3>Ahsanullah Akanda Shakil</h3>
+                <p class="designation">প্রতিষ্ঠাতা</p>
+                <div class="education-info">
+                    <p>🎓 [ডিগ্রির নাম]</p>
+                    <p>🏫 [বিশ্ববিদ্যালয়/কলেজের নাম]</p>
                 </div>
             </div>
+
+        </div>
+    </section>
+    <!-- প্রতিষ্ঠাতা সেকশন শেষ -->
+
+    <!-- যোগাযোগ সেকশন -->
+    <section class="contact-section">
+        <h2 class="section-title">যোগাযোগ</h2>
+        <p class="section-subtitle">কোর্স ও ভর্তি সম্পর্কে জানতে আমাদের সাথে যোগাযোগ করুন</p>
+
+        <div class="contact-grid">
+
+            <div class="contact-card">
+                <div class="contact-icon">✉️</div>
+                <h3>ইমেইল</h3>
+                <p>mazedhossain50555@gmail.com</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">📞</div>
+                <h3>ফোন</h3>
+                <p>01633554664</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">📍</div>
+                <h3>ঠিকানা</h3>
+                <p>পশ্চিম চর, নোয়াখালী, ফজলুল, নারায়ণগঞ্জ</p>
+            </div>
+
         </div>
     </section>
 
-    <!-- Notice Board -->
-    <section id="notice" class="notice-section">
-        <div class="container">
-            <div class="section-title">
-                <h2><i class="fas fa-bullhorn"></i> নোটিশ বোর্ড</h2>
-                <p>সর্বশেষ নোটিশসমূহ</p>
-            </div>
-            <div class="notice-board" id="noticeBoard">
-                <div class="notice-item urgent">
-                    <span class="notice-badge">জরুরি</span>
-                    <h4>ছুটি</h4>
-                    <p>আগামীকাল কোচিং বন্ধ থাকবে</p>
-                </div>
-                <div class="notice-item">
-                    <span class="notice-badge">নতুন</span>
-                    <h4>Dynamic Classroom-এ স্বাগতম</h4>
-                    <p>নতুন ব্যাচ শুরু হয়েছে, ভর্তি চলছে।</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Class Categories 6-12 -->
-    <section id="classes" class="classes-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>শ্রেণীভিত্তিক ক্লাস (৬-১২)</h2>
-                <p>আপনার শ্রেণী অনুযায়ী কোর্স নির্বাচন করুন</p>
-            </div>
-            <div class="class-grid">
-                <div class="class-card" data-class="6">
-                    <div class="class-icon">৬</div>
-                    <h3>ষষ্ঠ শ্রেণী</h3>
-                    <p>সব বিষয়ের মৌলিক পাঠদান</p>
-                </div>
-                <div class="class-card" data-class="7">
-                    <div class="class-icon">৭</div>
-                    <h3>সপ্তম শ্রেণী</h3>
-                    <p>বিষয়ভিত্তিক গভীর পাঠদান</p>
-                </div>
-                <div class="class-card" data-class="8">
-                    <div class="class-icon">৮</div>
-                    <h3>অষ্টম শ্রেণী</h3>
-                    <p>পরীক্ষার প্রস্তুতি ও অনুশীলন</p>
-                </div>
-                <div class="class-card" data-class="9">
-                    <div class="class-icon">৯</div>
-                    <h3>নবম শ্রেণী</h3>
-                    <p>বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা</p>
-                </div>
-                <div class="class-card" data-class="10">
-                    <div class="class-icon">১০</div>
-                    <h3>দশম শ্রেণী</h3>
-                    <p>SSC পরীক্ষার পূর্ণ প্রস্তুতি</p>
-                </div>
-                <div class="class-card" data-class="11">
-                    <div class="class-icon">১১</div>
-                    <h3>একাদশ শ্রেণী</h3>
-                    <p>HSC বিষয়ভিত্তিক ক্লাস</p>
-                </div>
-                <div class="class-card" data-class="12">
-                    <div class="class-icon">১২</div>
-                    <h3>দ্বাদশ শ্রেণী</h3>
-                    <p>HSC পরীক্ষার প্রস্তুতি</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features / Courses -->
-    <section id="courses" class="features-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>আমাদের শিক্ষা কার্যক্রম</h2>
-                <p>আমাদের বৈশিষ্ট্যসমূহ</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-book-open"></i></div>
-                    <h3>নিয়মিত ক্লাস</h3>
-                    <p>বিষয়ভিত্তিক পাঠদান ও অনুশীলনের মাধ্যমে শেখার সুযোগ।</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
-                    <h3>পরীক্ষার প্রস্তুতি</h3>
-                    <p>পরীক্ষার জন্য গুরুত্বপূর্ণ প্রশ্ন ও মডেল টেস্ট।</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-laptop"></i></div>
-                    <h3>অনলাইন শিক্ষা</h3>
-                    <p>ডিজিটাল শিক্ষাসামগ্রী ও পড়াশোনার সহায়তা।</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <h3>অভিজ্ঞ শিক্ষক</h3>
-                    <p>দক্ষ ও অভিজ্ঞ শিক্ষকমণ্ডলী দ্বারা পাঠদান।</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-clipboard-check"></i></div>
-                    <h3>নিয়মিত পরীক্ষা</h3>
-                    <p>সাপ্তাহিক ও মাসিক পরীক্ষার মাধ্যমে মূল্যায়ন।</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-user-graduate"></i></div>
-                    <h3>ব্যক্তিগত যত্ন</h3>
-                    <p>প্রতিটি শিক্ষার্থীর প্রতি আলাদা মনোযোগ।</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About -->
-    <section class="about-section">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>আমাদের সম্পর্কে</h2>
-                    <p>Dynamic Classroom একটি শিক্ষামূলক উদ্যোগ। আমাদের লক্ষ্য হলো শিক্ষার্থীদের মানসম্মত শিক্ষা ও অনুশীলনের সুযোগ করে দেওয়া। ক্লাস ৬ থেকে ১২ পর্যন্ত প্রতিটি শিক্ষার্থীর জন্য আমরা আধুনিক ও কার্যকর শিক্ষা পদ্ধতি নিশ্চিত করি।</p>
-                    <ul class="about-list">
-                        <li><i class="fas fa-check"></i> আধুনিক শিক্ষা পদ্ধতি</li>
-                        <li><i class="fas fa-check"></i> অভিজ্ঞ শিক্ষকমণ্ডলী</li>
-                        <li><i class="fas fa-check"></i> ডিজিটাল লার্নিং সাপোর্ট</li>
-                        <li><i class="fas fa-check"></i> সাশ্রয়ী মূল্যে কোর্স</li>
-                    </ul>
-                </div>
-                <div class="about-image">
-                    <i class="fas fa-school"></i>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Founders -->
-    <section id="teachers" class="founders-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>আমাদের প্রতিষ্ঠাতাগণ</h2>
-                <p>Dynamic Classroom-এর প্রতিষ্ঠাতা</p>
-            </div>
-            <div class="founders-grid">
-                <div class="founder-card">
-                    <div class="founder-avatar"><i class="fas fa-user-tie"></i></div>
-                    <h3>Md. Mazed Hossain</h3>
-                    <p>প্রতিষ্ঠাতা</p>
-                </div>
-                <div class="founder-card">
-                    <div class="founder-avatar"><i class="fas fa-user-tie"></i></div>
-                    <h3>Ahsanullah Akanda Shakil</h3>
-                    <p>প্রতিষ্ঠাতা</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="contact-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>যোগাযোগ</h2>
-                <p>কোর্স ও ভর্তি সম্পর্কে জানতে আমাদের সঙ্গে যোগাযোগ করুন</p>
-            </div>
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <i class="fas fa-envelope"></i>
-                    <h3>ইমেইল</h3>
-                    <p>mazedhossain50555@gmail.com</p>
-                </div>
-                <div class="contact-card">
-                    <i class="fas fa-phone"></i>
-                    <h3>ফোন</h3>
-                    <p>01633354664</p>
-                </div>
-                <div class="contact-card">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h3>ঠিকানা</h3>
-                    <p>শান্তিনগর, এনায়েতনগর, ফতুল্লা, নারায়ণগঞ্জ</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
+    <!-- ফুটার -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <h3><i class="fas fa-graduation-cap"></i> Dynamic Classroom</h3>
-                    <p>শিক্ষার্থীদের সাফল্যের পথে আপনার নির্ভরযোগ্য শিক্ষাকেন্দ্র।</p>
-                </div>
-                <div>
-                    <h3>দ্রুত লিংক</h3>
-                    <ul>
-                        <li><a href="#home">হোম</a></li>
-                        <li><a href="#courses">কোর্স</a></li>
-                        <li><a href="#notice">নোটিশ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>লগইন</h3>
-                    <ul>
-                        <li><a href="admin.html">এডমিন লগইন</a></li>
-                        <li><a href="student.html">শিক্ষার্থী লগইন</a></li>
-                    </ul>
-                </div>
+        <div class="footer-grid">
+
+            <div class="footer-col">
+                <h3>🎓 Dynamic Classroom</h3>
+                <p>শিক্ষার্থীদের পাশে থাকার প্রত্যয় নিয়ে নিবেদিত একটি শিক্ষামূলক প্রতিষ্ঠান।</p>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Dynamic Classroom. All rights reserved.</p>
+
+            <div class="footer-col">
+                <h3>দ্রুত লিংক</h3>
+                <a href="#">হোম</a>
+                <a href="#courses">কোর্স</a>
+                <a href="#">নোটিশ</a>
             </div>
+
+            <div class="footer-col">
+                <h3>লগইন</h3>
+                <a href="#">এডমিন লগইন</a>
+                <a href="#">শিক্ষার্থী লগইন</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Dynamic Classroom. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
 </body>
 </html>
